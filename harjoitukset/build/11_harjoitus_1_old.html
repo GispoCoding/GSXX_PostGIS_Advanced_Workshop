@@ -7,7 +7,7 @@
 <meta charset="utf-8" />
 <meta name="generator" content="pandoc" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta property="og:title" content="3 Harjoitus 2: Aineistojen lataaminen | PostgreSQL ja PostGISin perusteet" />
+<meta property="og:title" content="12 Harjoitus 1: Työkalujen käyttöönotto | PostgreSQL ja PostGISin perusteet" />
 <meta property="og:type" content="book" />
 
 
@@ -19,9 +19,9 @@
 <meta name="date" content="2026-04-15" />
 
 
-<meta name="description" content="3 Harjoitus 2: Aineistojen lataaminen | PostgreSQL ja PostGISin perusteet">
+<meta name="description" content="12 Harjoitus 1: Työkalujen käyttöönotto | PostgreSQL ja PostGISin perusteet">
 
-<title>3 Harjoitus 2: Aineistojen lataaminen | PostgreSQL ja PostGISin perusteet</title>
+<title>12 Harjoitus 1: Työkalujen käyttöönotto | PostgreSQL ja PostGISin perusteet</title>
 
 
 
@@ -280,161 +280,240 @@ type="button" onclick="navToggle()" aria-label="Toggle navigation">
 </div>
 <div class="row">
 <div class="col-sm-12">
-<div id="harjoitus-2-aineistojen-lataaminen" class="section level1" number="3">
-<h1><span class="header-section-number">3</span> Harjoitus 2: Aineistojen lataaminen</h1>
-<p><strong>Harjoituksen sisältö</strong> - Harjoituksessa ladataan paikkatietoaineistoja PostGIS- tietokantaan.</p>
-<p><strong>Harjoituksen tavoite</strong> - Harjoituksen jälkeen opiskelijalla on perustiedot paikkatietoaineistojen lataamiseen paikkatietokantaan.</p>
-<div id="valmistautuminen" class="section level3" number="3.0.1">
-<h3><span class="header-section-number">3.0.1</span> Valmistautuminen</h3>
-<p>QGIS tulee olla asennettuna, jotta paikkatietoaineistoja voidaan ladata. Avaa myös <a href="/pgadmin">pgAdmin</a> selaimeen ja kirjaudu sisään. Avaa <strong>Query Tool</strong> (Valitse <em>trainingdatabase</em> <strong>-&gt;</strong> Ylhäältä <strong>Tools</strong> <strong>-&gt;</strong> <strong>Query Tool</strong>).</p>
-</div>
-<div id="harjoitus-2.1-tekstitiedoston-lataaminen" class="section level2" number="3.1">
-<h2><span class="header-section-number">3.1</span> Harjoitus 2.1: Tekstitiedoston lataaminen</h2>
-<p>Monia pistemäisiä paikkatietoaineistoja on tallennettu CSV-tiedostoihin, jossa ne eivät varsinaisesti ole paikkatietomuodossa. Ensimmäisessä harjoituksessa ladataan globaali lentokenttiä kuvaava aineisto PostgreSQL-tietokantaan. Luodaan ensin harjoitustietokantaan taulu seuraavasti:</p>
-<div class="code-box">
-<div class="sourceCode" id="cb14"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb14-1"><a href="02_harjoitus_2.html#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="kw">DROP</span> <span class="kw">TABLE</span> <span class="cf">IF</span> <span class="kw">EXISTS</span> airports;</span>
-<span id="cb14-2"><a href="02_harjoitus_2.html#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-3"><a href="02_harjoitus_2.html#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> airports</span>
-<span id="cb14-4"><a href="02_harjoitus_2.html#cb14-4" aria-hidden="true" tabindex="-1"></a>(</span>
-<span id="cb14-5"><a href="02_harjoitus_2.html#cb14-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">id</span>            <span class="dt">integer</span>,</span>
-<span id="cb14-6"><a href="02_harjoitus_2.html#cb14-6" aria-hidden="true" tabindex="-1"></a>    name          text,</span>
-<span id="cb14-7"><a href="02_harjoitus_2.html#cb14-7" aria-hidden="true" tabindex="-1"></a>    city          text,</span>
-<span id="cb14-8"><a href="02_harjoitus_2.html#cb14-8" aria-hidden="true" tabindex="-1"></a>    country       text,</span>
-<span id="cb14-9"><a href="02_harjoitus_2.html#cb14-9" aria-hidden="true" tabindex="-1"></a>    IATA_code     <span class="dt">char</span>(<span class="dv">3</span>),</span>
-<span id="cb14-10"><a href="02_harjoitus_2.html#cb14-10" aria-hidden="true" tabindex="-1"></a>    ICAO_code     <span class="dt">char</span>(<span class="dv">4</span>),</span>
-<span id="cb14-11"><a href="02_harjoitus_2.html#cb14-11" aria-hidden="true" tabindex="-1"></a>    latitude      <span class="dt">numeric</span>,</span>
-<span id="cb14-12"><a href="02_harjoitus_2.html#cb14-12" aria-hidden="true" tabindex="-1"></a>    longitude     <span class="dt">numeric</span>,</span>
-<span id="cb14-13"><a href="02_harjoitus_2.html#cb14-13" aria-hidden="true" tabindex="-1"></a>    altitude      <span class="dt">numeric</span>,</span>
-<span id="cb14-14"><a href="02_harjoitus_2.html#cb14-14" aria-hidden="true" tabindex="-1"></a>    timezone      text,</span>
-<span id="cb14-15"><a href="02_harjoitus_2.html#cb14-15" aria-hidden="true" tabindex="-1"></a>    dst           text,</span>
-<span id="cb14-16"><a href="02_harjoitus_2.html#cb14-16" aria-hidden="true" tabindex="-1"></a>    tz_zone       text,</span>
-<span id="cb14-17"><a href="02_harjoitus_2.html#cb14-17" aria-hidden="true" tabindex="-1"></a>    <span class="kw">type</span>          text,</span>
-<span id="cb14-18"><a href="02_harjoitus_2.html#cb14-18" aria-hidden="true" tabindex="-1"></a>    <span class="kw">source</span>        text</span>
-<span id="cb14-19"><a href="02_harjoitus_2.html#cb14-19" aria-hidden="true" tabindex="-1"></a>);</span></code></pre></div>
-</div>
-<p>Kyseinen aineisto on ladattu valmiiksi <a href="http://openflights.org/data.html">OpenFlights.org-sivustolta</a> päänäkymän data-kansioon.</p>
-<p>Tarkastele miltä kyseinen aineisto näyttää kansiossa. Voit avata tiedoston selaimeen <a href="/data/airports.dat">tästä linkistä</a>.</p>
-<p>Voit lukea CSV-tiedoston tiedot edellisessä vaiheessa luotuun tauluun seuravaalla komennolla:</p>
-<div class="code-box">
-<div class="sourceCode" id="cb15"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb15-1"><a href="02_harjoitus_2.html#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="kw">COPY</span> airports</span>
-<span id="cb15-2"><a href="02_harjoitus_2.html#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> <span class="st">&#39;/home/student/data/airports.dat&#39;</span></span>
-<span id="cb15-3"><a href="02_harjoitus_2.html#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="kw">WITH</span> CSV;</span></code></pre></div>
-</div>
-<p><strong>COPY</strong>-komento viittaa tiedostoon kovalevyllä ja lataa sen. <strong>COPY</strong> voi viitata CSV:n lisäksi myös esimerkiksi <a href="https://www.postgresql.org/docs/current/sql-copy.html">binääriformaatteihin tai tekstitiedostoihin.</a></p>
-<p>Tarkista lopuksi, että tietokantataulussa on dataa.</p>
-<div class="code-box">
-<div class="sourceCode" id="cb16"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb16-1"><a href="02_harjoitus_2.html#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span></span>
-<span id="cb16-2"><a href="02_harjoitus_2.html#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> airports</span>
-<span id="cb16-3"><a href="02_harjoitus_2.html#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="kw">LIMIT</span> <span class="dv">10</span>;</span></code></pre></div>
-</div>
-<p>Aineistoa tarkastelemalla nähdään, että taulussa on koordinaatteja, mutta ne on tallennettu vain numeroarvoina; ei paikkatietotyyppinä.</p>
-<p>Jotta PostGIS:n toiminnallisuuksia voisi hyödyntää aineiston kanssa, tulee kyseiseen tauluun lisätä geometriasarake. PostGIS:ssä on valmis <a href="https://postgis.net/docs/AddGeometryColumn.html">funktio</a> tähän tarkoitukseen. Tarkastele dokumentaatiosta miten kyseistä funktiota käytetään.</p>
-<div class="code-box">
-<div class="sourceCode" id="cb17"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb17-1"><a href="02_harjoitus_2.html#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> AddGeometryColumn (<span class="st">&#39;airports&#39;</span>,<span class="st">&#39;geom&#39;</span>,<span class="dv">4326</span>,<span class="st">&#39;POINT&#39;</span>,<span class="dv">2</span>);</span></code></pre></div>
-</div>
-<p>Tarkastele taulua uudelleen.</p>
-<div class="code-box">
-<div class="sourceCode" id="cb18"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb18-1"><a href="02_harjoitus_2.html#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span></span>
-<span id="cb18-2"><a href="02_harjoitus_2.html#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> airports</span>
-<span id="cb18-3"><a href="02_harjoitus_2.html#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="kw">LIMIT</span> <span class="dv">10</span>;</span></code></pre></div>
-</div>
-<p>Tauluun on ilmestynyt uusi sarake. Sarake ei kuitenkaan sisällä vielä mitään tietoa. Päivitetään taulun sisältö <strong>UPDATE</strong>-komennon avulla.</p>
-<p>Seuraavassa komennossa on ketjutettu useampi funktio sisäkkäin.</p>
+<div id="harjoitus-1-työkalujen-käyttöönotto-1" class="section level1" number="12">
+<h1><span class="header-section-number">12</span> Harjoitus 1: Työkalujen käyttöönotto</h1>
+<p><strong>Harjoituksen sisältö</strong> - Harjoituksessa tutustutaan pgAdmin 4 -käyttöliittymään sekä psql:ään. Lisäksi harjoituksessa luodaan uusi paikkatietokanta.</p>
+<p><strong>Harjoituksen tavoite</strong> - Harjoituksen jälkeen opiskelija hallitsee pgAdmin 4 -käyttöliittymän ja psql:n perusteet.</p>
+<div id="harjoitus-1.1-pgadmin-4-1" class="section level2" number="12.1">
+<h2><span class="header-section-number">12.1</span> Harjoitus 1.1: pgAdmin 4</h2>
+<p>Käynnistä pgAdmin 4 -ohjelmisto menemällä osoitteeseen
+<a href="/pgadmin">/pgadmin</a>. Pääset kirjautumaan etäpalvelimen pgAdminiin
+seuraavilla tunnuksilla:</p>
 <ul>
-<li><a href="https://postgis.net/docs/ST_MakePoint.html">ST_MakePoint</a> luo tekstikenttien perusteella pistemuotoisen geometrian</li>
-<li><a href="https://postgis.net/docs/ST_SetSRID.html">ST_SetSRID</a> asettaa kyseiselle tietokentälle EPSG-koodin avulla koordinaattijärjestelmän</li>
+<li><p>Sähköpostiosoite: <strong><a href="mailto:student@gispocoding.fi" class="email">student@gispocoding.fi</a></strong></p></li>
+<li><p>Salasana: <strong>gispotraining</strong></p></li>
 </ul>
-<div class="code-box">
-<div class="sourceCode" id="cb19"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb19-1"><a href="02_harjoitus_2.html#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="kw">UPDATE</span> airports</span>
-<span id="cb19-2"><a href="02_harjoitus_2.html#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SET</span> geom <span class="op">=</span> ST_SetSRID(ST_MakePoint(longitude, latitude),<span class="dv">4326</span>);</span></code></pre></div>
+<div class="figure">
+<img src="img/pgadmin_splash.png" alt="" />
+<p class="caption">pgAdmin- kirjautuminen</p>
 </div>
-<p>Tarkastele lopuksi aineistoa esimerkiksi pgAdminin karttatoiminnallisuuden avulla.</p>
-<p><img src="img/pgadmin_geom.png" /></p>
-</div>
-<div id="harjoitus-2.2-paikkatietoaineiston-lataaminen" class="section level2" number="3.2">
-<h2><span class="header-section-number">3.2</span> Harjoitus 2.2: Paikkatietoaineiston lataaminen</h2>
-<p>Maanmittauslaitoksen aineisto on ladattu valmiiksi harjoitussivun <a href="/data">data-kansioon</a>.</p>
-<div id="vaihtoehto-1-qgisin-tietokannan-hallinnan-avulla" class="section level3" number="3.2.1">
-<h3><span class="header-section-number">3.2.1</span> Vaihtoehto 1: QGISin tietokannan hallinnan avulla</h3>
-<p>QGIS-työpöytäohjelmisto tarjoaa erittäin kätevän graafisen käyttöliittymän paikkatietoaineistojen lataamiseksi PostGIS-tietokantaan. Useat QGISin eri työkalut mahdollistavat joustavan latauksen ja mahdolliset muokkaukset aineistoon jo ennen latausta.</p>
-<p>Ensimmäisessä vaiheessa otetaan yhteys lokaalista QGIS-asennuksesta koulutuksessa käytettävään PostGIS-tietokantaan. Avaa tässä vaiheessa QGIS, jos et ole sitä jo tehnyt. Lisää uusi tietokantayhteys avaamalla QGISin tietolähteiden hallinta klikkaamalla Tasot &gt; Tietolähteiden hallinta. Valitse Tietolähteiden hallinta -ikkunasta PostgreSQL-välilehti ja klikkaa Uusi-painiketta.</p>
-<p>Syötä Yhteyden tiedot -ikkunaan seuraavat tiedot tietokantayhteyden määrittämiseksi:</p>
-<p><img src="img/yhteyspg.png" /></p>
-<p>Huomaa, että Name-kenttä kuvaa vain QGISiin tallennettavan yhteyden nimeä eikä itse tietokannan nimeä. Yhteyden valinnaisista toiminnallisuuksista kannattaa oletuksena valita kaikki. Esimerkiksi arvioidun metadatan käyttäminen nopeuttaa hakuja huomattavasti.</p>
-<p>Paina <strong>Testaa yhteyttä</strong> -painiketta varmistaaksesi tietokantayhteyden toiminnan ja paina <strong>OK</strong>. QGISin sisällä voi myös ajaa SQL-komentoja esimerkiksi <strong>DB Manager</strong>in avulla.</p>
-<p>Ota yhteys QGISista postgres-nimisen tietokannan lisäksi trainingdatabase-nimiseen tietokantaan, jossa tulemme operoimaan loppukurssin ajan. Tietokantayhteyden muodostaminen tapahtuu hyvin pitkälti samoin kuin yllä on kuvattu. Ainoastaan Name-kohtaan tulee syöttää jokin muu arvo (esim. gispo_trainingdatabase).</p>
-<p>Luo tässä vaiheessa harjoitustietokantaan uusi skeema, jonne Maanmittauslaitoksen aineistot tullaan lataamaan, ja anna skeemalle nimeksi “nlsfi”. Skeemojen avulla on helpompi pitää aineistot järjestyksessä. Uuden skeeman voi luoda pgAdminin graafisen käyttöliittymän kautta, QGISin kautta tai seuraavalla SQL-komennolla:</p>
-<div class="code-box">
-<div class="sourceCode" id="cb20"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb20-1"><a href="02_harjoitus_2.html#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">SCHEMA</span> <span class="cf">IF</span> <span class="kw">NOT</span> <span class="kw">EXISTS</span> nlsfi;</span></code></pre></div>
-</div>
-<p>Jos et saa luomaasi skeemaa näkyviin QGISin puolella, aja seuraavat sql- komennot ja käynnistä QGIS-projekti uudelleen.</p>
-<div class="code-box">
-<div class="sourceCode" id="cb21"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb21-1"><a href="02_harjoitus_2.html#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="kw">DROP</span> <span class="kw">TABLE</span> <span class="cf">IF</span> <span class="kw">EXISTS</span> nlsfi.example;</span>
-<span id="cb21-2"><a href="02_harjoitus_2.html#cb21-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-3"><a href="02_harjoitus_2.html#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> nlsfi.example</span>
-<span id="cb21-4"><a href="02_harjoitus_2.html#cb21-4" aria-hidden="true" tabindex="-1"></a>(</span>
-<span id="cb21-5"><a href="02_harjoitus_2.html#cb21-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">id</span>            <span class="dt">integer</span>,</span>
-<span id="cb21-6"><a href="02_harjoitus_2.html#cb21-6" aria-hidden="true" tabindex="-1"></a>    name          text</span>
-<span id="cb21-7"><a href="02_harjoitus_2.html#cb21-7" aria-hidden="true" tabindex="-1"></a>);</span></code></pre></div>
-</div>
-<div class="code-box">
-<div class="sourceCode" id="cb22"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb22-1"><a href="02_harjoitus_2.html#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="kw">INSERT</span> <span class="kw">INTO</span> nlsfi.example</span>
-<span id="cb22-2"><a href="02_harjoitus_2.html#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="kw">VALUES</span> (<span class="dv">1</span>, <span class="st">&#39;testi&#39;</span>);</span></code></pre></div>
-</div>
-<p>Lataa <a href="/data/Maastokartta_1m.zip">data-kansio</a> omalle koneellesi. Aineistoja voi lisätä navigoimalla Tasot &gt; Lisää taso &gt; Lisää vektoritaso, klikkaamalla Lisää vektoritaso -kuvaketta tasojen hallinnan työkalupalkista tai ihan vain raahaamalla tasoja suoraan Selain-ikkunasta Tasot-ikkunaan.</p>
-<p>Lataa projektiisi ja tietokantaasi (ainakin) seuraavat aineistot:</p>
+<div id="tietokantayhteyden-lisääminen-1" class="section level3" number="12.1.1">
+<h3><span class="header-section-number">12.1.1</span> Tietokantayhteyden lisääminen</h3>
+<p>Liitä pgAdmin-ohjelmaan koulutusympäristön tietokanta klikkaamalla
+hiiren oikealla kohdasta <strong>Servers</strong> ja valitsemalla <strong>Register &gt;
+Server…</strong></p>
+<p>Syötä seuraavat tiedot:</p>
 <ul>
-<li>TieViiva.shp</li>
-<li>HallintoAlue.shp</li>
-<li>KarttanimiPiste1000.shp</li>
-<li>SahkoLinja.shp</li>
-<li>LentokenttaPiste.shp</li>
-<li>RautatieViiva.shp</li>
+<li>General-välilehdellä
+<ul>
+<li>Name: yhteyden nimi (tyypillisesti &lt;käyttäjänimi&gt;@&lt;tietokanta&gt;)</li>
+<li>Connection-välilehdellä
+<ul>
+<li>Host: <strong>dbhost</strong></li>
+<li>Port: <strong>5432</strong></li>
+<li>Maintenance database: <strong>postgres</strong></li>
+<li>Username: <strong>postgres</strong></li>
+<li>Password: <strong>gispotraining</strong></li>
+</ul></li>
+</ul></li>
+<li>Valitse <strong>Save password</strong>, jos et halua kirjoittaa salasanaa uudelleen aina avatessasi yhteyden</li>
 </ul>
+<p>Voit tarkastella asennettua tietokantaa pgAdmin:n avulla yläpalkin eri
+välilehdiltä:</p>
+<p><img src="img/pgadylapalkki.png" /></p>
+<p>PostGIS-tietokantoja voidaan hyödyntää pgAdmin:n lisäksi myös muissa
+sovelluksissa (psql-komentorivin tai QGISin <strong>Tietokannan hallinta (DB
+Manager)</strong> -lisäosan kautta). Tältä tietokanta näyttää QGISin
+<strong>Tietokannan hallinnassa</strong>:</p>
+<p><img src="img/qgisDbmanager.png" /></p>
+</div>
+<div id="harjoitustietokannan-luonti-1" class="section level3" number="12.1.2">
+<h3><span class="header-section-number">12.1.2</span> Harjoitustietokannan luonti</h3>
+<p>Luodaan koulutusta varten <strong>trainingdatabase</strong>-niminen
+harjoitustietokanta. Tämän voi tehdä pgAdmin:n <strong>graafisen
+käyttöliittymän</strong> kautta:</p>
+<p><img src="img/pgadmindbluo.png" /></p>
 <div class="hint-box">
-<p>Tarkista, että Koodaus-kohdassa on valittu UTF-8. Mikäli aineisto koodataan jollakin toisella järjestelmällä, ääkköset puuttuvat metatiedoista.</p>
+<p><strong>Huom!</strong> Tietokannan voi luoda ja poistaa myös seuraavien SQL-lauseiden avulla:</p>
+<p><strong>CREATE DATABASE</strong> trainingdatabase;<br />
+<strong>DROP DATABASE</strong> trainingdatabase;</p>
 </div>
-<p>QGIS-projektiin avautuu vektoriaineistoja, johon on määritelty tietty koordinaattijärjestelmä. Tarkista, että koordinaattijärjestelmäksi on määritelty ETRS89 / TM35FIN(E,N) (EPSG: 3067) tai EPSG:3047. Tason koordinaattijärjestelmän voit tarkistaa ja muuttaa klikkaamalla hiiren oikeaa painiketta tasolla ja valitsemalla <strong>Ominaisuudet &gt; Lähde &gt; Aseta koordinaattijärjestelmä</strong>.</p>
-<p><img src="img/qgistasot.png" /></p>
-<p>Avaa QGISin prosessointityökaluista työkalu nimeltä Export to PostgreSQL. Avaa työkalun alapalkista <strong>Aja eräajona</strong> (Run as Batch Process), joka mahdollistaa useamman taulun ajamiseen tietokantaan kerralla. Muuta parametreja niin, että aineistot tulee ladattua oikeaan skeemaan ja tietokantaan. <strong>Täytä</strong> (Fill Down) -toimintoa käyttämällä sinun ei tarvitse klikkailla jokaisen tason kohdalta arvoja kuntoon. Lisää geometriasarakkeen nimeksi “wkb_geometry” ja, varmistaaksesi taulujen nimien kirjaantumisen pienillä kirjaimilla, avaa taulun nimen määrittävässä kohdassa lausekkeenmuodostaja ja kopioi siihen komento:</p>
+</div>
+<div id="sql-komentojen-suorittaminen-1" class="section level3" number="12.1.3">
+<h3><span class="header-section-number">12.1.3</span> SQL-komentojen suorittaminen</h3>
+<p>Koulutuksessa tullaan suorittamaan useita harjoituksia SQL-komentokielen
+avulla. pgAdmin:n <strong>Kysely-työkalun (Query Tool)</strong> avulla voit suorittaa
+SQL-kyselyitä ja lausekkeita. <strong>Query Tool</strong> käynnistetään seuraavasti:</p>
+<ul>
+<li>Valitse <strong>Servers</strong>-osiosta oma tietokantaklusterisi</li>
+<li>Valitse klusterin sisältä haluamasi tietokanta (<strong>trainingdatabase</strong>)</li>
+<li>Valitse ylhäältä <strong>Tools &gt; Query Tool</strong></li>
+</ul>
+<p>Haluttu SQL-komento suoritetaan painamalla avautuvasta <strong>Query Tool</strong>
+-ikkunasta löytyvää kolmio-painiketta (<strong>Execute/Refresh</strong>) tai
+<strong>F5</strong>-näppäintä. Jos haluat suorittaa vain osan SQL-lausekkeesta,
+väritä hiirellä mieleisesi osio ja paina <strong>F5</strong>. Näet alaikkunassa
+komennon tuloksen. Voit myös tallentaa SQL-komentosi
+<strong>.sql</strong>-tiedostoon, josta ne voi myöhemmin ladata.</p>
+<p><img src="img/pgadmin_query_tool.gif" /></p>
+<p>Nyt voidaan lisätä PostGIS-lisäosa <strong>trainingdatabase</strong>-tietokantaan
+seuraavalla SQL-komennolla:</p>
 <div class="code-box">
-<div class="sourceCode" id="cb23"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb23-1"><a href="02_harjoitus_2.html#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lower</span>(layer_property( @INPUT, <span class="st">&#39;name&#39;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb144"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb144-1"><a href="11_harjoitus_1_old.html#cb144-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> EXTENSION <span class="cf">IF</span> <span class="kw">NOT</span> <span class="kw">EXISTS</span> postgis;</span></code></pre></div>
 </div>
-<p>Tarkista mitä muita parametrejä prosessi pitää sisällään. Voit kuitenkin jättää ne oletusarvoisiksi. Lopulta latausprosessisi pitäisi näyttää kutakuinkin tältä. Klikkaa <strong>Run</strong>!</p>
-<p><img src="img/batchrun.png" /> Tarkista latauksen jälkeen, että aineistot ovat latautuneet. Tarkista virheilmoitukset ja korjaa latausta tarvittaessa.</p>
+<div class="hint-box">
+<p>Mitä spatial_ref_sys-taulu sisältää?</p>
+<p>Mitä näkymiä (views) on tietokantaan muodostunut? Mitä tietoja ne
+sisältävät?</p>
+</div>
+<p>Uusi taulu voidaan luoda kirjoittamalla seuraava SQL-komentojono <strong>Query Tool</strong>:n SQL-editoriin.</p>
 <div class="code-box">
-<div class="sourceCode" id="cb24"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb24-1"><a href="02_harjoitus_2.html#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span></span>
-<span id="cb24-2"><a href="02_harjoitus_2.html#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> nlsfi.tieviiva</span>
-<span id="cb24-3"><a href="02_harjoitus_2.html#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="kw">LIMIT</span> <span class="dv">10</span>;</span></code></pre></div>
+<div class="sourceCode" id="cb145"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb145-1"><a href="11_harjoitus_1_old.html#cb145-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- PostgreSQL ja PostGISin perusteet</span></span>
+<span id="cb145-2"><a href="11_harjoitus_1_old.html#cb145-2" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> test_tmp(</span>
+<span id="cb145-3"><a href="11_harjoitus_1_old.html#cb145-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">id</span> serial,</span>
+<span id="cb145-4"><a href="11_harjoitus_1_old.html#cb145-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">time</span> <span class="dt">time</span>,</span>
+<span id="cb145-5"><a href="11_harjoitus_1_old.html#cb145-5" aria-hidden="true" tabindex="-1"></a>    num <span class="dt">integer</span>);</span></code></pre></div>
 </div>
+<div class="hint-box">
+<p>Huomaa, että kahdella viivalla “--” alkavat rivit ovat
+kommenttirivejä, eikä niitä oteta huomioon SQL-komentoa
+suoritettaessa.</p>
 </div>
-<div id="vaihtoehto-2-komentorivin-avulla" class="section level3" number="3.2.2">
-<h3><span class="header-section-number">3.2.2</span> Vaihtoehto 2: Komentorivin avulla</h3>
-<p>Luo tässä vaiheessa harjoitustietokantaan uusi skeema, jonne Maanmittauslaitoksen aineistot tullaan lataamaan, ja anna skeemalle nimeksi “nlsfi”. Skeemojen avulla on helpompi pitää aineistot järjestyksessä. Uuden skeeman voi luoda pgAdminin graafisen käyttöliittymän kautta tai seuraavalla SQL-komennolla:</p>
+<p>Tauluja voi luoda myös SQL-kyselyiden tulosten perusteella.</p>
+<p>Lisätään yllä luotuun tauluun tietueita seuraavalla SQL-komennolla:</p>
 <div class="code-box">
-<div class="sourceCode" id="cb25"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb25-1"><a href="02_harjoitus_2.html#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">SCHEMA</span> <span class="cf">IF</span> <span class="kw">NOT</span> <span class="kw">EXISTS</span> nlsfi;</span></code></pre></div>
+<div class="sourceCode" id="cb146"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb146-1"><a href="11_harjoitus_1_old.html#cb146-1" aria-hidden="true" tabindex="-1"></a><span class="kw">INSERT</span> <span class="kw">INTO</span> test_tmp (<span class="dt">time</span>,num)</span>
+<span id="cb146-2"><a href="11_harjoitus_1_old.html#cb146-2" aria-hidden="true" tabindex="-1"></a>(<span class="kw">SELECT</span> now(), generate_series(<span class="dv">1</span>,<span class="dv">5000</span>));</span></code></pre></div>
 </div>
-<p>Komentoriviltä tapahtuvaan lataamiseen käytetään <strong>shp2pgsql</strong>-ohjelmaa tai <strong>ogr2ogr</strong>-työkalua. Käynnistämällä ohjelman ilman parametrejä saat opasteen eri parametreistä. Tämän jälkeen voit ladata aineistoa äsken luotuun skeemaan <strong>ogr2ogr</strong>-työkalulla. Jos koneellasi on asennettu OSGeo4W-paketti (tulee QGIS:n asennuksen mukana), avaa käynnistysvalikosta <strong>OSGeo4W Shell</strong> ja anna seuraava komento:</p>
+<p>Tietueita voi lisätä myös SQL-kyselyjen tulosten perusteella.</p>
+<p>Voit listata tauluusi tekemiä tietueita esimerkiksi seuraavalla
+komennolla:</p>
+<div class="code-box">
+<div class="sourceCode" id="cb147"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb147-1"><a href="11_harjoitus_1_old.html#cb147-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span></span>
+<span id="cb147-2"><a href="11_harjoitus_1_old.html#cb147-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> test_tmp</span>
+<span id="cb147-3"><a href="11_harjoitus_1_old.html#cb147-3" aria-hidden="true" tabindex="-1"></a><span class="kw">LIMIT</span> <span class="dv">10</span>;</span></code></pre></div>
+</div>
+<p>Voit poistaa luodun taulun seuraavalla komennolla:</p>
+<div class="code-box">
+<div class="sourceCode" id="cb148"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb148-1"><a href="11_harjoitus_1_old.html#cb148-1" aria-hidden="true" tabindex="-1"></a><span class="kw">DROP</span> <span class="kw">TABLE</span> test_tmp;</span></code></pre></div>
+</div>
+</div>
+<div id="pg_dump-ja-pg_restore-1" class="section level3" number="12.1.4">
+<h3><span class="header-section-number">12.1.4</span> pg_dump ja pg_restore</h3>
+<p>Tietokannan tai yksittäisten taulujen varmuuskopioiden luomiseen ja
+palauttamiseen on omat komentoriviohjelmansa:
+<a href="https://www.postgresql.org/docs/13/app-pgdump.html">pg_dump</a> ja
+<a href="https://www.postgresql.org/docs/13/app-pgrestore.html">pg_restore</a>.
+Muun muassa pgAdmin käyttää näitä sisäisesti.</p>
+</div>
+</div>
+<div id="harjoitus-1.2-psql-1" class="section level2" number="12.2">
+<h2><span class="header-section-number">12.2</span> Harjoitus 1.2: psql</h2>
+<p>SQL-komentoja voi suorittaa pgAdminin (ja QGISin Tietokannan hallinta
+-lisäosan) lisäksi myös psql-komentorivin kautta. Avaa
+<a href="/wetty">komentorivi</a>, jotta pääset käyttämään
+psql-komentorivityökalua. Kirjaudu ensin sisään WeTTY- terminaaliemulaattoriin:</p>
+<ul>
+<li>Username: <strong>student</strong></li>
+<li>Password: <strong>gispotraining</strong></li>
+</ul>
+<p>Ota yhteys omaan tietokantaklusteriisi
+komennolla:</p>
 <div class="commandline-box">
-<div class="sourceCode" id="cb26"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb26-1"><a href="02_harjoitus_2.html#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="ex">ogr2ogr</span> <span class="at">-f</span> <span class="st">&quot;PostgreSQL&quot;</span> PG:<span class="st">&quot;host=&lt;hostname&gt;  dbname=&lt;dbname&gt; user=&lt;kayttaja&gt; password=&lt;salasana&gt;&quot;</span> <span class="op">&lt;</span>dir<span class="op">&gt;</span><span class="dt">\t</span>iedostonimi.shp <span class="at">-lco</span> SCHEMA=nlsfi</span></code></pre></div>
+<div class="sourceCode" id="cb149"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb149-1"><a href="11_harjoitus_1_old.html#cb149-1" aria-hidden="true" tabindex="-1"></a><span class="ex">psql</span> <span class="at">-U</span> postgres <span class="at">-h</span> dbhost</span></code></pre></div>
 </div>
-<p>Muista tarkistaa, että aineiston hakemistopolku ja muut parametrit ovat kunnossa!</p>
-<p><strong>ogr2ogr</strong>-komennon käyttämät parametrit ovat:</p>
+<p><img src="img/psql_start.png" /></p>
+<div id="psqln-käyttäminen-1" class="section level3" number="12.2.1">
+<h3><span class="header-section-number">12.2.1</span> psql:n käyttäminen</h3>
+<p>Kun psql on käynnistetty, komentoriville voi kirjoittaa sekä psql- että
+SQL-komentoja. psql-session aikana käytettäviä komentoja kutsutaan
+psql-interaktiivisiksi.</p>
+<p>Alla muutama esimerkki interaktiivisista psql-komennoista:</p>
 <div class="commandline-box">
-<pre><code>-f   output file format name
--lco layer creation option</code></pre>
+<pre class="psql"><code>\d = näytä taulut, näkymät ja sekvenssit
+\dg = näytä tietokantaklusterin roolit (käyttäjät)
+\c tietokannan_nimi = yhdistä tietokannan_nimi -tietokantaan</code></pre>
 </div>
-<p>Muita parametreja voit tutkia suorittamalla <strong>ogr2ogr</strong>-komennon ilman parametrejä. PostGIS-asennuksen yhteydessä usein asennettavalla <strong>shp2pgsql</strong>-työkalulla on myös mahdollista luoda shp-tiedostoista SQL-muotoisia lataustiedostoja. Komentorivityökalut mahdollistavat useamman tiedoston lataamisen tietokantaan kätevästi yhdellä kertaa. Esimerkiksi Windows-ympäristössä on mahdollista ladata kansiollisen gml-tiedostoja kerralla tietokantaan seuraavalla komennolla:</p>
+<p>Komennolla <code>help</code> ja erityisesti komennolla <code>\?</code> saat tietoa ohjelman
+eri komennoista. Pääset pois listauksesta painamalla <code>q</code>.</p>
+<p>Komentorivin puolella käytettäviä psql-komentoja kutsutaan
+ei-interaktiivisiksi. Ei-interaktiivisia psql-komentoja käytetään
+silloin kun halutaan käyttää psql:aa suoraan käyttöjärjestelmän
+komentorivista ja valittavat psql-komennot sekä SQL-skriptit ovat
+tiedostossa. Ei-interaktiivinen psql soveltuu erityisen hyvin tehtävien
+automaatisointiin. Edellä mainitut yhteydenottokomennot ovat oivia
+esimerkkejä ei-interaktiivisista psql-komennoista. Kokeile ajaa seuraava
+komento komentorivillä:</p>
 <div class="commandline-box">
-<div class="sourceCode" id="cb28"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb28-1"><a href="02_harjoitus_2.html#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> <span class="ex">%i</span> in <span class="er">(</span><span class="ex">*.gml</span><span class="kw">)</span> <span class="cf">do</span> <span class="ex">ogr2ogr</span> <span class="at">-update</span> <span class="at">-append</span> <span class="at">-f</span> PostgreSQL PG:<span class="st">&quot;host=&lt;hostname&gt; port=5432 dbname=&lt;tietokantanimi&gt; user=&lt;kayttaja&gt; password=&lt;salasana&gt; schemas=gml&quot;</span> %i</span></code></pre></div>
+<div class="sourceCode" id="cb151"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb151-1"><a href="11_harjoitus_1_old.html#cb151-1" aria-hidden="true" tabindex="-1"></a><span class="ex">psql</span> <span class="at">-U</span> postgres <span class="at">-h</span> dbhost <span class="at">-c</span> <span class="st">&quot;select current_database();&quot;</span></span></code></pre></div>
 </div>
+</div>
+<div id="tietokannan-luonti-1" class="section level3" number="12.2.2">
+<h3><span class="header-section-number">12.2.2</span> Tietokannan luonti</h3>
+<p>createdb on komentorivityökalu helpottamaan tietokannan luomista.
+Helpoimmillaan uuden tietokannan luominen onnistuukin komennolla:</p>
+<div class="commandline-box">
+<div class="sourceCode" id="cb152"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb152-1"><a href="11_harjoitus_1_old.html#cb152-1" aria-hidden="true" tabindex="-1"></a><span class="ex">createdb</span> <span class="at">-U</span> postgres <span class="at">-h</span> dbhost uuden_tietokannan_nimi</span></code></pre></div>
+</div>
+<p><img src="img/createdb.png" /></p>
+</div>
+<div id="tietokannan-poistaminen-1" class="section level3" number="12.2.3">
+<h3><span class="header-section-number">12.2.3</span> Tietokannan poistaminen</h3>
+<p>dropdb samoin kuin createdb on komentorivityökalu. Helpoimmillaan
+tietokannan voi poistaa komennolla:</p>
+<div class="commandline-box">
+<div class="sourceCode" id="cb153"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb153-1"><a href="11_harjoitus_1_old.html#cb153-1" aria-hidden="true" tabindex="-1"></a><span class="ex">dropdb</span> <span class="at">-U</span> postgres <span class="at">-h</span> dbhost poistettavan_tietokannan_nimi</span></code></pre></div>
+</div>
+</div>
+<div id="tietokantayhteyden-sulkeminen-2" class="section level3" number="12.2.4">
+<h3><span class="header-section-number">12.2.4</span> Tietokantayhteyden sulkeminen</h3>
+<p>Kun haluat sulkea tietokantayhteyden, anna psql-ohjelmassa komento:</p>
+<div class="commandline-box">
+<p><code>\q</code></p>
+</div>
+</div>
+<div id="tiedot-asennuksista-1" class="section level3" number="12.2.5">
+<h3><span class="header-section-number">12.2.5</span> Tiedot asennuksista</h3>
+<p>PostgreSQL:n version voit kysyä SQL-komennolla:</p>
+<div class="code-box">
+<div class="sourceCode" id="cb154"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb154-1"><a href="11_harjoitus_1_old.html#cb154-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> version();</span></code></pre></div>
+</div>
+<p>Asennetut lisäosat voit tarkistaa SQL-lauseella:</p>
+<div class="code-box">
+<div class="sourceCode" id="cb155"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb155-1"><a href="11_harjoitus_1_old.html#cb155-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span></span>
+<span id="cb155-2"><a href="11_harjoitus_1_old.html#cb155-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> pg_extension;</span></code></pre></div>
+</div>
+</div>
+<div id="tietokantayhteyden-sulkeminen-3" class="section level3" number="12.2.6">
+<h3><span class="header-section-number">12.2.6</span> Tietokantayhteyden sulkeminen</h3>
+<p>Klikkaa hiiren oikealla luomasi yhteyden päällä ja valitse <strong>Disconnect
+from server</strong>.</p>
+</div>
+<div id="muita-huomioita-1" class="section level3" number="12.2.7">
+<h3><span class="header-section-number">12.2.7</span> Muita huomioita</h3>
+<p>Jos haluat käyttää PostGIS-tietokantaa muilta tietokoneilta, tulee
+PostgreSQL:n määrittelytiedostoon (pg_hba.conf) tehdä muutamia
+tarvittavia muutoksia, esimerkiksi seuraavasti:</p>
+<div class="code-box">
+<pre class="mysql"><code># IPv4 local connections:
+#host  all     all      127.0.0.1/32      md5
+host   all     all        0.0.0.0/0       trust</code></pre>
+</div>
+<p>Muutokset on tehty koulutuksessa käytettävälle PostgreSQL-asennukselle
+jo valmiiksi.</p>
+<div class="hint-box">
+<p><strong>HUOM!</strong> Tämä muutos mahdollistaa yhteydenoton mistä tahansa tietokoneesta ja
+on turvallisuusriski tuotannollisissa tietojärjestelmissä.</p>
+</div>
+<p>Oletuksena yhteys tietokantaan on suojaamaton. Tietokantayhteys
+suositellaan salattavaksi TLS:n avulla.</p>
 
 </div>
 </div>
 </div>
 <p style="text-align: center;">
-<a href="01_harjoitus_1.html"><button class="btn btn-default">Previous</button></a>
-<a href="03_harjoitus_3.html"><button class="btn btn-default">Next</button></a>
+<a href="10_harjoitus_10.html"><button class="btn btn-default">Previous</button></a>
+<a href="12_harjoitus_2_old.html"><button class="btn btn-default">Next</button></a>
 </p>
 </div>
 </div>

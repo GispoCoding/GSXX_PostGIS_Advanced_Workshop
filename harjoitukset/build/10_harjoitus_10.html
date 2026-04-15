@@ -16,7 +16,7 @@
 
 <meta name="author" content="Gispo Oy" />
 
-<meta name="date" content="2024-05-15" />
+<meta name="date" content="2026-04-15" />
 
 
 <meta name="description" content="11 Harjoitus 10: Varmistus ja palautus | PostgreSQL ja PostGISin perusteet">
@@ -141,23 +141,36 @@ type="button" onclick="navToggle()" aria-label="Toggle navigation">
 <li><a href="02_harjoitus_2.html#harjoitus-2.1-tekstitiedoston-lataaminen"><span class="toc-section-number">3.1</span> Harjoitus 2.1: Tekstitiedoston lataaminen</a></li>
 <li><a href="02_harjoitus_2.html#harjoitus-2.2-paikkatietoaineiston-lataaminen"><span class="toc-section-number">3.2</span> Harjoitus 2.2: Paikkatietoaineiston lataaminen</a></li>
 </ul></li>
-<li class="has-sub"><a href="03_harjoitus_3.html#harjoitus-3-sqln-perusteet"><span class="toc-section-number">4</span> Harjoitus 3: SQL:n perusteet</a>
+<li class="has-sub"><a href="03_harjoitus_3.html#harjoitus-3-postgis-funktiot"><span class="toc-section-number">4</span> Harjoitus 3: PostGIS-funktiot</a>
 <ul>
 <li><a href="03_harjoitus_3.html#harjoitus-3.1"><span class="toc-section-number">4.1</span> Harjoitus 3.1</a></li>
-<li><a href="03_harjoitus_3.html#harjoitus-3.2"><span class="toc-section-number">4.2</span> Harjoitus 3.2</a></li>
-<li><a href="03_harjoitus_3.html#harjoitus-3.3"><span class="toc-section-number">4.3</span> Harjoitus 3.3</a></li>
-<li><a href="03_harjoitus_3.html#harjoitus-3.4"><span class="toc-section-number">4.4</span> Harjoitus 3.4</a></li>
-<li><a href="03_harjoitus_3.html#harjoitus-3.5"><span class="toc-section-number">4.5</span> Harjoitus 3.5</a></li>
-<li><a href="03_harjoitus_3.html#harjoitus-3.6"><span class="toc-section-number">4.6</span> Harjoitus 3.6</a></li>
+<li><a href="03_harjoitus_3.html#harjoitus-4.1-geometrioiden-metatiedot"><span class="toc-section-number">4.2</span> Harjoitus 4.1: Geometrioiden metatiedot</a></li>
+<li><a href="03_harjoitus_3.html#harjoitus-4.2-geometrian-esittäminen"><span class="toc-section-number">4.3</span> Harjoitus 4.2: Geometrian esittäminen</a></li>
+<li><a href="03_harjoitus_3.html#harjoitus-4.3-funktiot"><span class="toc-section-number">4.4</span> Harjoitus 4.3: Funktiot</a></li>
+<li><a href="03_harjoitus_3.html#harjoitus-6.1"><span class="toc-section-number">4.5</span> Harjoitus 6.1</a></li>
+<li><a href="03_harjoitus_3.html#harjoitus-6.2"><span class="toc-section-number">4.6</span> Harjoitus 6.2</a></li>
+<li><a href="03_harjoitus_3.html#harjoitus-6.3"><span class="toc-section-number">4.7</span> Harjoitus 6.3</a></li>
+<li><a href="03_harjoitus_3.html#harjoitus-6.4"><span class="toc-section-number">4.8</span> Harjoitus 6.4</a></li>
+<li><a href="03_harjoitus_3.html#harjoitus-6.5"><span class="toc-section-number">4.9</span> Harjoitus 6.5</a></li>
+<li><a href="03_harjoitus_3.html#harjoitus-6.6"><span class="toc-section-number">4.10</span> Harjoitus 6.6</a></li>
+<li><a href="03_harjoitus_3.html#harjoitus-6.7"><span class="toc-section-number">4.11</span> Harjoitus 6.7</a></li>
+<li><a href="03_harjoitus_3.html#harjoitus-7.1-koordinaattipisteen-konversio"><span class="toc-section-number">4.12</span> Harjoitus 7.1: Koordinaattipisteen konversio</a></li>
+<li><a href="03_harjoitus_3.html#harjoitus-7.2-koordinaattimuunnos"><span class="toc-section-number">4.13</span> Harjoitus 7.2: Koordinaattimuunnos</a></li>
+<li><a href="03_harjoitus_3.html#harjoitus-7.3-koordinaattimuunnosten-vertailu"><span class="toc-section-number">4.14</span> Harjoitus 7.3: Koordinaattimuunnosten vertailu</a></li>
+<li><a href="03_harjoitus_3.html#harjoitus-7.4-koordinaattijärjestelmien-määrittelyt"><span class="toc-section-number">4.15</span> Harjoitus 7.4: Koordinaattijärjestelmien määrittelyt</a></li>
+<li><a href="03_harjoitus_3.html#harjoitus-7.5-koordinaattijärjestelmien-vertailu"><span class="toc-section-number">4.16</span> Harjoitus 7.5: Koordinaattijärjestelmien vertailu</a></li>
+<li><a href="03_harjoitus_3.html#harjoitus-7.6-uuden-paikkatietotaulun-luominen"><span class="toc-section-number">4.17</span> Harjoitus 7.6: Uuden paikkatietotaulun luominen</a></li>
+<li><a href="03_harjoitus_3.html#harjoitus-7.7-toisen-geometriakentän-lisääminen"><span class="toc-section-number">4.18</span> Harjoitus 7.7: Toisen geometriakentän lisääminen</a></li>
+<li><a href="03_harjoitus_3.html#harjoitus-7.8-muunnoksen-tallennus-geometriakenttään"><span class="toc-section-number">4.19</span> Harjoitus 7.8: Muunnoksen tallennus geometriakenttään</a></li>
+<li><a href="03_harjoitus_3.html#harjoitus-8.2-keskipisteiden-määritys"><span class="toc-section-number">4.20</span> Harjoitus 8.2: Keskipisteiden määritys</a></li>
+<li><a href="03_harjoitus_3.html#harjoitus-8.3-etäisyydet"><span class="toc-section-number">4.21</span> Harjoitus 8.3: Etäisyydet</a></li>
+<li><a href="03_harjoitus_3.html#harjoitus-8.4-vyöhykkeet"><span class="toc-section-number">4.22</span> Harjoitus 8.4: Vyöhykkeet</a></li>
 </ul></li>
-<li class="has-sub"><a href="04_harjoitus_4.html#harjoitus-4-spatiaaliset-sql-haut"><span class="toc-section-number">5</span> Harjoitus 4: Spatiaaliset SQL-haut</a>
+<li class="has-sub"><a href="04_harjoitus_4.html#harjoitus-4-tavalliset-ja-materialisoidut-näkymät"><span class="toc-section-number">5</span> Harjoitus 4: Tavalliset ja materialisoidut näkymät</a>
 <ul>
-<li><a href="04_harjoitus_4.html#harjoitus-4.1-geometrioiden-metatiedot"><span class="toc-section-number">5.1</span> Harjoitus 4.1: Geometrioiden metatiedot</a></li>
-<li><a href="04_harjoitus_4.html#harjoitus-4.2-geometrian-esittäminen"><span class="toc-section-number">5.2</span> Harjoitus 4.2: Geometrian esittäminen</a></li>
-<li><a href="04_harjoitus_4.html#harjoitus-4.3-funktiot"><span class="toc-section-number">5.3</span> Harjoitus 4.3: Funktiot</a></li>
-<li><a href="04_harjoitus_4.html#harjoitus-4.4-spatiaaliset-indeksit"><span class="toc-section-number">5.4</span> Harjoitus 4.4: Spatiaaliset indeksit</a></li>
+<li><a href="04_harjoitus_4.html#harjoitus-8.5-geometrioiden-yhdistäminen"><span class="toc-section-number">5.1</span> Harjoitus 8.5: Geometrioiden yhdistäminen</a></li>
 </ul></li>
-<li class="has-sub"><a href="05_harjoitus_5.html#harjoitus-5-paikkatietokohteiden-geometria"><span class="toc-section-number">6</span> Harjoitus 5: Paikkatietokohteiden geometria</a>
+<li class="has-sub"><a href="05_harjoitus_5.html#harjoitus-5-triggerit-ja-niiden-luonti"><span class="toc-section-number">6</span> Harjoitus 5: Triggerit ja niiden luonti</a>
 <ul>
 <li><a href="05_harjoitus_5.html#harjoitus-5.1"><span class="toc-section-number">6.1</span> Harjoitus 5.1</a></li>
 <li><a href="05_harjoitus_5.html#harjoitus-5.2"><span class="toc-section-number">6.2</span> Harjoitus 5.2</a></li>
@@ -165,49 +178,98 @@ type="button" onclick="navToggle()" aria-label="Toggle navigation">
 <li><a href="05_harjoitus_5.html#harjoitus-5.4"><span class="toc-section-number">6.4</span> Harjoitus 5.4</a></li>
 <li><a href="05_harjoitus_5.html#harjoitus-5.5"><span class="toc-section-number">6.5</span> Harjoitus 5.5</a></li>
 </ul></li>
-<li class="has-sub"><a href="06_harjoitus_6.html#harjoitus-6-spatiaaliset-relaatiot"><span class="toc-section-number">7</span> Harjoitus 6: Spatiaaliset relaatiot</a>
+<li class="has-sub"><a href="06_harjoitus_6.html#harjoitus-6-käyttäjähallinta"><span class="toc-section-number">7</span> Harjoitus 6: Käyttäjähallinta</a>
 <ul>
-<li><a href="06_harjoitus_6.html#harjoitus-6.1"><span class="toc-section-number">7.1</span> Harjoitus 6.1</a></li>
-<li><a href="06_harjoitus_6.html#harjoitus-6.2"><span class="toc-section-number">7.2</span> Harjoitus 6.2</a></li>
-<li><a href="06_harjoitus_6.html#harjoitus-6.3"><span class="toc-section-number">7.3</span> Harjoitus 6.3</a></li>
-<li><a href="06_harjoitus_6.html#harjoitus-6.4"><span class="toc-section-number">7.4</span> Harjoitus 6.4</a></li>
-<li><a href="06_harjoitus_6.html#harjoitus-6.5"><span class="toc-section-number">7.5</span> Harjoitus 6.5</a></li>
-<li><a href="06_harjoitus_6.html#harjoitus-6.6"><span class="toc-section-number">7.6</span> Harjoitus 6.6</a></li>
-<li><a href="06_harjoitus_6.html#harjoitus-6.7"><span class="toc-section-number">7.7</span> Harjoitus 6.7</a></li>
+<li><a href="06_harjoitus_6.html#harjoitus-9.2-käyttäjäroolit"><span class="toc-section-number">7.1</span> Harjoitus 9.2: Käyttäjäroolit</a></li>
+<li><a href="06_harjoitus_6.html#harjoitus-9.3-ryhmäroolit"><span class="toc-section-number">7.2</span> Harjoitus 9.3: Ryhmäroolit</a></li>
+<li><a href="06_harjoitus_6.html#harjoitus-9.4-roolien-lisääminen-käyttöliittymässä"><span class="toc-section-number">7.3</span> Harjoitus 9.4: Roolien lisääminen käyttöliittymässä</a></li>
+<li><a href="06_harjoitus_6.html#harjoitus-9.5-uuden-taulutilan-luominen"><span class="toc-section-number">7.4</span> Harjoitus 9.5: Uuden taulutilan luominen</a></li>
 </ul></li>
-<li class="has-sub"><a href="07_harjoitus_7.html#harjoitus-7-koordinaattijärjestelmät"><span class="toc-section-number">8</span> Harjoitus 7: Koordinaattijärjestelmät</a>
-<ul>
-<li><a href="07_harjoitus_7.html#harjoitus-7.1-koordinaattipisteen-konversio"><span class="toc-section-number">8.1</span> Harjoitus 7.1: Koordinaattipisteen konversio</a></li>
-<li><a href="07_harjoitus_7.html#harjoitus-7.2-koordinaattimuunnos"><span class="toc-section-number">8.2</span> Harjoitus 7.2: Koordinaattimuunnos</a></li>
-<li><a href="07_harjoitus_7.html#harjoitus-7.3-koordinaattimuunnosten-vertailu"><span class="toc-section-number">8.3</span> Harjoitus 7.3: Koordinaattimuunnosten vertailu</a></li>
-<li><a href="07_harjoitus_7.html#harjoitus-7.4-koordinaattijärjestelmien-määrittelyt"><span class="toc-section-number">8.4</span> Harjoitus 7.4: Koordinaattijärjestelmien määrittelyt</a></li>
-<li><a href="07_harjoitus_7.html#harjoitus-7.5-koordinaattijärjestelmien-vertailu"><span class="toc-section-number">8.5</span> Harjoitus 7.5: Koordinaattijärjestelmien vertailu</a></li>
-<li><a href="07_harjoitus_7.html#harjoitus-7.6-uuden-paikkatietotaulun-luominen"><span class="toc-section-number">8.6</span> Harjoitus 7.6: Uuden paikkatietotaulun luominen</a></li>
-<li><a href="07_harjoitus_7.html#harjoitus-7.7-toisen-geometriakentän-lisääminen"><span class="toc-section-number">8.7</span> Harjoitus 7.7: Toisen geometriakentän lisääminen</a></li>
-<li><a href="07_harjoitus_7.html#harjoitus-7.8-muunnoksen-tallennus-geometriakenttään"><span class="toc-section-number">8.8</span> Harjoitus 7.8: Muunnoksen tallennus geometriakenttään</a></li>
-</ul></li>
-<li class="has-sub"><a href="08_harjoitus_8.html#harjoitus-8-geoprosessointi"><span class="toc-section-number">9</span> Harjoitus 8: Geoprosessointi</a>
-<ul>
-<li><a href="08_harjoitus_8.html#harjoitus-8.1-keskipisteet"><span class="toc-section-number">9.1</span> Harjoitus 8.1: Keskipisteet</a></li>
-<li><a href="08_harjoitus_8.html#harjoitus-8.2-keskipisteiden-määritys"><span class="toc-section-number">9.2</span> Harjoitus 8.2: Keskipisteiden määritys</a></li>
-<li><a href="08_harjoitus_8.html#harjoitus-8.3-etäisyydet"><span class="toc-section-number">9.3</span> Harjoitus 8.3: Etäisyydet</a></li>
-<li><a href="08_harjoitus_8.html#harjoitus-8.4-vyöhykkeet"><span class="toc-section-number">9.4</span> Harjoitus 8.4: Vyöhykkeet</a></li>
-<li><a href="08_harjoitus_8.html#harjoitus-8.5-geometrioiden-yhdistäminen"><span class="toc-section-number">9.5</span> Harjoitus 8.5: Geometrioiden yhdistäminen</a></li>
-</ul></li>
-<li class="has-sub"><a href="09_harjoitus_09.html#harjoitus-9-postgresqln-ylläpito"><span class="toc-section-number">10</span> Harjoitus 9: PostgreSQL:n ylläpito</a>
-<ul>
-<li><a href="09_harjoitus_09.html#harjoitus-9.1-taulutilat"><span class="toc-section-number">10.1</span> Harjoitus 9.1: Taulutilat</a></li>
-<li><a href="09_harjoitus_09.html#harjoitus-9.2-käyttäjäroolit"><span class="toc-section-number">10.2</span> Harjoitus 9.2: Käyttäjäroolit</a></li>
-<li><a href="09_harjoitus_09.html#harjoitus-9.3-ryhmäroolit"><span class="toc-section-number">10.3</span> Harjoitus 9.3: Ryhmäroolit</a></li>
-<li><a href="09_harjoitus_09.html#harjoitus-9.4-roolien-lisääminen-käyttöliittymässä"><span class="toc-section-number">10.4</span> Harjoitus 9.4: Roolien lisääminen käyttöliittymässä</a></li>
-<li><a href="09_harjoitus_09.html#harjoitus-9.5-uuden-taulutilan-luominen"><span class="toc-section-number">10.5</span> Harjoitus 9.5: Uuden taulutilan luominen</a></li>
-<li><a href="09_harjoitus_09.html#harjoitus-9.6-tietokannan-ja-taulun-taulutilan-muuttaminen"><span class="toc-section-number">10.6</span> Harjoitus 9.6: Tietokannan ja taulun taulutilan muuttaminen</a></li>
-<li><a href="09_harjoitus_09.html#harjoitus-9.7-indeksin-taulutilan-muuttaminen"><span class="toc-section-number">10.7</span> Harjoitus 9.7: Indeksin taulutilan muuttaminen</a></li>
-</ul></li>
+<li><a href="07_harjoitus_7.html#harjoitus-7-foreign-data-wrapper"><span class="toc-section-number">8</span> Harjoitus 7: Foreign Data Wrapper</a></li>
+<li><a href="08_harjoitus_8.html#harjoitus-8-postgresqln-yhteentoimivuus-muiden-ohjelmistojen-kanssa"><span class="toc-section-number">9</span> Harjoitus 8: PostgreSQL:n yhteentoimivuus muiden ohjelmistojen kanssa</a></li>
+<li><a href="09_harjoitus_09.html#harjoitus-9-indeksit---tavalliset-ja-spatiaaliset"><span class="toc-section-number">10</span> Harjoitus 9: Indeksit - tavalliset ja spatiaaliset</a></li>
 <li class="has-sub"><a href="10_harjoitus_10.html#harjoitus-10-varmistus-ja-palautus"><span class="toc-section-number">11</span> Harjoitus 10: Varmistus ja palautus</a>
 <ul>
 <li><a href="10_harjoitus_10.html#harjoitus-10.1-luodaan-varmistus"><span class="toc-section-number">11.1</span> Harjoitus 10.1: Luodaan varmistus</a></li>
 <li><a href="10_harjoitus_10.html#harjoitus-10.2-tehdään-palautus"><span class="toc-section-number">11.2</span> Harjoitus 10.2: Tehdään palautus</a></li>
+</ul></li>
+<li class="has-sub"><a href="11_harjoitus_1_old.html#harjoitus-1-työkalujen-käyttöönotto-1"><span class="toc-section-number">12</span> Harjoitus 1: Työkalujen käyttöönotto</a>
+<ul>
+<li><a href="11_harjoitus_1_old.html#harjoitus-1.1-pgadmin-4-1"><span class="toc-section-number">12.1</span> Harjoitus 1.1: pgAdmin 4</a></li>
+<li><a href="11_harjoitus_1_old.html#harjoitus-1.2-psql-1"><span class="toc-section-number">12.2</span> Harjoitus 1.2: psql</a></li>
+</ul></li>
+<li class="has-sub"><a href="12_harjoitus_2_old.html#harjoitus-2-aineistojen-lataaminen-1"><span class="toc-section-number">13</span> Harjoitus 2: Aineistojen lataaminen</a>
+<ul>
+<li><a href="12_harjoitus_2_old.html#harjoitus-2.1-tekstitiedoston-lataaminen-1"><span class="toc-section-number">13.1</span> Harjoitus 2.1: Tekstitiedoston lataaminen</a></li>
+<li><a href="12_harjoitus_2_old.html#harjoitus-2.2-paikkatietoaineiston-lataaminen-1"><span class="toc-section-number">13.2</span> Harjoitus 2.2: Paikkatietoaineiston lataaminen</a></li>
+</ul></li>
+<li class="has-sub"><a href="13_harjoitus_3_old.html#harjoitus-3-sqln-perusteet"><span class="toc-section-number">14</span> Harjoitus 3: SQL:n perusteet</a>
+<ul>
+<li><a href="13_harjoitus_3_old.html#harjoitus-3.1-1"><span class="toc-section-number">14.1</span> Harjoitus 3.1</a></li>
+<li><a href="13_harjoitus_3_old.html#harjoitus-3.2"><span class="toc-section-number">14.2</span> Harjoitus 3.2</a></li>
+<li><a href="13_harjoitus_3_old.html#harjoitus-3.3"><span class="toc-section-number">14.3</span> Harjoitus 3.3</a></li>
+<li><a href="13_harjoitus_3_old.html#harjoitus-3.4"><span class="toc-section-number">14.4</span> Harjoitus 3.4</a></li>
+<li><a href="13_harjoitus_3_old.html#harjoitus-3.5"><span class="toc-section-number">14.5</span> Harjoitus 3.5</a></li>
+<li><a href="13_harjoitus_3_old.html#harjoitus-3.6"><span class="toc-section-number">14.6</span> Harjoitus 3.6</a></li>
+</ul></li>
+<li class="has-sub"><a href="14_harjoitus_4_old.html#harjoitus-4-spatiaaliset-sql-haut"><span class="toc-section-number">15</span> Harjoitus 4: Spatiaaliset SQL-haut</a>
+<ul>
+<li><a href="14_harjoitus_4_old.html#harjoitus-4.1-geometrioiden-metatiedot-1"><span class="toc-section-number">15.1</span> Harjoitus 4.1: Geometrioiden metatiedot</a></li>
+<li><a href="14_harjoitus_4_old.html#harjoitus-4.2-geometrian-esittäminen-1"><span class="toc-section-number">15.2</span> Harjoitus 4.2: Geometrian esittäminen</a></li>
+<li><a href="14_harjoitus_4_old.html#harjoitus-4.3-funktiot-1"><span class="toc-section-number">15.3</span> Harjoitus 4.3: Funktiot</a></li>
+<li><a href="14_harjoitus_4_old.html#harjoitus-4.4-spatiaaliset-indeksit"><span class="toc-section-number">15.4</span> Harjoitus 4.4: Spatiaaliset indeksit</a></li>
+</ul></li>
+<li class="has-sub"><a href="15_harjoitus_5_old.html#harjoitus-5-paikkatietokohteiden-geometria"><span class="toc-section-number">16</span> Harjoitus 5: Paikkatietokohteiden geometria</a>
+<ul>
+<li><a href="15_harjoitus_5_old.html#harjoitus-5.1-1"><span class="toc-section-number">16.1</span> Harjoitus 5.1</a></li>
+<li><a href="15_harjoitus_5_old.html#harjoitus-5.2-1"><span class="toc-section-number">16.2</span> Harjoitus 5.2</a></li>
+<li><a href="15_harjoitus_5_old.html#harjoitus-5.3-1"><span class="toc-section-number">16.3</span> Harjoitus 5.3</a></li>
+<li><a href="15_harjoitus_5_old.html#harjoitus-5.4-1"><span class="toc-section-number">16.4</span> Harjoitus 5.4</a></li>
+<li><a href="15_harjoitus_5_old.html#harjoitus-5.5-1"><span class="toc-section-number">16.5</span> Harjoitus 5.5</a></li>
+</ul></li>
+<li class="has-sub"><a href="16_harjoitus_6_old.html#harjoitus-6-spatiaaliset-relaatiot"><span class="toc-section-number">17</span> Harjoitus 6: Spatiaaliset relaatiot</a>
+<ul>
+<li><a href="16_harjoitus_6_old.html#harjoitus-6.1-1"><span class="toc-section-number">17.1</span> Harjoitus 6.1</a></li>
+<li><a href="16_harjoitus_6_old.html#harjoitus-6.2-1"><span class="toc-section-number">17.2</span> Harjoitus 6.2</a></li>
+<li><a href="16_harjoitus_6_old.html#harjoitus-6.3-1"><span class="toc-section-number">17.3</span> Harjoitus 6.3</a></li>
+<li><a href="16_harjoitus_6_old.html#harjoitus-6.4-1"><span class="toc-section-number">17.4</span> Harjoitus 6.4</a></li>
+<li><a href="16_harjoitus_6_old.html#harjoitus-6.5-1"><span class="toc-section-number">17.5</span> Harjoitus 6.5</a></li>
+<li><a href="16_harjoitus_6_old.html#harjoitus-6.6-1"><span class="toc-section-number">17.6</span> Harjoitus 6.6</a></li>
+<li><a href="16_harjoitus_6_old.html#harjoitus-6.7-1"><span class="toc-section-number">17.7</span> Harjoitus 6.7</a></li>
+</ul></li>
+<li class="has-sub"><a href="17_harjoitus_7_old.html#harjoitus-7-koordinaattijärjestelmät"><span class="toc-section-number">18</span> Harjoitus 7: Koordinaattijärjestelmät</a>
+<ul>
+<li><a href="17_harjoitus_7_old.html#harjoitus-7.1-koordinaattipisteen-konversio-1"><span class="toc-section-number">18.1</span> Harjoitus 7.1: Koordinaattipisteen konversio</a></li>
+<li><a href="17_harjoitus_7_old.html#harjoitus-7.2-koordinaattimuunnos-1"><span class="toc-section-number">18.2</span> Harjoitus 7.2: Koordinaattimuunnos</a></li>
+<li><a href="17_harjoitus_7_old.html#harjoitus-7.3-koordinaattimuunnosten-vertailu-1"><span class="toc-section-number">18.3</span> Harjoitus 7.3: Koordinaattimuunnosten vertailu</a></li>
+<li><a href="17_harjoitus_7_old.html#harjoitus-7.4-koordinaattijärjestelmien-määrittelyt-1"><span class="toc-section-number">18.4</span> Harjoitus 7.4: Koordinaattijärjestelmien määrittelyt</a></li>
+<li><a href="17_harjoitus_7_old.html#harjoitus-7.5-koordinaattijärjestelmien-vertailu-1"><span class="toc-section-number">18.5</span> Harjoitus 7.5: Koordinaattijärjestelmien vertailu</a></li>
+<li><a href="17_harjoitus_7_old.html#harjoitus-7.6-uuden-paikkatietotaulun-luominen-1"><span class="toc-section-number">18.6</span> Harjoitus 7.6: Uuden paikkatietotaulun luominen</a></li>
+<li><a href="17_harjoitus_7_old.html#harjoitus-7.7-toisen-geometriakentän-lisääminen-1"><span class="toc-section-number">18.7</span> Harjoitus 7.7: Toisen geometriakentän lisääminen</a></li>
+<li><a href="17_harjoitus_7_old.html#harjoitus-7.8-muunnoksen-tallennus-geometriakenttään-1"><span class="toc-section-number">18.8</span> Harjoitus 7.8: Muunnoksen tallennus geometriakenttään</a></li>
+</ul></li>
+<li class="has-sub"><a href="18_harjoitus_8_old.html#harjoitus-8-geoprosessointi"><span class="toc-section-number">19</span> Harjoitus 8: Geoprosessointi</a>
+<ul>
+<li><a href="18_harjoitus_8_old.html#harjoitus-8.1-keskipisteet"><span class="toc-section-number">19.1</span> Harjoitus 8.1: Keskipisteet</a></li>
+<li><a href="18_harjoitus_8_old.html#harjoitus-8.2-keskipisteiden-määritys-1"><span class="toc-section-number">19.2</span> Harjoitus 8.2: Keskipisteiden määritys</a></li>
+<li><a href="18_harjoitus_8_old.html#harjoitus-8.3-etäisyydet-1"><span class="toc-section-number">19.3</span> Harjoitus 8.3: Etäisyydet</a></li>
+<li><a href="18_harjoitus_8_old.html#harjoitus-8.4-vyöhykkeet-1"><span class="toc-section-number">19.4</span> Harjoitus 8.4: Vyöhykkeet</a></li>
+<li><a href="18_harjoitus_8_old.html#harjoitus-8.5-geometrioiden-yhdistäminen-1"><span class="toc-section-number">19.5</span> Harjoitus 8.5: Geometrioiden yhdistäminen</a></li>
+</ul></li>
+<li class="has-sub"><a href="19_harjoitus_09_old.html#harjoitus-9-postgresqln-ylläpito"><span class="toc-section-number">20</span> Harjoitus 9: PostgreSQL:n ylläpito</a>
+<ul>
+<li><a href="19_harjoitus_09_old.html#harjoitus-9.1-taulutilat"><span class="toc-section-number">20.1</span> Harjoitus 9.1: Taulutilat</a></li>
+<li><a href="19_harjoitus_09_old.html#harjoitus-9.2-käyttäjäroolit-1"><span class="toc-section-number">20.2</span> Harjoitus 9.2: Käyttäjäroolit</a></li>
+<li><a href="19_harjoitus_09_old.html#harjoitus-9.3-ryhmäroolit-1"><span class="toc-section-number">20.3</span> Harjoitus 9.3: Ryhmäroolit</a></li>
+<li><a href="19_harjoitus_09_old.html#harjoitus-9.4-roolien-lisääminen-käyttöliittymässä-1"><span class="toc-section-number">20.4</span> Harjoitus 9.4: Roolien lisääminen käyttöliittymässä</a></li>
+<li><a href="19_harjoitus_09_old.html#harjoitus-9.5-uuden-taulutilan-luominen-1"><span class="toc-section-number">20.5</span> Harjoitus 9.5: Uuden taulutilan luominen</a></li>
+<li><a href="19_harjoitus_09_old.html#harjoitus-9.6-tietokannan-ja-taulun-taulutilan-muuttaminen"><span class="toc-section-number">20.6</span> Harjoitus 9.6: Tietokannan ja taulun taulutilan muuttaminen</a></li>
+<li><a href="19_harjoitus_09_old.html#harjoitus-9.7-indeksin-taulutilan-muuttaminen"><span class="toc-section-number">20.7</span> Harjoitus 9.7: Indeksin taulutilan muuttaminen</a></li>
+</ul></li>
+<li class="has-sub"><a href="20_harjoitus_10_old.html#harjoitus-10-varmistus-ja-palautus-1"><span class="toc-section-number">21</span> Harjoitus 10: Varmistus ja palautus</a>
+<ul>
+<li><a href="20_harjoitus_10_old.html#harjoitus-10.1-luodaan-varmistus-1"><span class="toc-section-number">21.1</span> Harjoitus 10.1: Luodaan varmistus</a></li>
+<li><a href="20_harjoitus_10_old.html#harjoitus-10.2-tehdään-palautus-1"><span class="toc-section-number">21.2</span> Harjoitus 10.2: Tehdään palautus</a></li>
 </ul></li>
 </ul>
 </div>
@@ -254,6 +316,7 @@ type="button" onclick="navToggle()" aria-label="Toggle navigation">
 </div>
 <p style="text-align: center;">
 <a href="09_harjoitus_09.html"><button class="btn btn-default">Previous</button></a>
+<a href="11_harjoitus_1_old.html"><button class="btn btn-default">Next</button></a>
 </p>
 </div>
 </div>
@@ -264,7 +327,7 @@ type="button" onclick="navToggle()" aria-label="Toggle navigation">
 
 <div class="footer-info">
 <h5 class="footer-title">PostgreSQL ja PostGISin perusteet</h5>
-<span class="footer-version">v2024-05-15</span>
+<span class="footer-version">v2026-04-15</span>
 <div class="license"><img src="img/by-nd.svg" width="80px" alt="CC-BY-ND"></div>
 </div>
 
