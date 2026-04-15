@@ -1,4 +1,4 @@
-PostgreSQL ja PostGISin perusteet -kurssi
+Räätälöity PostrePostgreSQL- ja PostGIS-kurssi
 =================
 
 Tämä projekti on räätälöidyn PostGIS-työpajan käytännön osuus.
