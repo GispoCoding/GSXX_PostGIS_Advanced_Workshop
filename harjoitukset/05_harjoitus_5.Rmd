@@ -1,4 +1,4 @@
-# Harjoitus 5: Paikkatietokohteiden geometria
+# Harjoitus 5: Triggerit ja niiden luonti
 
 **Harjoituksen sisältö** - Harjoituksessa tutustutaan PostGISin tapaan käsitellä geometrioita.
 

@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+<!-- Based on TemplateMo 553 Xtra Blog: https://templatemo.com/tm-553-xtra-blog -->
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta property="og:title" content="13 Harjoitus 2: Aineistojen lataaminen | PostgreSQL ja PostGISin perusteet" />
+<meta property="og:type" content="book" />
+
+
+
+
+
+<meta name="author" content="Gispo Oy" />
+
+<meta name="date" content="2026-04-18" />
+
+
+<meta name="description" content="13 Harjoitus 2: Aineistojen lataaminen | PostgreSQL ja PostGISin perusteet">
+
+<title>13 Harjoitus 2: Aineistojen lataaminen | PostgreSQL ja PostGISin perusteet</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="custom.css" type="text/css" />
+
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="css/hamburgers.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+
+<div class="main-content">
+<!-- special comment to mark beginning of title section for bookdown -->
+<!-- bookdown comments must be in this order: title, toc, body -->
+
+<div class="main-content-wrapper">
+
+<div class="row">
+<div class="col-sm-12">
+<header class="main-toc sidebar" id="sidebar">
+<div class="sidebar-wrapper">
+
+<button class="navbar-toggle hamburger hamburger--collapse" id="navbar-toggle"
+type="button" onclick="navToggle()" aria-label="Toggle navigation">
+<span class="hamburger-box"><span class="hamburger-inner"></span></span>
+</button>
+
+<div class="sidebar-title-wrapper">
+<img alt="Logo" width="100" src="img/gispo_white_sm.png" class="sidebar-logo">
+<div class="sidebar-title"><h1>PostgreSQL ja PostGISin perusteet</h1></div>
+<div class="abstract-sidebar"><p>Kurssi PostGISin yleisimpiin käyttötapauksiin.</p></div>
+</div>
+
+<nav class="sidebar-nav">
+<div id="TOC" class="toc">
+<ul>
+<li class="has-sub"><a href="index.html#johdanto"><span class="toc-section-number">1</span> 1. Johdanto</a>
+<ul>
+<li><a href="index.html#harjoitusmateriaalin-lisenssi"><span class="toc-section-number">1.1</span> 1.1 Harjoitusmateriaalin lisenssi</a></li>
+</ul></li>
+<li class="has-sub"><a href="01_harjoitus_1.html#harjoitus-1-työkalujen-käyttöönotto"><span class="toc-section-number">2</span> Harjoitus 1: Työkalujen käyttöönotto</a>
+<ul>
+<li><a href="01_harjoitus_1.html#harjoitus-1.1-pgadmin-4"><span class="toc-section-number">2.1</span> Harjoitus 1.1: pgAdmin 4</a></li>
+<li><a href="01_harjoitus_1.html#harjoitus-1.2-psql"><span class="toc-section-number">2.2</span> Harjoitus 1.2: psql</a></li>
+</ul></li>
+<li class="has-sub"><a href="02_harjoitus_2.html#harjoitus-2-aineistojen-lataaminen"><span class="toc-section-number">3</span> Harjoitus 2: Aineistojen lataaminen</a>
+<ul>
+<li><a href="02_harjoitus_2.html#harjoitus-2.1-tekstitiedoston-lataaminen"><span class="toc-section-number">3.1</span> Harjoitus 2.1: Tekstitiedoston lataaminen</a></li>
+<li><a href="02_harjoitus_2.html#harjoitus-2.2-paikkatietoaineiston-lataaminen"><span class="toc-section-number">3.2</span> Harjoitus 2.2: Paikkatietoaineiston lataaminen</a></li>
+</ul></li>
+<li class="has-sub"><a href="03_harjoitus_3.html#harjoitus-3-postgis-funktiot"><span class="toc-section-number">4</span> Harjoitus 3: PostGIS-funktiot</a>
+<ul>
+<li><a href="03_harjoitus_3.html#harjoitus-3.1"><span class="toc-section-number">4.1</span> Harjoitus 3.1</a></li>
+<li><a href="03_harjoitus_3.html#postgisin-perusfunktiot-geometrioiden-käsittelyyn"><span class="toc-section-number">4.2</span> PostGISin perusfunktiot geometrioiden käsittelyyn</a></li>
+<li><a href="03_harjoitus_3.html#postgisin-perusfunktiot-geometrioiden-määrittelyyn"><span class="toc-section-number">4.3</span> PostGISin perusfunktiot geometrioiden määrittelyyn</a></li>
+<li><a href="03_harjoitus_3.html#harjoitus-4.1-geometrioiden-metatiedot"><span class="toc-section-number">4.4</span> Harjoitus 4.1: Geometrioiden metatiedot</a></li>
+<li><a href="03_harjoitus_3.html#spatiaaliset-relaatiot"><span class="toc-section-number">4.5</span> Spatiaaliset relaatiot</a></li>
+<li><a href="03_harjoitus_3.html#harjoitus-6.1"><span class="toc-section-number">4.6</span> Harjoitus 6.1</a></li>
+<li><a href="03_harjoitus_3.html#harjoitus-6.2"><span class="toc-section-number">4.7</span> Harjoitus 6.2</a></li>
+<li><a href="03_harjoitus_3.html#harjoitus-6.3"><span class="toc-section-number">4.8</span> Harjoitus 6.3</a></li>
+<li><a href="03_harjoitus_3.html#harjoitus-6.4"><span class="toc-section-number">4.9</span> Harjoitus 6.4</a></li>
+<li><a href="03_harjoitus_3.html#harjoitus-6.5"><span class="toc-section-number">4.10</span> Harjoitus 6.5</a></li>
+<li><a href="03_harjoitus_3.html#harjoitus-6.6"><span class="toc-section-number">4.11</span> Harjoitus 6.6</a></li>
+<li><a href="03_harjoitus_3.html#harjoitus-6.7"><span class="toc-section-number">4.12</span> Harjoitus 6.7</a></li>
+<li><a href="03_harjoitus_3.html#section"><span class="toc-section-number">4.13</span> ——————————————————</a></li>
+<li><a href="03_harjoitus_3.html#harjoitus-4.3-funktiot"><span class="toc-section-number">4.14</span> Harjoitus 4.3: Funktiot</a></li>
+<li><a href="03_harjoitus_3.html#harjoitus-7.1-koordinaattipisteen-konversio"><span class="toc-section-number">4.15</span> Harjoitus 7.1: Koordinaattipisteen konversio</a></li>
+<li><a href="03_harjoitus_3.html#harjoitus-7.2-koordinaattimuunnos"><span class="toc-section-number">4.16</span> Harjoitus 7.2: Koordinaattimuunnos</a></li>
+<li><a href="03_harjoitus_3.html#harjoitus-7.3-koordinaattimuunnosten-vertailu"><span class="toc-section-number">4.17</span> Harjoitus 7.3: Koordinaattimuunnosten vertailu</a></li>
+<li><a href="03_harjoitus_3.html#harjoitus-7.4-koordinaattijärjestelmien-määrittelyt"><span class="toc-section-number">4.18</span> Harjoitus 7.4: Koordinaattijärjestelmien määrittelyt</a></li>
+<li><a href="03_harjoitus_3.html#harjoitus-7.5-koordinaattijärjestelmien-vertailu"><span class="toc-section-number">4.19</span> Harjoitus 7.5: Koordinaattijärjestelmien vertailu</a></li>
+<li><a href="03_harjoitus_3.html#harjoitus-7.6-uuden-paikkatietotaulun-luominen"><span class="toc-section-number">4.20</span> Harjoitus 7.6: Uuden paikkatietotaulun luominen</a></li>
+<li><a href="03_harjoitus_3.html#harjoitus-7.7-toisen-geometriakentän-lisääminen"><span class="toc-section-number">4.21</span> Harjoitus 7.7: Toisen geometriakentän lisääminen</a></li>
+<li><a href="03_harjoitus_3.html#harjoitus-7.8-muunnoksen-tallennus-geometriakenttään"><span class="toc-section-number">4.22</span> Harjoitus 7.8: Muunnoksen tallennus geometriakenttään</a></li>
+<li><a href="03_harjoitus_3.html#harjoitus-8.2-keskipisteiden-määritys"><span class="toc-section-number">4.23</span> Harjoitus 8.2: Keskipisteiden määritys</a></li>
+<li><a href="03_harjoitus_3.html#harjoitus-8.3-etäisyydet"><span class="toc-section-number">4.24</span> Harjoitus 8.3: Etäisyydet</a></li>
+<li><a href="03_harjoitus_3.html#harjoitus-8.4-vyöhykkeet"><span class="toc-section-number">4.25</span> Harjoitus 8.4: Vyöhykkeet</a></li>
+</ul></li>
+<li class="has-sub"><a href="04_harjoitus_4.html#harjoitus-4-tavalliset-ja-materialisoidut-näkymät"><span class="toc-section-number">5</span> Harjoitus 4: Tavalliset ja materialisoidut näkymät</a>
+<ul>
+<li><a href="04_harjoitus_4.html#harjoitus-8.5-geometrioiden-yhdistäminen"><span class="toc-section-number">5.1</span> Harjoitus 8.5: Geometrioiden yhdistäminen</a></li>
+</ul></li>
+<li class="has-sub"><a href="05_harjoitus_5.html#harjoitus-5-triggerit-ja-niiden-luonti"><span class="toc-section-number">6</span> Harjoitus 5: Triggerit ja niiden luonti</a>
+<ul>
+<li><a href="05_harjoitus_5.html#harjoitus-5.1"><span class="toc-section-number">6.1</span> Harjoitus 5.1</a></li>
+<li><a href="05_harjoitus_5.html#harjoitus-5.2"><span class="toc-section-number">6.2</span> Harjoitus 5.2</a></li>
+<li><a href="05_harjoitus_5.html#harjoitus-5.3"><span class="toc-section-number">6.3</span> Harjoitus 5.3</a></li>
+<li><a href="05_harjoitus_5.html#harjoitus-5.4"><span class="toc-section-number">6.4</span> Harjoitus 5.4</a></li>
+<li><a href="05_harjoitus_5.html#harjoitus-5.5"><span class="toc-section-number">6.5</span> Harjoitus 5.5</a></li>
+</ul></li>
+<li class="has-sub"><a href="06_harjoitus_6.html#harjoitus-6-käyttäjähallinta"><span class="toc-section-number">7</span> Harjoitus 6: Käyttäjähallinta</a>
+<ul>
+<li><a href="06_harjoitus_6.html#harjoitus-9.2-käyttäjäroolit"><span class="toc-section-number">7.1</span> Harjoitus 9.2: Käyttäjäroolit</a></li>
+<li><a href="06_harjoitus_6.html#harjoitus-9.3-ryhmäroolit"><span class="toc-section-number">7.2</span> Harjoitus 9.3: Ryhmäroolit</a></li>
+<li><a href="06_harjoitus_6.html#harjoitus-9.4-roolien-lisääminen-käyttöliittymässä"><span class="toc-section-number">7.3</span> Harjoitus 9.4: Roolien lisääminen käyttöliittymässä</a></li>
+<li><a href="06_harjoitus_6.html#harjoitus-9.5-uuden-taulutilan-luominen"><span class="toc-section-number">7.4</span> Harjoitus 9.5: Uuden taulutilan luominen</a></li>
+</ul></li>
+<li><a href="07_harjoitus_7.html#harjoitus-7-foreign-data-wrapper"><span class="toc-section-number">8</span> Harjoitus 7: Foreign Data Wrapper</a></li>
+<li><a href="08_harjoitus_8.html#harjoitus-8-postgresqln-yhteentoimivuus-muiden-ohjelmistojen-kanssa"><span class="toc-section-number">9</span> Harjoitus 8: PostgreSQL:n yhteentoimivuus muiden ohjelmistojen kanssa</a></li>
+<li><a href="09_harjoitus_09.html#harjoitus-9-indeksit---tavalliset-ja-spatiaaliset"><span class="toc-section-number">10</span> Harjoitus 9: Indeksit - tavalliset ja spatiaaliset</a></li>
+<li class="has-sub"><a href="10_harjoitus_10.html#harjoitus-10-suorituskyvyn-optimointi"><span class="toc-section-number">11</span> Harjoitus 10: Suorituskyvyn optimointi</a>
+<ul>
+<li><a href="10_harjoitus_10.html#harjoitus-9.1-taulutilat"><span class="toc-section-number">11.1</span> Harjoitus 9.1: Taulutilat</a></li>
+<li><a href="10_harjoitus_10.html#harjoitus-9.6-tietokannan-ja-taulun-taulutilan-muuttaminen"><span class="toc-section-number">11.2</span> Harjoitus 9.6: Tietokannan ja taulun taulutilan muuttaminen</a></li>
+<li><a href="10_harjoitus_10.html#harjoitus-9.7-indeksin-taulutilan-muuttaminen"><span class="toc-section-number">11.3</span> Harjoitus 9.7: Indeksin taulutilan muuttaminen</a></li>
+</ul></li>
+<li class="has-sub"><a href="11_harjoitus_1_old.html#harjoitus-1-työkalujen-käyttöönotto-1"><span class="toc-section-number">12</span> Harjoitus 1: Työkalujen käyttöönotto</a>
+<ul>
+<li><a href="11_harjoitus_1_old.html#harjoitus-1.1-pgadmin-4-1"><span class="toc-section-number">12.1</span> Harjoitus 1.1: pgAdmin 4</a></li>
+<li><a href="11_harjoitus_1_old.html#harjoitus-1.2-psql-1"><span class="toc-section-number">12.2</span> Harjoitus 1.2: psql</a></li>
+</ul></li>
+<li class="has-sub"><a href="12_harjoitus_2_old.html#harjoitus-2-aineistojen-lataaminen-1"><span class="toc-section-number">13</span> Harjoitus 2: Aineistojen lataaminen</a>
+<ul>
+<li><a href="12_harjoitus_2_old.html#harjoitus-2.1-tekstitiedoston-lataaminen-1"><span class="toc-section-number">13.1</span> Harjoitus 2.1: Tekstitiedoston lataaminen</a></li>
+<li><a href="12_harjoitus_2_old.html#harjoitus-2.2-paikkatietoaineiston-lataaminen-1"><span class="toc-section-number">13.2</span> Harjoitus 2.2: Paikkatietoaineiston lataaminen</a></li>
+</ul></li>
+<li class="has-sub"><a href="13_harjoitus_3_old.html#harjoitus-3-sqln-perusteet"><span class="toc-section-number">14</span> Harjoitus 3: SQL:n perusteet</a>
+<ul>
+<li><a href="13_harjoitus_3_old.html#harjoitus-3.1-1"><span class="toc-section-number">14.1</span> Harjoitus 3.1</a></li>
+<li><a href="13_harjoitus_3_old.html#harjoitus-3.2"><span class="toc-section-number">14.2</span> Harjoitus 3.2</a></li>
+<li><a href="13_harjoitus_3_old.html#harjoitus-3.3"><span class="toc-section-number">14.3</span> Harjoitus 3.3</a></li>
+<li><a href="13_harjoitus_3_old.html#harjoitus-3.4"><span class="toc-section-number">14.4</span> Harjoitus 3.4</a></li>
+<li><a href="13_harjoitus_3_old.html#harjoitus-3.5"><span class="toc-section-number">14.5</span> Harjoitus 3.5</a></li>
+<li><a href="13_harjoitus_3_old.html#harjoitus-3.6"><span class="toc-section-number">14.6</span> Harjoitus 3.6</a></li>
+</ul></li>
+<li class="has-sub"><a href="14_harjoitus_4_old.html#harjoitus-4-spatiaaliset-sql-haut"><span class="toc-section-number">15</span> Harjoitus 4: Spatiaaliset SQL-haut</a>
+<ul>
+<li><a href="14_harjoitus_4_old.html#harjoitus-4.1-geometrioiden-metatiedot-1"><span class="toc-section-number">15.1</span> Harjoitus 4.1: Geometrioiden metatiedot</a></li>
+<li><a href="14_harjoitus_4_old.html#harjoitus-4.2-geometrian-esittäminen"><span class="toc-section-number">15.2</span> Harjoitus 4.2: Geometrian esittäminen</a></li>
+<li><a href="14_harjoitus_4_old.html#harjoitus-4.3-funktiot-1"><span class="toc-section-number">15.3</span> Harjoitus 4.3: Funktiot</a></li>
+<li><a href="14_harjoitus_4_old.html#harjoitus-4.4-spatiaaliset-indeksit"><span class="toc-section-number">15.4</span> Harjoitus 4.4: Spatiaaliset indeksit</a></li>
+</ul></li>
+<li class="has-sub"><a href="15_harjoitus_5_old.html#harjoitus-5-paikkatietokohteiden-geometria"><span class="toc-section-number">16</span> Harjoitus 5: Paikkatietokohteiden geometria</a>
+<ul>
+<li><a href="15_harjoitus_5_old.html#harjoitus-5.1-1"><span class="toc-section-number">16.1</span> Harjoitus 5.1</a></li>
+<li><a href="15_harjoitus_5_old.html#harjoitus-5.2-1"><span class="toc-section-number">16.2</span> Harjoitus 5.2</a></li>
+<li><a href="15_harjoitus_5_old.html#harjoitus-5.3-1"><span class="toc-section-number">16.3</span> Harjoitus 5.3</a></li>
+<li><a href="15_harjoitus_5_old.html#harjoitus-5.4-1"><span class="toc-section-number">16.4</span> Harjoitus 5.4</a></li>
+<li><a href="15_harjoitus_5_old.html#harjoitus-5.5-1"><span class="toc-section-number">16.5</span> Harjoitus 5.5</a></li>
+</ul></li>
+<li class="has-sub"><a href="16_harjoitus_6_old.html#harjoitus-6-spatiaaliset-relaatiot"><span class="toc-section-number">17</span> Harjoitus 6: Spatiaaliset relaatiot</a>
+<ul>
+<li><a href="16_harjoitus_6_old.html#harjoitus-6.1-1"><span class="toc-section-number">17.1</span> Harjoitus 6.1</a></li>
+<li><a href="16_harjoitus_6_old.html#harjoitus-6.2-1"><span class="toc-section-number">17.2</span> Harjoitus 6.2</a></li>
+<li><a href="16_harjoitus_6_old.html#harjoitus-6.3-1"><span class="toc-section-number">17.3</span> Harjoitus 6.3</a></li>
+<li><a href="16_harjoitus_6_old.html#harjoitus-6.4-1"><span class="toc-section-number">17.4</span> Harjoitus 6.4</a></li>
+<li><a href="16_harjoitus_6_old.html#harjoitus-6.5-1"><span class="toc-section-number">17.5</span> Harjoitus 6.5</a></li>
+<li><a href="16_harjoitus_6_old.html#harjoitus-6.6-1"><span class="toc-section-number">17.6</span> Harjoitus 6.6</a></li>
+<li><a href="16_harjoitus_6_old.html#harjoitus-6.7-1"><span class="toc-section-number">17.7</span> Harjoitus 6.7</a></li>
+</ul></li>
+<li class="has-sub"><a href="17_harjoitus_7_old.html#harjoitus-7-koordinaattijärjestelmät"><span class="toc-section-number">18</span> Harjoitus 7: Koordinaattijärjestelmät</a>
+<ul>
+<li><a href="17_harjoitus_7_old.html#harjoitus-7.1-koordinaattipisteen-konversio-1"><span class="toc-section-number">18.1</span> Harjoitus 7.1: Koordinaattipisteen konversio</a></li>
+<li><a href="17_harjoitus_7_old.html#harjoitus-7.2-koordinaattimuunnos-1"><span class="toc-section-number">18.2</span> Harjoitus 7.2: Koordinaattimuunnos</a></li>
+<li><a href="17_harjoitus_7_old.html#harjoitus-7.3-koordinaattimuunnosten-vertailu-1"><span class="toc-section-number">18.3</span> Harjoitus 7.3: Koordinaattimuunnosten vertailu</a></li>
+<li><a href="17_harjoitus_7_old.html#harjoitus-7.4-koordinaattijärjestelmien-määrittelyt-1"><span class="toc-section-number">18.4</span> Harjoitus 7.4: Koordinaattijärjestelmien määrittelyt</a></li>
+<li><a href="17_harjoitus_7_old.html#harjoitus-7.5-koordinaattijärjestelmien-vertailu-1"><span class="toc-section-number">18.5</span> Harjoitus 7.5: Koordinaattijärjestelmien vertailu</a></li>
+<li><a href="17_harjoitus_7_old.html#harjoitus-7.6-uuden-paikkatietotaulun-luominen-1"><span class="toc-section-number">18.6</span> Harjoitus 7.6: Uuden paikkatietotaulun luominen</a></li>
+<li><a href="17_harjoitus_7_old.html#harjoitus-7.7-toisen-geometriakentän-lisääminen-1"><span class="toc-section-number">18.7</span> Harjoitus 7.7: Toisen geometriakentän lisääminen</a></li>
+<li><a href="17_harjoitus_7_old.html#harjoitus-7.8-muunnoksen-tallennus-geometriakenttään-1"><span class="toc-section-number">18.8</span> Harjoitus 7.8: Muunnoksen tallennus geometriakenttään</a></li>
+</ul></li>
+<li class="has-sub"><a href="18_harjoitus_8_old.html#harjoitus-8-geoprosessointi"><span class="toc-section-number">19</span> Harjoitus 8: Geoprosessointi</a>
+<ul>
+<li><a href="18_harjoitus_8_old.html#harjoitus-8.1-keskipisteet"><span class="toc-section-number">19.1</span> Harjoitus 8.1: Keskipisteet</a></li>
+<li><a href="18_harjoitus_8_old.html#harjoitus-8.2-keskipisteiden-määritys-1"><span class="toc-section-number">19.2</span> Harjoitus 8.2: Keskipisteiden määritys</a></li>
+<li><a href="18_harjoitus_8_old.html#harjoitus-8.3-etäisyydet-1"><span class="toc-section-number">19.3</span> Harjoitus 8.3: Etäisyydet</a></li>
+<li><a href="18_harjoitus_8_old.html#harjoitus-8.4-vyöhykkeet-1"><span class="toc-section-number">19.4</span> Harjoitus 8.4: Vyöhykkeet</a></li>
+<li><a href="18_harjoitus_8_old.html#harjoitus-8.5-geometrioiden-yhdistäminen-1"><span class="toc-section-number">19.5</span> Harjoitus 8.5: Geometrioiden yhdistäminen</a></li>
+</ul></li>
+<li class="has-sub"><a href="19_harjoitus_09_old.html#harjoitus-9-postgresqln-ylläpito"><span class="toc-section-number">20</span> Harjoitus 9: PostgreSQL:n ylläpito</a>
+<ul>
+<li><a href="19_harjoitus_09_old.html#harjoitus-9.1-taulutilat-1"><span class="toc-section-number">20.1</span> Harjoitus 9.1: Taulutilat</a></li>
+<li><a href="19_harjoitus_09_old.html#harjoitus-9.2-käyttäjäroolit-1"><span class="toc-section-number">20.2</span> Harjoitus 9.2: Käyttäjäroolit</a></li>
+<li><a href="19_harjoitus_09_old.html#harjoitus-9.3-ryhmäroolit-1"><span class="toc-section-number">20.3</span> Harjoitus 9.3: Ryhmäroolit</a></li>
+<li><a href="19_harjoitus_09_old.html#harjoitus-9.4-roolien-lisääminen-käyttöliittymässä-1"><span class="toc-section-number">20.4</span> Harjoitus 9.4: Roolien lisääminen käyttöliittymässä</a></li>
+<li><a href="19_harjoitus_09_old.html#harjoitus-9.5-uuden-taulutilan-luominen-1"><span class="toc-section-number">20.5</span> Harjoitus 9.5: Uuden taulutilan luominen</a></li>
+<li><a href="19_harjoitus_09_old.html#harjoitus-9.6-tietokannan-ja-taulun-taulutilan-muuttaminen-1"><span class="toc-section-number">20.6</span> Harjoitus 9.6: Tietokannan ja taulun taulutilan muuttaminen</a></li>
+<li><a href="19_harjoitus_09_old.html#harjoitus-9.7-indeksin-taulutilan-muuttaminen-1"><span class="toc-section-number">20.7</span> Harjoitus 9.7: Indeksin taulutilan muuttaminen</a></li>
+</ul></li>
+<li class="has-sub"><a href="20_harjoitus_10_old.html#harjoitus-10-varmistus-ja-palautus"><span class="toc-section-number">21</span> Harjoitus 10: Varmistus ja palautus</a>
+<ul>
+<li><a href="20_harjoitus_10_old.html#harjoitus-10.1-luodaan-varmistus"><span class="toc-section-number">21.1</span> Harjoitus 10.1: Luodaan varmistus</a></li>
+<li><a href="20_harjoitus_10_old.html#harjoitus-10.2-tehdään-palautus"><span class="toc-section-number">21.2</span> Harjoitus 10.2: Tehdään palautus</a></li>
+</ul></li>
+</ul>
+</div>
+</nav>
+</div>
+</header>
+</div>
+</div>
+<div class="row">
+<div class="col-sm-12">
+<div id="harjoitus-2-aineistojen-lataaminen-1" class="section level1" number="13">
+<h1><span class="header-section-number">13</span> Harjoitus 2: Aineistojen lataaminen</h1>
+<p><strong>Harjoituksen sisältö</strong> - Harjoituksessa ladataan paikkatietoaineistoja PostGIS- tietokantaan.</p>
+<p><strong>Harjoituksen tavoite</strong> - Harjoituksen jälkeen opiskelijalla on perustiedot paikkatietoaineistojen lataamiseen paikkatietokantaan.</p>
+<div id="valmistautuminen-8" class="section level3" number="13.0.1">
+<h3><span class="header-section-number">13.0.1</span> Valmistautuminen</h3>
+<p>QGIS tulee olla asennettuna, jotta paikkatietoaineistoja voidaan ladata. Avaa myös <a href="/pgadmin">pgAdmin</a> selaimeen ja kirjaudu sisään. Avaa <strong>Query Tool</strong> (Valitse <em>trainingdatabase</em> <strong>-&gt;</strong> Ylhäältä <strong>Tools</strong> <strong>-&gt;</strong> <strong>Query Tool</strong>).</p>
+</div>
+<div id="harjoitus-2.1-tekstitiedoston-lataaminen-1" class="section level2" number="13.1">
+<h2><span class="header-section-number">13.1</span> Harjoitus 2.1: Tekstitiedoston lataaminen</h2>
+<p>Monia pistemäisiä paikkatietoaineistoja on tallennettu CSV-tiedostoihin, jossa ne eivät varsinaisesti ole paikkatietomuodossa. Ensimmäisessä harjoituksessa ladataan globaali lentokenttiä kuvaava aineisto PostgreSQL-tietokantaan. Luodaan ensin harjoitustietokantaan taulu seuraavasti:</p>
+<div class="code-box">
+<div class="sourceCode" id="cb161"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb161-1"><a href="12_harjoitus_2_old.html#cb161-1" aria-hidden="true" tabindex="-1"></a><span class="kw">DROP</span> <span class="kw">TABLE</span> <span class="cf">IF</span> <span class="kw">EXISTS</span> airports;</span>
+<span id="cb161-2"><a href="12_harjoitus_2_old.html#cb161-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb161-3"><a href="12_harjoitus_2_old.html#cb161-3" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> airports</span>
+<span id="cb161-4"><a href="12_harjoitus_2_old.html#cb161-4" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb161-5"><a href="12_harjoitus_2_old.html#cb161-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">id</span>            <span class="dt">integer</span>,</span>
+<span id="cb161-6"><a href="12_harjoitus_2_old.html#cb161-6" aria-hidden="true" tabindex="-1"></a>    name          text,</span>
+<span id="cb161-7"><a href="12_harjoitus_2_old.html#cb161-7" aria-hidden="true" tabindex="-1"></a>    city          text,</span>
+<span id="cb161-8"><a href="12_harjoitus_2_old.html#cb161-8" aria-hidden="true" tabindex="-1"></a>    country       text,</span>
+<span id="cb161-9"><a href="12_harjoitus_2_old.html#cb161-9" aria-hidden="true" tabindex="-1"></a>    IATA_code     <span class="dt">char</span>(<span class="dv">3</span>),</span>
+<span id="cb161-10"><a href="12_harjoitus_2_old.html#cb161-10" aria-hidden="true" tabindex="-1"></a>    ICAO_code     <span class="dt">char</span>(<span class="dv">4</span>),</span>
+<span id="cb161-11"><a href="12_harjoitus_2_old.html#cb161-11" aria-hidden="true" tabindex="-1"></a>    latitude      <span class="dt">numeric</span>,</span>
+<span id="cb161-12"><a href="12_harjoitus_2_old.html#cb161-12" aria-hidden="true" tabindex="-1"></a>    longitude     <span class="dt">numeric</span>,</span>
+<span id="cb161-13"><a href="12_harjoitus_2_old.html#cb161-13" aria-hidden="true" tabindex="-1"></a>    altitude      <span class="dt">numeric</span>,</span>
+<span id="cb161-14"><a href="12_harjoitus_2_old.html#cb161-14" aria-hidden="true" tabindex="-1"></a>    timezone      text,</span>
+<span id="cb161-15"><a href="12_harjoitus_2_old.html#cb161-15" aria-hidden="true" tabindex="-1"></a>    dst           text,</span>
+<span id="cb161-16"><a href="12_harjoitus_2_old.html#cb161-16" aria-hidden="true" tabindex="-1"></a>    tz_zone       text,</span>
+<span id="cb161-17"><a href="12_harjoitus_2_old.html#cb161-17" aria-hidden="true" tabindex="-1"></a>    <span class="kw">type</span>          text,</span>
+<span id="cb161-18"><a href="12_harjoitus_2_old.html#cb161-18" aria-hidden="true" tabindex="-1"></a>    <span class="kw">source</span>        text</span>
+<span id="cb161-19"><a href="12_harjoitus_2_old.html#cb161-19" aria-hidden="true" tabindex="-1"></a>);</span></code></pre></div>
+</div>
+<p>Kyseinen aineisto on ladattu valmiiksi <a href="http://openflights.org/data.html">OpenFlights.org-sivustolta</a> päänäkymän data-kansioon.</p>
+<p>Tarkastele miltä kyseinen aineisto näyttää kansiossa. Voit avata tiedoston selaimeen <a href="/data/airports.dat">tästä linkistä</a>.</p>
+<p>Voit lukea CSV-tiedoston tiedot edellisessä vaiheessa luotuun tauluun seuravaalla komennolla:</p>
+<div class="code-box">
+<div class="sourceCode" id="cb162"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb162-1"><a href="12_harjoitus_2_old.html#cb162-1" aria-hidden="true" tabindex="-1"></a><span class="kw">COPY</span> airports</span>
+<span id="cb162-2"><a href="12_harjoitus_2_old.html#cb162-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> <span class="st">&#39;/home/student/data/airports.dat&#39;</span></span>
+<span id="cb162-3"><a href="12_harjoitus_2_old.html#cb162-3" aria-hidden="true" tabindex="-1"></a><span class="kw">WITH</span> CSV;</span></code></pre></div>
+</div>
+<p><strong>COPY</strong>-komento viittaa tiedostoon kovalevyllä ja lataa sen. <strong>COPY</strong> voi viitata CSV:n lisäksi myös esimerkiksi <a href="https://www.postgresql.org/docs/current/sql-copy.html">binääriformaatteihin tai tekstitiedostoihin.</a></p>
+<p>Tarkista lopuksi, että tietokantataulussa on dataa.</p>
+<div class="code-box">
+<div class="sourceCode" id="cb163"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb163-1"><a href="12_harjoitus_2_old.html#cb163-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span></span>
+<span id="cb163-2"><a href="12_harjoitus_2_old.html#cb163-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> airports</span>
+<span id="cb163-3"><a href="12_harjoitus_2_old.html#cb163-3" aria-hidden="true" tabindex="-1"></a><span class="kw">LIMIT</span> <span class="dv">10</span>;</span></code></pre></div>
+</div>
+<p>Aineistoa tarkastelemalla nähdään, että taulussa on koordinaatteja, mutta ne on tallennettu vain numeroarvoina; ei paikkatietotyyppinä.</p>
+<p>Jotta PostGIS:n toiminnallisuuksia voisi hyödyntää aineiston kanssa, tulee kyseiseen tauluun lisätä geometriasarake. PostGIS:ssä on valmis <a href="https://postgis.net/docs/AddGeometryColumn.html">funktio</a> tähän tarkoitukseen. Tarkastele dokumentaatiosta miten kyseistä funktiota käytetään.</p>
+<div class="code-box">
+<div class="sourceCode" id="cb164"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb164-1"><a href="12_harjoitus_2_old.html#cb164-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> AddGeometryColumn (<span class="st">&#39;airports&#39;</span>,<span class="st">&#39;geom&#39;</span>,<span class="dv">4326</span>,<span class="st">&#39;POINT&#39;</span>,<span class="dv">2</span>);</span></code></pre></div>
+</div>
+<p>Tarkastele taulua uudelleen.</p>
+<div class="code-box">
+<div class="sourceCode" id="cb165"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb165-1"><a href="12_harjoitus_2_old.html#cb165-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span></span>
+<span id="cb165-2"><a href="12_harjoitus_2_old.html#cb165-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> airports</span>
+<span id="cb165-3"><a href="12_harjoitus_2_old.html#cb165-3" aria-hidden="true" tabindex="-1"></a><span class="kw">LIMIT</span> <span class="dv">10</span>;</span></code></pre></div>
+</div>
+<p>Tauluun on ilmestynyt uusi sarake. Sarake ei kuitenkaan sisällä vielä mitään tietoa. Päivitetään taulun sisältö <strong>UPDATE</strong>-komennon avulla.</p>
+<p>Seuraavassa komennossa on ketjutettu useampi funktio sisäkkäin.</p>
+<ul>
+<li><a href="https://postgis.net/docs/ST_MakePoint.html">ST_MakePoint</a> luo tekstikenttien perusteella pistemuotoisen geometrian</li>
+<li><a href="https://postgis.net/docs/ST_SetSRID.html">ST_SetSRID</a> asettaa kyseiselle tietokentälle EPSG-koodin avulla koordinaattijärjestelmän</li>
+</ul>
+<div class="code-box">
+<div class="sourceCode" id="cb166"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb166-1"><a href="12_harjoitus_2_old.html#cb166-1" aria-hidden="true" tabindex="-1"></a><span class="kw">UPDATE</span> airports</span>
+<span id="cb166-2"><a href="12_harjoitus_2_old.html#cb166-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SET</span> geom <span class="op">=</span> ST_SetSRID(ST_MakePoint(longitude, latitude),<span class="dv">4326</span>);</span></code></pre></div>
+</div>
+<p>Tarkastele lopuksi aineistoa esimerkiksi pgAdminin karttatoiminnallisuuden avulla.</p>
+<p><img src="img/pgadmin_geom.png" /></p>
+</div>
+<div id="harjoitus-2.2-paikkatietoaineiston-lataaminen-1" class="section level2" number="13.2">
+<h2><span class="header-section-number">13.2</span> Harjoitus 2.2: Paikkatietoaineiston lataaminen</h2>
+<p>Maanmittauslaitoksen aineisto on ladattu valmiiksi harjoitussivun <a href="/data">data-kansioon</a>.</p>
+<div id="vaihtoehto-1-qgisin-tietokannan-hallinnan-avulla-1" class="section level3" number="13.2.1">
+<h3><span class="header-section-number">13.2.1</span> Vaihtoehto 1: QGISin tietokannan hallinnan avulla</h3>
+<p>QGIS-työpöytäohjelmisto tarjoaa erittäin kätevän graafisen käyttöliittymän paikkatietoaineistojen lataamiseksi PostGIS-tietokantaan. Useat QGISin eri työkalut mahdollistavat joustavan latauksen ja mahdolliset muokkaukset aineistoon jo ennen latausta.</p>
+<p>Ensimmäisessä vaiheessa otetaan yhteys lokaalista QGIS-asennuksesta koulutuksessa käytettävään PostGIS-tietokantaan. Avaa tässä vaiheessa QGIS, jos et ole sitä jo tehnyt. Lisää uusi tietokantayhteys avaamalla QGISin tietolähteiden hallinta klikkaamalla Tasot &gt; Tietolähteiden hallinta. Valitse Tietolähteiden hallinta -ikkunasta PostgreSQL-välilehti ja klikkaa Uusi-painiketta.</p>
+<p>Syötä Yhteyden tiedot -ikkunaan seuraavat tiedot tietokantayhteyden määrittämiseksi:</p>
+<p><img src="img/yhteyspg.png" /></p>
+<p>Huomaa, että Name-kenttä kuvaa vain QGISiin tallennettavan yhteyden nimeä eikä itse tietokannan nimeä. Yhteyden valinnaisista toiminnallisuuksista kannattaa oletuksena valita kaikki. Esimerkiksi arvioidun metadatan käyttäminen nopeuttaa hakuja huomattavasti.</p>
+<p>Paina <strong>Testaa yhteyttä</strong> -painiketta varmistaaksesi tietokantayhteyden toiminnan ja paina <strong>OK</strong>. QGISin sisällä voi myös ajaa SQL-komentoja esimerkiksi <strong>DB Manager</strong>in avulla.</p>
+<p>Ota yhteys QGISista postgres-nimisen tietokannan lisäksi trainingdatabase-nimiseen tietokantaan, jossa tulemme operoimaan loppukurssin ajan. Tietokantayhteyden muodostaminen tapahtuu hyvin pitkälti samoin kuin yllä on kuvattu. Ainoastaan Name-kohtaan tulee syöttää jokin muu arvo (esim. gispo_trainingdatabase).</p>
+<p>Luo tässä vaiheessa harjoitustietokantaan uusi skeema, jonne Maanmittauslaitoksen aineistot tullaan lataamaan, ja anna skeemalle nimeksi “nlsfi”. Skeemojen avulla on helpompi pitää aineistot järjestyksessä. Uuden skeeman voi luoda pgAdminin graafisen käyttöliittymän kautta, QGISin kautta tai seuraavalla SQL-komennolla:</p>
+<div class="code-box">
+<div class="sourceCode" id="cb167"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb167-1"><a href="12_harjoitus_2_old.html#cb167-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">SCHEMA</span> <span class="cf">IF</span> <span class="kw">NOT</span> <span class="kw">EXISTS</span> nlsfi;</span></code></pre></div>
+</div>
+<p>Jos et saa luomaasi skeemaa näkyviin QGISin puolella, aja seuraavat sql- komennot ja käynnistä QGIS-projekti uudelleen.</p>
+<div class="code-box">
+<div class="sourceCode" id="cb168"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb168-1"><a href="12_harjoitus_2_old.html#cb168-1" aria-hidden="true" tabindex="-1"></a><span class="kw">DROP</span> <span class="kw">TABLE</span> <span class="cf">IF</span> <span class="kw">EXISTS</span> nlsfi.example;</span>
+<span id="cb168-2"><a href="12_harjoitus_2_old.html#cb168-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb168-3"><a href="12_harjoitus_2_old.html#cb168-3" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> nlsfi.example</span>
+<span id="cb168-4"><a href="12_harjoitus_2_old.html#cb168-4" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb168-5"><a href="12_harjoitus_2_old.html#cb168-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">id</span>            <span class="dt">integer</span>,</span>
+<span id="cb168-6"><a href="12_harjoitus_2_old.html#cb168-6" aria-hidden="true" tabindex="-1"></a>    name          text</span>
+<span id="cb168-7"><a href="12_harjoitus_2_old.html#cb168-7" aria-hidden="true" tabindex="-1"></a>);</span></code></pre></div>
+</div>
+<div class="code-box">
+<div class="sourceCode" id="cb169"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb169-1"><a href="12_harjoitus_2_old.html#cb169-1" aria-hidden="true" tabindex="-1"></a><span class="kw">INSERT</span> <span class="kw">INTO</span> nlsfi.example</span>
+<span id="cb169-2"><a href="12_harjoitus_2_old.html#cb169-2" aria-hidden="true" tabindex="-1"></a><span class="kw">VALUES</span> (<span class="dv">1</span>, <span class="st">&#39;testi&#39;</span>);</span></code></pre></div>
+</div>
+<p>Lataa <a href="/data/Maastokartta_1m.zip">data-kansio</a> omalle koneellesi. Aineistoja voi lisätä navigoimalla Tasot &gt; Lisää taso &gt; Lisää vektoritaso, klikkaamalla Lisää vektoritaso -kuvaketta tasojen hallinnan työkalupalkista tai ihan vain raahaamalla tasoja suoraan Selain-ikkunasta Tasot-ikkunaan.</p>
+<p>Lataa projektiisi ja tietokantaasi (ainakin) seuraavat aineistot:</p>
+<ul>
+<li>TieViiva.shp</li>
+<li>HallintoAlue.shp</li>
+<li>KarttanimiPiste1000.shp</li>
+<li>SahkoLinja.shp</li>
+<li>LentokenttaPiste.shp</li>
+<li>RautatieViiva.shp</li>
+</ul>
+<div class="hint-box">
+<p>Tarkista, että Koodaus-kohdassa on valittu UTF-8. Mikäli aineisto koodataan jollakin toisella järjestelmällä, ääkköset puuttuvat metatiedoista.</p>
+</div>
+<p>QGIS-projektiin avautuu vektoriaineistoja, johon on määritelty tietty koordinaattijärjestelmä. Tarkista, että koordinaattijärjestelmäksi on määritelty ETRS89 / TM35FIN(E,N) (EPSG: 3067) tai EPSG:3047. Tason koordinaattijärjestelmän voit tarkistaa ja muuttaa klikkaamalla hiiren oikeaa painiketta tasolla ja valitsemalla <strong>Ominaisuudet &gt; Lähde &gt; Aseta koordinaattijärjestelmä</strong>.</p>
+<p><img src="img/qgistasot.png" /></p>
+<p>Avaa QGISin prosessointityökaluista työkalu nimeltä Export to PostgreSQL. Avaa työkalun alapalkista <strong>Aja eräajona</strong> (Run as Batch Process), joka mahdollistaa useamman taulun ajamiseen tietokantaan kerralla. Muuta parametreja niin, että aineistot tulee ladattua oikeaan skeemaan ja tietokantaan. <strong>Täytä</strong> (Fill Down) -toimintoa käyttämällä sinun ei tarvitse klikkailla jokaisen tason kohdalta arvoja kuntoon. Lisää geometriasarakkeen nimeksi “wkb_geometry” ja, varmistaaksesi taulujen nimien kirjaantumisen pienillä kirjaimilla, avaa taulun nimen määrittävässä kohdassa lausekkeenmuodostaja ja kopioi siihen komento:</p>
+<div class="code-box">
+<div class="sourceCode" id="cb170"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb170-1"><a href="12_harjoitus_2_old.html#cb170-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lower</span>(layer_property( @INPUT, <span class="st">&#39;name&#39;</span>))</span></code></pre></div>
+</div>
+<p>Tarkista mitä muita parametrejä prosessi pitää sisällään. Voit kuitenkin jättää ne oletusarvoisiksi. Lopulta latausprosessisi pitäisi näyttää kutakuinkin tältä. Klikkaa <strong>Run</strong>!</p>
+<p><img src="img/batchrun.png" /> Tarkista latauksen jälkeen, että aineistot ovat latautuneet. Tarkista virheilmoitukset ja korjaa latausta tarvittaessa.</p>
+<div class="code-box">
+<div class="sourceCode" id="cb171"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb171-1"><a href="12_harjoitus_2_old.html#cb171-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span></span>
+<span id="cb171-2"><a href="12_harjoitus_2_old.html#cb171-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> nlsfi.tieviiva</span>
+<span id="cb171-3"><a href="12_harjoitus_2_old.html#cb171-3" aria-hidden="true" tabindex="-1"></a><span class="kw">LIMIT</span> <span class="dv">10</span>;</span></code></pre></div>
+</div>
+</div>
+<div id="vaihtoehto-2-komentorivin-avulla-1" class="section level3" number="13.2.2">
+<h3><span class="header-section-number">13.2.2</span> Vaihtoehto 2: Komentorivin avulla</h3>
+<p>Luo tässä vaiheessa harjoitustietokantaan uusi skeema, jonne Maanmittauslaitoksen aineistot tullaan lataamaan, ja anna skeemalle nimeksi “nlsfi”. Skeemojen avulla on helpompi pitää aineistot järjestyksessä. Uuden skeeman voi luoda pgAdminin graafisen käyttöliittymän kautta tai seuraavalla SQL-komennolla:</p>
+<div class="code-box">
+<div class="sourceCode" id="cb172"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb172-1"><a href="12_harjoitus_2_old.html#cb172-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">SCHEMA</span> <span class="cf">IF</span> <span class="kw">NOT</span> <span class="kw">EXISTS</span> nlsfi;</span></code></pre></div>
+</div>
+<p>Komentoriviltä tapahtuvaan lataamiseen käytetään <strong>shp2pgsql</strong>-ohjelmaa tai <strong>ogr2ogr</strong>-työkalua. Käynnistämällä ohjelman ilman parametrejä saat opasteen eri parametreistä. Tämän jälkeen voit ladata aineistoa äsken luotuun skeemaan <strong>ogr2ogr</strong>-työkalulla. Jos koneellasi on asennettu OSGeo4W-paketti (tulee QGIS:n asennuksen mukana), avaa käynnistysvalikosta <strong>OSGeo4W Shell</strong> ja anna seuraava komento:</p>
+<div class="commandline-box">
+<div class="sourceCode" id="cb173"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb173-1"><a href="12_harjoitus_2_old.html#cb173-1" aria-hidden="true" tabindex="-1"></a><span class="ex">ogr2ogr</span> <span class="at">-f</span> <span class="st">&quot;PostgreSQL&quot;</span> PG:<span class="st">&quot;host=&lt;hostname&gt;  dbname=&lt;dbname&gt; user=&lt;kayttaja&gt; password=&lt;salasana&gt;&quot;</span> <span class="op">&lt;</span>dir<span class="op">&gt;</span><span class="dt">\t</span>iedostonimi.shp <span class="at">-lco</span> SCHEMA=nlsfi</span></code></pre></div>
+</div>
+<p>Muista tarkistaa, että aineiston hakemistopolku ja muut parametrit ovat kunnossa!</p>
+<p><strong>ogr2ogr</strong>-komennon käyttämät parametrit ovat:</p>
+<div class="commandline-box">
+<pre><code>-f   output file format name
+-lco layer creation option</code></pre>
+</div>
+<p>Muita parametreja voit tutkia suorittamalla <strong>ogr2ogr</strong>-komennon ilman parametrejä. PostGIS-asennuksen yhteydessä usein asennettavalla <strong>shp2pgsql</strong>-työkalulla on myös mahdollista luoda shp-tiedostoista SQL-muotoisia lataustiedostoja. Komentorivityökalut mahdollistavat useamman tiedoston lataamisen tietokantaan kätevästi yhdellä kertaa. Esimerkiksi Windows-ympäristössä on mahdollista ladata kansiollisen gml-tiedostoja kerralla tietokantaan seuraavalla komennolla:</p>
+<div class="commandline-box">
+<div class="sourceCode" id="cb175"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb175-1"><a href="12_harjoitus_2_old.html#cb175-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> <span class="ex">%i</span> in <span class="er">(</span><span class="ex">*.gml</span><span class="kw">)</span> <span class="cf">do</span> <span class="ex">ogr2ogr</span> <span class="at">-update</span> <span class="at">-append</span> <span class="at">-f</span> PostgreSQL PG:<span class="st">&quot;host=&lt;hostname&gt; port=5432 dbname=&lt;tietokantanimi&gt; user=&lt;kayttaja&gt; password=&lt;salasana&gt; schemas=gml&quot;</span> %i</span></code></pre></div>
+</div>
+
+</div>
+</div>
+</div>
+<p style="text-align: center;">
+<a href="11_harjoitus_1_old.html"><button class="btn btn-default">Previous</button></a>
+<a href="13_harjoitus_3_old.html"><button class="btn btn-default">Next</button></a>
+</p>
+</div>
+</div>
+
+<footer class="footer text-center">
+
+<div class="footer-container text-center">
+
+<div class="footer-info">
+<h5 class="footer-title">PostgreSQL ja PostGISin perusteet</h5>
+<span class="footer-version">v2026-04-18</span>
+<div class="license"><img src="img/by-nd.svg" width="80px" alt="CC-BY-ND"></div>
+</div>
+
+<div class="footer-info">
+<h5 class="footer-title footer-company">Gispo Ltd.
+<span class="footer-copyright-year">© 2023</span></h5>
+<span class="footer-contact-info">Kumpulantie 3, 3 krs
+<br>00520 Helsinki, Finland
+<br>info@gispo.fi
+</span>
+</div>
+
+</div>
+</div>
+</footer>
+</div>
+
+
+<script src="js/nav-script.js"></script>
+<script src="js/answer-key.js"></script>
+
+</body>
+</html>
