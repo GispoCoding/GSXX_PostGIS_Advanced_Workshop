@@ -30,5 +30,5 @@ Näiden harjoitusten avulla voit tutustua itsenäisesti PostgreSQL-tietokantajä
 
 Harjoituksissa käytettävät aineistot:
 
-- 1_milj_Shape_etrs_shape.zip - ladattu 5.7.2023 Maanmittauslaitoksen Karttapaikasta (Maastokartta 1:1 000 000). Jaettu lisenssillä [Creative Commons Nimeä 4.0](https://creativecommons.org/licenses/by/4.0/deed.fi)
+- Helsingin aineistot on ladattu 18.4.2026 Helsingin kaupungin avoimesta WFS-rajapinnasta: https://kartta.hel.fi/ws/geoserver/avoindata/wfs?request=getCapabilities 
 - airports.dat - ladattu [Openflights](https://openflights.org/data.html)- sivustolta. Lentokenttäaineisto on julkista (public domain).

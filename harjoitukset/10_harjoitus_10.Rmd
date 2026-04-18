@@ -1,42 +1,113 @@
-# Harjoitus 10: Varmistus ja palautus
+# Harjoitus 10: Suorituskyvyn optimointi
 
-**Harjoituksen sisältö** - Tutustutaan tietokannan varmistamiseen ja palautukseen.
+**Harjoituksen sisältö** - Tutustutaan aiheisiin PostgreSQL:n suorituskykyyn liittyen.
 
-**Harjoituksen tavoite** - Opiskelija tietää kuinka tietokanta voidaan varmistaa ja palauttaa.
-
-## Harjoitus 10.1: Luodaan varmistus
-
-Tehdään varmistus koulutuskannasta pgAdmin-työkalun avulla. Valitse harjoitustietokanta ja valitse hiiren oikealla  painikkeella **Backup...**-toiminto: <br>
+**Harjoituksen tavoite** - Opiskelija tietää mitkä tekijät ja parametrit vaikuttavat PostgreSQL-tietokannan suorituskykyyn ja miten niitä muutetaan.
 
 
-![](img/pgadminback.png)
+## Harjoitus 9.1: Taulutilat
 
-:::hint-box
-Mikäli Backup-ikkuna ei avaudu vaan törmäät virheilmoitukseen, menettele seuraavasti: File > Preferences > vasemman reunan valikosta Paths alta Binary Paths ja kirjoita PostgreSQL Binary Path -kenttään **/usr/bin**
+Tarkista koulutuspalvelimen oletustaulutilojen sijainti. Käyttäjien tiedot sijaitsevat **pg_default**-taulutilassa, joka on data_directoryn base-hakemistossa. Järjestelmän yleiset tiedot sijaitsevat **pg_global**-taulutilassa, joka on data_directoryn global-hakemistossa. Datahakemiston sijainnin voit tarkistaa komennolla:
+
+:::code-box
+```sql
+SHOW data_directory;
+```
 :::
 
-Täytä avautuvaan **Backup**-ikkunaan tiedoston nimeksi **"trainingdatabase_backup"**, formaatiksi **Tar** ja koodaukseksi **UTF8**.
 
-![](img/pgadminback2.png)
+## Harjoitus 9.6: Tietokannan ja taulun taulutilan muuttaminen
 
-## Harjoitus 10.2: Tehdään palautus
-
-### Luo uusi tietokanta
-
-Klikkaa hiiren oikeaa nappia tietokantaklusterin päällä ja valitse **Create > Database…**. Anna tietokannalle nimeksi **"trainingdatabase2"**.
-
-![](img/pgadmindb2.png)
-
-### Palauta varmistustiedostosta tiedot
-
-Palautetaan siihen varmistukset klikkaamalla hiiren oikeaa painiketta juuri luodun **trainingdatabase2**-tietokannan päällä. Valitse **Restore... > Filename > …** ja hae äsken tallentamasi .tar-tiedosto koulutustietokoneesta.
-
-![](img/pgadminrestore.png)
-
-Jos varmistustiedostoa ei meinaa löytyä, valitse **Select file** -ikkunan oikean alanurkan **Format**-alasvetovalikosta formaatiksi **All Files**. Voit tarkastella palautettavia kohteita ennen palautusta **Display Objects** -toiminnon avulla.
-
-![](img/pgadmindisplay.png)
+Koko tietokannan taulutilan voi muuttaa yhdellä komennolla.
 
 :::hint-box
-Kuinka kopioit harjoitustietokannan rakenteen (skeeman) toiseen tietokantaan?
+**HUOM!** Tätä ei kuitenkaan voi tehdä jos tietokantaan on auki aktiivisia yhteyksiä!
 :::
+
+1. Sulje pgAdminin tietokantayhteys harjoitustietokantaasi klikkaamalla tietokantaa sivupaneelissa hiiren oikealla painikkeella ja valitsemalla **Disconnect Database**.
+2. Avaa tämän jälkeen sivupaneelista postgres-tietokanta ja avaa **Query tool** (voit tehdä tämän myös psql:n avulla). Anna komento:
+
+:::code-box
+```sql
+ALTER DATABASE trainingdatabase
+SET TABLESPACE tmp_tablespace;
+```
+:::
+
+:::hint-box
+Mikäli tämä ei onnistu, ja pgAdmin4 kertoo, että tietokantaan on aktiivisia yhteyksiä, yritä kirjautua ulos ja takaisin sisään pgAdminiin.
+:::
+
+Voit tarkistaa tietokannan taulutilan sijainnin SQL-kyselyllä:
+
+:::code-box
+```sql
+SELECT
+spcname, pg_tablespace_location(oid)
+FROM
+pg_tablespace;
+```
+:::
+
+Luo testausta varten tilapäinen taulu:
+
+:::code-box
+```sql
+DROP TABLE IF EXISTS tmp_table;
+
+CREATE TABLE tmp_table AS
+SELECT x
+FROM
+generate_series(2,5000,2) AS x;
+```
+:::
+
+Taulun käyttämän taulutilan voit tarkistaa seuraavalla komennolla:
+
+:::code-box
+```sql
+SELECT
+tablename, tablespace
+FROM
+pg_tables
+WHERE
+tablename = 'tmp_table';
+```
+:::
+
+Muuta taulun taulutilaa seuraavalla komennolla:
+
+:::code-box
+```sql
+ALTER TABLE
+tmp_table
+SET TABLESPACE
+tmp_tablespace;
+```
+:::
+
+Tarkista, että taulun taulutila on nyt muuttunut. Voit myös käyttää pgAdminin käyttöliittymää taulutilojen tarkastamiseen.
+
+## Harjoitus 9.7: Indeksin taulutilan muuttaminen
+
+Voit luoda indeksin tauluun komennolla:
+
+:::code-box
+```sql
+CREATE INDEX
+idx_tmp_x
+ON tmp_table(x);
+```
+:::
+
+Indeksit luodaan oletusarvoisesti **pg_default**-taulutilaan. Usein käytetyt indeksit voi olla tarpeen tallentaa sellaiseen taulutilaan, joka käyttää palvelimessa olevaa nopeinta levyä (esimerkiksi SSD-levyt). Indeksien taulutilan muuttaminen onnistuu seuraavasti:
+
+:::code-box
+```sql
+ALTER INDEX
+idx_tmp_x
+SET TABLESPACE
+tmp_tablespace;
+```
+:::
+

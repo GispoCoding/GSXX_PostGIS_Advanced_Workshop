@@ -32,257 +32,6 @@ tallennetaan maantieteelliseen koordinaatistoon ja vaikka WKT-muodossa. (ei luod
 - Luodaan vaikka jo pohja kyselylle seuraavan harkan näkymiä varten
 
 
-
-
-## ------------------------------------------------------
-
-Seuraavaksi tutkitaan hiukan edellisessä harjoituksessa ladattuja paikkatietoaineistoja:
-
-:::code-box
-```sql
-SELECT
---
-FROM
---;
-```
-:::
-
-
-<button onclick="toggleAnswer(this)" class="btn answer_btn">vinkki</button>
-
-::: hidden-box
-:::code-box
-```sql
--- Täydennä tähän kyselyyn oikeat sarakkeet, skeema ja taulu. Tarkista millä funktiolla
--- saat laskettua keskiarvon. Käytä char_length() funktiota, jolla saat palautettua
--- merkkijonon pituuden.
-SELECT
---
-FROM
-skeema.taulu
-GROUP BY
---
-ORDER BY
---
-LIMIT 1;
-```
-:::
-:::
-
-<button onclick="toggleAnswer(this)" class="btn answer_btn">ratkaisu</button>
-
-::: hidden-box
-:::code-box
-```sql
-SELECT
-maaku_ni1, avg(char_length(kunta_ni1))
-FROM
-nlsfi.hallintoalue
-GROUP BY
-maaku_ni1
-ORDER BY
-avg(char_length(kunta_ni1)) desc
-LIMIT 1;
-```
-:::
-:::
-
-### Paikkatietojen metatiedot
-
-Kaikki PostGIS-tietokannassa olevat paikkatietotaulut on rekisteröity metatieto-tauluihin:
-
-|                                               |                                                             |
-|:------------------------------:|:--------------------------------------:|
-| [**geography_columns**]{style="color:purple"} |           Geography-tietotyypin paikkatietotaulut           |
-| [**geometry_columns**]{style="color:purple"}  |           Geometry-tietotyypin paikkatietotaulut            |
-|  [**raster_columns**]{style="color:purple"}   |         Rasteritietoa sisältävät paikkatietotaulut          |
-| [**raster_overviews**]{style="color:purple"}  | Yleistettyjä rasteriaineistoja sisältävät paikkatietotaulut |
-
-## Harjoitus 4.1: Geometrioiden metatiedot
-
-Tutki geometry_columns-taulua. Mitä tietoja eri tietokentät sisältävät?
-
-::: code-box
-``` sql
-SELECT *
-FROM
-geometry_columns;
-```
-:::
-
-::: hint-box
-Onko geometry_columns taulu?
-:::
-
-## Harjoitus 4.2: Geometrian esittäminen
-
-Tarkastellaan ensin paikkatietojen tallennusmuotoa PostGIS-paikkatietokannassa. Suorita seuraava SQL-lause:
-
-::: code-box
-``` sql
-SELECT
-kunta_ni1, maaku_ni1, wkb_geometry
-FROM
-nlsfi.hallintoalue
-WHERE
-kunta_ni1 = 'Hanko';
-```
-:::
-
-Tuloksesta nähdään, että sarakkeen wkb_geometry sisältö on koneluettavassa binäärimuodossa. 
-
-::: hint-box
-Vinkki: On mahdollista tarkastella geometrioita suoraan graafisessa käyttöliittymässä klikkaamalla pientä karttaikonia ![](img/pgadmin_geom.png) geometriasarakkeen päällä. Mikäli aineistot ovat WGS84-koordinaattijärjestelmässä (EPSG: 4326), pgAdmin myös lisää niihin suoraan taustakartan OpenStreetMapista.
-:::
-
-Aineistojen koordinaatistot löytyvät SRID-sarakkeesta. Yhdessä SRID-sarakkeessa voi olla vain yhden koordinaatiston metatiedot. Koordinaatit voi muuntaa paremmin ihmisluettavaan tekstimuotoon seuraavalla hakulausekkeella:
-
-::: code-box
-``` sql
-SELECT
-kunta_ni1, maaku_ni1, ST_AsText(wkb_geometry)
-FROM
-nlsfi.hallintoalue
-WHERE
-kunta_ni1 = 'Hanko';
-```
-:::
-
-## Harjoitus 4.3: Funktiot
-
-Kokeile myös seuraavia funktioita Hangon kunnan geometriatietoihin liittyen:
-
--   ST_Boundary
-
-::: code-box
-``` sql
-SELECT
-...
-FROM
-...
-WHERE
-...;
-```
-:::
-
-<button onclick="toggleAnswer(this)" class="btn answer_btn">vinkki</button>
-
-::: hidden-box
-:::code-box
-```sql
-SELECT
-kunta_ni1, maaku_ni1, ST_Boundary() -- valitse funktioon geometria- sarake
-FROM
-skeema.taulu
-WHERE
-...; -- valitse Hangon kunta nimen perusteella.
-```
-:::
-:::
-
-<button onclick="toggleAnswer(this)" class="btn answer_btn">ratkaisu</button>
-
-::: hidden-box
-::: code-box
-``` sql
-SELECT
-kunta_ni1, maaku_ni1, ST_Boundary(wkb_geometry)
-FROM
-nlsfi.hallintoalue
-WHERE
-kunta_ni1 = 'Hanko';
-```
-:::
-:::
-
--   ST_Centroid
-
-::: code-box
-``` sql
-SELECT
-...
-FROM
-...
-WHERE
-...;
-```
-:::
-
-<button onclick="toggleAnswer(this)" class="btn answer_btn">vinkki</button>
-
-::: hidden-box
-:::code-box
-```sql
-kunta_ni1, maaku_ni1, ST_Centroid() -- valitse funktioon geometria- sarake
-FROM
-skeema.taulu
-WHERE
-...; -- valitse Hangon kunta nimen perusteella.
-```
-:::
-:::
-
-<button onclick="toggleAnswer(this)" class="btn answer_btn">ratkaisu</button>
-
-
-::: hidden-box
-::: code-box
-``` sql
-SELECT
-kunta_ni1, maaku_ni1, ST_Centroid(wkb_geometry)
-FROM
-nlsfi.hallintoalue
-WHERE
-kunta_ni1 = 'Hanko';
-```
-:::
-:::
-
--   ST_Envelope
-
-::: code-box
-``` sql
-SELECT
-...
-FROM
-...
-WHERE
-...;
-```
-:::
-
-<button onclick="toggleAnswer(this)" class="btn answer_btn">vinkki</button>
-
-::: hidden-box
-:::code-box
-```sql
-kunta_ni1, maaku_ni1, ST_Envelope() -- valitse funktioon geometria- sarake
-FROM
-skeema.taulu
-WHERE
-...; -- valitse Hangon kunta nimen perusteella.
-```
-:::
-:::
-
-<button onclick="toggleAnswer(this)" class="btn answer_btn">ratkaisu</button>
-
-::: hidden-box
-::: code-box
-``` sql
-SELECT
-kunta_ni1, maaku_ni1, ST_Envelope(wkb_geometry)
-FROM
-nlsfi.hallintoalue
-WHERE
-kunta_ni1 = 'Hanko';
-```
-:::
-:::
-
-Huomaa, miten vastauksena tuleva geometrian tyyppi vaihtelee eri funktioiden kohdalla.
-
-
 ### Käytettäviä funktioita
 
 Tässä harjoituksessa hyödynnetään ainakin näitä funktioita:
@@ -693,6 +442,259 @@ dist;
 :::
 
 
+
+
+
+## ------------------------------------------------------
+
+Seuraavaksi tutkitaan hiukan edellisessä harjoituksessa ladattuja paikkatietoaineistoja:
+
+:::code-box
+```sql
+SELECT
+--
+FROM
+--;
+```
+:::
+
+
+<button onclick="toggleAnswer(this)" class="btn answer_btn">vinkki</button>
+
+::: hidden-box
+:::code-box
+```sql
+-- Täydennä tähän kyselyyn oikeat sarakkeet, skeema ja taulu. Tarkista millä funktiolla
+-- saat laskettua keskiarvon. Käytä char_length() funktiota, jolla saat palautettua
+-- merkkijonon pituuden.
+SELECT
+--
+FROM
+skeema.taulu
+GROUP BY
+--
+ORDER BY
+--
+LIMIT 1;
+```
+:::
+:::
+
+<button onclick="toggleAnswer(this)" class="btn answer_btn">ratkaisu</button>
+
+::: hidden-box
+:::code-box
+```sql
+SELECT
+maaku_ni1, avg(char_length(kunta_ni1))
+FROM
+nlsfi.hallintoalue
+GROUP BY
+maaku_ni1
+ORDER BY
+avg(char_length(kunta_ni1)) desc
+LIMIT 1;
+```
+:::
+:::
+
+### Paikkatietojen metatiedot
+
+Kaikki PostGIS-tietokannassa olevat paikkatietotaulut on rekisteröity metatieto-tauluihin:
+
+|                                               |                                                             |
+|:------------------------------:|:--------------------------------------:|
+| [**geography_columns**]{style="color:purple"} |           Geography-tietotyypin paikkatietotaulut           |
+| [**geometry_columns**]{style="color:purple"}  |           Geometry-tietotyypin paikkatietotaulut            |
+|  [**raster_columns**]{style="color:purple"}   |         Rasteritietoa sisältävät paikkatietotaulut          |
+| [**raster_overviews**]{style="color:purple"}  | Yleistettyjä rasteriaineistoja sisältävät paikkatietotaulut |
+
+## Harjoitus 4.1: Geometrioiden metatiedot
+
+Tutki geometry_columns-taulua. Mitä tietoja eri tietokentät sisältävät?
+
+::: code-box
+``` sql
+SELECT *
+FROM
+geometry_columns;
+```
+:::
+
+::: hint-box
+Onko geometry_columns taulu?
+:::
+
+## Harjoitus 4.2: Geometrian esittäminen
+
+Tarkastellaan ensin paikkatietojen tallennusmuotoa PostGIS-paikkatietokannassa. Suorita seuraava SQL-lause:
+
+::: code-box
+``` sql
+SELECT
+kunta_ni1, maaku_ni1, wkb_geometry
+FROM
+nlsfi.hallintoalue
+WHERE
+kunta_ni1 = 'Hanko';
+```
+:::
+
+Tuloksesta nähdään, että sarakkeen wkb_geometry sisältö on koneluettavassa binäärimuodossa. 
+
+::: hint-box
+Vinkki: On mahdollista tarkastella geometrioita suoraan graafisessa käyttöliittymässä klikkaamalla pientä karttaikonia ![](img/pgadmin_geom.png) geometriasarakkeen päällä. Mikäli aineistot ovat WGS84-koordinaattijärjestelmässä (EPSG: 4326), pgAdmin myös lisää niihin suoraan taustakartan OpenStreetMapista.
+:::
+
+Aineistojen koordinaatistot löytyvät SRID-sarakkeesta. Yhdessä SRID-sarakkeessa voi olla vain yhden koordinaatiston metatiedot. Koordinaatit voi muuntaa paremmin ihmisluettavaan tekstimuotoon seuraavalla hakulausekkeella:
+
+::: code-box
+``` sql
+SELECT
+kunta_ni1, maaku_ni1, ST_AsText(wkb_geometry)
+FROM
+nlsfi.hallintoalue
+WHERE
+kunta_ni1 = 'Hanko';
+```
+:::
+
+## Harjoitus 4.3: Funktiot
+
+Kokeile myös seuraavia funktioita Hangon kunnan geometriatietoihin liittyen:
+
+-   ST_Boundary
+
+::: code-box
+``` sql
+SELECT
+...
+FROM
+...
+WHERE
+...;
+```
+:::
+
+<button onclick="toggleAnswer(this)" class="btn answer_btn">vinkki</button>
+
+::: hidden-box
+:::code-box
+```sql
+SELECT
+kunta_ni1, maaku_ni1, ST_Boundary() -- valitse funktioon geometria- sarake
+FROM
+skeema.taulu
+WHERE
+...; -- valitse Hangon kunta nimen perusteella.
+```
+:::
+:::
+
+<button onclick="toggleAnswer(this)" class="btn answer_btn">ratkaisu</button>
+
+::: hidden-box
+::: code-box
+``` sql
+SELECT
+kunta_ni1, maaku_ni1, ST_Boundary(wkb_geometry)
+FROM
+nlsfi.hallintoalue
+WHERE
+kunta_ni1 = 'Hanko';
+```
+:::
+:::
+
+-   ST_Centroid
+
+::: code-box
+``` sql
+SELECT
+...
+FROM
+...
+WHERE
+...;
+```
+:::
+
+<button onclick="toggleAnswer(this)" class="btn answer_btn">vinkki</button>
+
+::: hidden-box
+:::code-box
+```sql
+kunta_ni1, maaku_ni1, ST_Centroid() -- valitse funktioon geometria- sarake
+FROM
+skeema.taulu
+WHERE
+...; -- valitse Hangon kunta nimen perusteella.
+```
+:::
+:::
+
+<button onclick="toggleAnswer(this)" class="btn answer_btn">ratkaisu</button>
+
+
+::: hidden-box
+::: code-box
+``` sql
+SELECT
+kunta_ni1, maaku_ni1, ST_Centroid(wkb_geometry)
+FROM
+nlsfi.hallintoalue
+WHERE
+kunta_ni1 = 'Hanko';
+```
+:::
+:::
+
+-   ST_Envelope
+
+::: code-box
+``` sql
+SELECT
+...
+FROM
+...
+WHERE
+...;
+```
+:::
+
+<button onclick="toggleAnswer(this)" class="btn answer_btn">vinkki</button>
+
+::: hidden-box
+:::code-box
+```sql
+kunta_ni1, maaku_ni1, ST_Envelope() -- valitse funktioon geometria- sarake
+FROM
+skeema.taulu
+WHERE
+...; -- valitse Hangon kunta nimen perusteella.
+```
+:::
+:::
+
+<button onclick="toggleAnswer(this)" class="btn answer_btn">ratkaisu</button>
+
+::: hidden-box
+::: code-box
+``` sql
+SELECT
+kunta_ni1, maaku_ni1, ST_Envelope(wkb_geometry)
+FROM
+nlsfi.hallintoalue
+WHERE
+kunta_ni1 = 'Hanko';
+```
+:::
+:::
+
+Huomaa, miten vastauksena tuleva geometrian tyyppi vaihtelee eri funktioiden kohdalla.
+
+
+
 ### Käytettäviä funktioita
 
 Tässä harjoituksessa koordinaattien konversioihin ja muunnoksiin voidaan käyttää mm. seuraavia funktioita:
@@ -810,23 +812,7 @@ POINT(6678507.76432921 2522091.992364572)
 ```
 :::
 
-Vertaa saatuja koordinaattiarvoja Maanmittauslaitoksen ylläpitämän [koordinaattimuunnospalvelun](https://kartta.paikkatietoikkuna.fi/) koordinaatteihin. Koordinaattimuunnostoiminto löytyy **Paikkatietoikkunan** vasemman reunan valikosta nimellä **Koordinaattimuunnos**.
 
-![](img/paikkatietoikkuna.png)
-
-Huomaa, että EPSG:4258- ja EPSG:3067-koordinaattijärjestelmien välillä tehtiin koordinaattikonversio, eikä PostGIS:n ja MML:n laskennassa ole oleellista eroa.
-
-Tehdään koordinaattimuunnos EPSG:4258- ja EPSG:2392-koordinaattijärjestelmien välillä. Ero PostGISin ja Maanmittauslaitoksen laskemien koordinaattien välillä on merkittävämpi:
-
-| PostGIS | MML | Erotus (m) |
-| :--: | :---: | :---: |
-| 6,678,  507.764333 | 6,678,  507.677300 | 0.087033 |
-| 2,522,  091.992365 | 2,522,  091.368400 | 0.623965 |
-\
-
-:::hint-box
-Mistä koordinaattimuunnoksen ero voi johtua?
-:::
 
 ### Koordinaattijärjestelmien määritykset
 
@@ -843,10 +829,6 @@ WHERE
 srid = 2392;
 ```
 :::
-
-Tallennetut muunnosparametrit EUREF-FIN-datumin ja KKJ-datumin välillä antavat maksimissaan kahden metrin virheen Suomen alueella (kuva JHS 197-suosituksesta):
-
-![](img/JHSsuositus.png)
 
 #### Puuttuvia koordinaattijärjestelmiä
 
