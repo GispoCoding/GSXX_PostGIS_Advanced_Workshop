@@ -27,6 +27,66 @@ tallennetaan maantieteelliseen koordinaatistoon ja vaikka WKT-muodossa. (ei luod
 -- mistä saadaan PostGISsissä tietoa geometria-kentistä (sekä CRS:stä)
 --lentokenttä-aineisto ja distance funktion vertailu (tässä voisi myös käyttää jo explain analyzeä)
 
+### Paikkatietojen metatiedot
+
+Kaikki PostGIS-tietokannassa olevat paikkatietotaulut on rekisteröity metatieto-tauluihin:
+
+|                                               |                                                             |
+|:------------------------------:|:--------------------------------------:|
+| [**geography_columns**]{style="color:purple"} |           Geography-tietotyypin paikkatietotaulut           |
+| [**geometry_columns**]{style="color:purple"}  |           Geometry-tietotyypin paikkatietotaulut            |
+|  [**raster_columns**]{style="color:purple"}   |         Rasteritietoa sisältävät paikkatietotaulut          |
+| [**raster_overviews**]{style="color:purple"}  | Yleistettyjä rasteriaineistoja sisältävät paikkatietotaulut |
+
+## Harjoitus 4.1: Geometrioiden metatiedot
+
+Tutki geometry_columns-taulua. Mitä tietoja eri tietokentät sisältävät?
+
+::: code-box
+``` sql
+SELECT *
+FROM
+geometry_columns;
+```
+:::
+
+::: hint-box
+Onko geometry_columns taulu?
+:::
+
+![](img/pgadmin_geom_cols.png)
+
+### Geometrian esitysmuodot
+
+Tarkastellaan ensin paikkatietojen tallennusmuotoa PostGIS-paikkatietokannassa. Suorita seuraava SQL-lause:
+
+::: code-box
+``` sql
+SELECT
+nimi_fi, wkb_geometry
+FROM
+nlsfi.kaupunginosajako;
+```
+:::
+
+Tuloksesta nähdään, että sarakkeen wkb_geometry sisältö on koneluettavassa binäärimuodossa. 
+
+::: hint-box
+Vinkki: On mahdollista tarkastella geometrioita suoraan graafisessa käyttöliittymässä klikkaamalla pientä karttaikonia ![](img/pgadmin_geom.png) geometriasarakkeen päällä. Mikäli aineistot ovat WGS84-koordinaattijärjestelmässä (EPSG: 4326), pgAdmin myös lisää niihin suoraan taustakartan OpenStreetMapista.
+:::
+
+Aineistojen koordinaatistot löytyvät SRID-sarakkeesta. Yhdessä SRID-sarakkeessa voi olla vain yhden koordinaatiston metatiedot. Koordinaatit voi muuntaa paremmin ihmisluettavaan tekstimuotoon seuraavalla hakulausekkeella:
+
+::: code-box
+``` sql
+SELECT
+nimi_fi, ST_AsText(wkb_geometry)
+FROM
+nlsfi.kaupunginosajako;
+```
+:::
+
+
 ## Spatiaaliset relaatiot
 
 - Luodaan vaikka jo pohja kyselylle seuraavan harkan näkymiä varten
@@ -498,66 +558,6 @@ LIMIT 1;
 :::
 :::
 
-### Paikkatietojen metatiedot
-
-Kaikki PostGIS-tietokannassa olevat paikkatietotaulut on rekisteröity metatieto-tauluihin:
-
-|                                               |                                                             |
-|:------------------------------:|:--------------------------------------:|
-| [**geography_columns**]{style="color:purple"} |           Geography-tietotyypin paikkatietotaulut           |
-| [**geometry_columns**]{style="color:purple"}  |           Geometry-tietotyypin paikkatietotaulut            |
-|  [**raster_columns**]{style="color:purple"}   |         Rasteritietoa sisältävät paikkatietotaulut          |
-| [**raster_overviews**]{style="color:purple"}  | Yleistettyjä rasteriaineistoja sisältävät paikkatietotaulut |
-
-## Harjoitus 4.1: Geometrioiden metatiedot
-
-Tutki geometry_columns-taulua. Mitä tietoja eri tietokentät sisältävät?
-
-::: code-box
-``` sql
-SELECT *
-FROM
-geometry_columns;
-```
-:::
-
-::: hint-box
-Onko geometry_columns taulu?
-:::
-
-## Harjoitus 4.2: Geometrian esittäminen
-
-Tarkastellaan ensin paikkatietojen tallennusmuotoa PostGIS-paikkatietokannassa. Suorita seuraava SQL-lause:
-
-::: code-box
-``` sql
-SELECT
-kunta_ni1, maaku_ni1, wkb_geometry
-FROM
-nlsfi.hallintoalue
-WHERE
-kunta_ni1 = 'Hanko';
-```
-:::
-
-Tuloksesta nähdään, että sarakkeen wkb_geometry sisältö on koneluettavassa binäärimuodossa. 
-
-::: hint-box
-Vinkki: On mahdollista tarkastella geometrioita suoraan graafisessa käyttöliittymässä klikkaamalla pientä karttaikonia ![](img/pgadmin_geom.png) geometriasarakkeen päällä. Mikäli aineistot ovat WGS84-koordinaattijärjestelmässä (EPSG: 4326), pgAdmin myös lisää niihin suoraan taustakartan OpenStreetMapista.
-:::
-
-Aineistojen koordinaatistot löytyvät SRID-sarakkeesta. Yhdessä SRID-sarakkeessa voi olla vain yhden koordinaatiston metatiedot. Koordinaatit voi muuntaa paremmin ihmisluettavaan tekstimuotoon seuraavalla hakulausekkeella:
-
-::: code-box
-``` sql
-SELECT
-kunta_ni1, maaku_ni1, ST_AsText(wkb_geometry)
-FROM
-nlsfi.hallintoalue
-WHERE
-kunta_ni1 = 'Hanko';
-```
-:::
 
 ## Harjoitus 4.3: Funktiot
 

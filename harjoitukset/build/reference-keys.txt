@@ -26,6 +26,9 @@ yksinkertaisia-sql-hakuja
 harjoitus-3.1
 postgisin-perusfunktiot-geometrioiden-käsittelyyn
 postgisin-perusfunktiot-geometrioiden-määrittelyyn
+paikkatietojen-metatiedot
+harjoitus-4.1-geometrioiden-metatiedot
+geometrian-esitysmuodot
 spatiaaliset-relaatiot
 käytettäviä-funktioita
 harjoitus-6.1
@@ -36,9 +39,6 @@ harjoitus-6.5
 harjoitus-6.6
 harjoitus-6.7
 section
-paikkatietojen-metatiedot
-harjoitus-4.1-geometrioiden-metatiedot
-harjoitus-4.2-geometrian-esittäminen
 harjoitus-4.3-funktiot
 käytettäviä-funktioita-1
 harjoitus-7.1-koordinaattipisteen-konversio
@@ -120,7 +120,7 @@ harjoitus-4-spatiaaliset-sql-haut
 valmistautuminen-10
 paikkatietojen-metatiedot-1
 harjoitus-4.1-geometrioiden-metatiedot-1
-harjoitus-4.2-geometrian-esittäminen-1
+harjoitus-4.2-geometrian-esittäminen
 harjoitus-4.3-funktiot-1
 harjoitus-4.4-spatiaaliset-indeksit
 harjoitus-5-paikkatietokohteiden-geometria
