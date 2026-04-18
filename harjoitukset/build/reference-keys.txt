@@ -24,6 +24,10 @@ harjoitus-3-postgis-funktiot
 valmistautuminen-1
 yksinkertaisia-sql-hakuja
 harjoitus-3.1
+postgisin-perusfunktiot-geometrioiden-käsittelyyn
+postgisin-perusfunktiot-geometrioiden-määrittelyyn
+spatiaaliset-relaatiot
+section
 paikkatietojen-metatiedot
 harjoitus-4.1-geometrioiden-metatiedot
 harjoitus-4.2-geometrian-esittäminen
@@ -78,6 +82,7 @@ harjoitus-8-postgresqln-yhteentoimivuus-muiden-ohjelmistojen-kanssa
 valmistautuminen-6
 harjoitus-9-indeksit---tavalliset-ja-spatiaaliset
 valmistautuminen-7
+postgresqln-ei-spatiaaliset-indeksit
 harjoitus-10-varmistus-ja-palautus
 harjoitus-10.1-luodaan-varmistus
 harjoitus-10.2-tehdään-palautus

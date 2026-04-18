@@ -12,6 +12,30 @@ Avaa [pgAdmin](/pgadmin) selaimeen ja kirjaudu sisään.  Avaa **Query Tool** (V
 
 ## Harjoitus 3.1
 
+## PostGISin perusfunktiot geometrioiden käsittelyyn
+
+- dokumentaatio 
+
+## PostGISin perusfunktiot geometrioiden määrittelyyn
+
+-ST_AsWKT ja muut mahdolliset geometrioiden muodot: 
+-- Käytetään ainakin lentokenttätasoa (tai myös liikennevaylat-tasoa tai puurekisteri) tehdään uusi geometria, johon geometria kopioidaan wkb_geometry-kentästä, mutta 
+tallennetaan maantieteelliseen koordinaatistoon ja vaikka WKT-muodossa. (ei luoda indeksiä tässä)
+
+
+- ST_Distance-funktio ja projisoidut sekä maantieteelliset koordinaatit
+-- mistä saadaan PostGISsissä tietoa geometria-kentistä (sekä CRS:stä)
+--lentokenttä-aineisto ja distance funktion vertailu (tässä voisi myös käyttää jo explain analyzeä)
+
+## Spatiaaliset relaatiot
+
+- Luodaan vaikka jo pohja kyselylle seuraavan harkan näkymiä varten
+
+
+
+
+## ------------------------------------------------------
+
 Seuraavaksi tutkitaan hiukan edellisessä harjoituksessa ladattuja paikkatietoaineistoja:
 
 :::code-box

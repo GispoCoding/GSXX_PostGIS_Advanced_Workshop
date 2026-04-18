@@ -151,16 +151,17 @@ VALUES (1, 'testi');
 ```
 :::
 
-Lataa [data-kansio](/data/Maastokartta_1m.zip) omalle koneellesi. Aineistoja voi lisätä navigoimalla Tasot \> Lisää taso \> Lisää vektoritaso, klikkaamalla Lisää vektoritaso -kuvaketta tasojen hallinnan työkalupalkista tai ihan vain raahaamalla tasoja suoraan Selain-ikkunasta Tasot-ikkunaan.
+Lataa [data-kansio](/data/helsinki_avoin_data.zip) omalle koneellesi. Aineistoja voi lisätä navigoimalla Tasot \> Lisää taso \> Lisää vektoritaso, klikkaamalla Lisää vektoritaso -kuvaketta tasojen hallinnan työkalupalkista tai ihan vain raahaamalla tasoja suoraan Selain-ikkunasta Tasot-ikkunaan.
 
 Lataa projektiisi ja tietokantaasi (ainakin) seuraavat aineistot:
 
--   TieViiva.shp
--   HallintoAlue.shp
--   KarttanimiPiste1000.shp
--   SahkoLinja.shp
--   LentokenttaPiste.shp
--   RautatieViiva.shp
+- puurekisteri_piste
+- liikennevaylat
+- ylre_viheralueet
+- aluesarjat_avainluvut_2024
+- piirijako_osaalue
+- kaupunginosajako
+
 
 ::: hint-box
 Tarkista, että Koodaus-kohdassa on valittu UTF-8. Mikäli aineisto koodataan jollakin toisella järjestelmällä, ääkköset puuttuvat metatiedoista.
@@ -168,7 +169,7 @@ Tarkista, että Koodaus-kohdassa on valittu UTF-8. Mikäli aineisto koodataan jo
 
 QGIS-projektiin avautuu vektoriaineistoja, johon on määritelty tietty koordinaattijärjestelmä. Tarkista, että koordinaattijärjestelmäksi on määritelty ETRS89 / TM35FIN(E,N) (EPSG: 3067) tai EPSG:3047. Tason koordinaattijärjestelmän voit tarkistaa ja muuttaa klikkaamalla hiiren oikeaa painiketta tasolla ja valitsemalla **Ominaisuudet \> Lähde \> Aseta koordinaattijärjestelmä**.
 
-![](img/qgistasot.png)
+![](img/qgistasot_hel.png)
 
 Avaa QGISin prosessointityökaluista työkalu nimeltä Export to PostgreSQL. Avaa työkalun alapalkista **Aja eräajona** (Run as Batch Process), joka mahdollistaa useamman taulun ajamiseen tietokantaan kerralla. Muuta parametreja niin, että aineistot tulee ladattua oikeaan skeemaan ja tietokantaan. **Täytä** (Fill Down) -toimintoa käyttämällä sinun ei tarvitse klikkailla jokaisen tason kohdalta arvoja kuntoon. Lisää geometriasarakkeen nimeksi "wkb_geometry" ja, varmistaaksesi taulujen nimien kirjaantumisen pienillä kirjaimilla, avaa taulun nimen määrittävässä kohdassa lausekkeenmuodostaja ja kopioi siihen komento:
 
@@ -180,7 +181,7 @@ lower(layer_property( @INPUT, 'name'))
 
 Tarkista mitä muita parametrejä prosessi pitää sisällään. Voit kuitenkin jättää ne oletusarvoisiksi. Lopulta latausprosessisi pitäisi näyttää kutakuinkin tältä. Klikkaa **Run**!
 
-![](img/batchrun.png) Tarkista latauksen jälkeen, että aineistot ovat latautuneet. Tarkista virheilmoitukset ja korjaa latausta tarvittaessa.
+![](img/hel_batchrun.png) Tarkista latauksen jälkeen, että aineistot ovat latautuneet. Tarkista virheilmoitukset ja korjaa latausta tarvittaessa.
 
 ::: code-box
 ``` sql
