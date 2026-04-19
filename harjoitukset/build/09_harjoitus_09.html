@@ -16,7 +16,7 @@
 
 <meta name="author" content="Gispo Oy" />
 
-<meta name="date" content="2026-04-18" />
+<meta name="date" content="2026-04-19" />
 
 
 <meta name="description" content="10 Harjoitus 9: Indeksit - tavalliset ja spatiaaliset | PostgreSQL ja PostGISin perusteet">
@@ -190,7 +190,11 @@ type="button" onclick="navToggle()" aria-label="Toggle navigation">
 </ul></li>
 <li><a href="07_harjoitus_7.html#harjoitus-7-foreign-data-wrapper"><span class="toc-section-number">8</span> Harjoitus 7: Foreign Data Wrapper</a></li>
 <li><a href="08_harjoitus_8.html#harjoitus-8-postgresqln-yhteentoimivuus-muiden-ohjelmistojen-kanssa"><span class="toc-section-number">9</span> Harjoitus 8: PostgreSQL:n yhteentoimivuus muiden ohjelmistojen kanssa</a></li>
-<li><a href="09_harjoitus_09.html#harjoitus-9-indeksit---tavalliset-ja-spatiaaliset"><span class="toc-section-number">10</span> Harjoitus 9: Indeksit - tavalliset ja spatiaaliset</a></li>
+<li class="has-sub"><a href="09_harjoitus_09.html#harjoitus-9-indeksit---tavalliset-ja-spatiaaliset"><span class="toc-section-number">10</span> Harjoitus 9: Indeksit - tavalliset ja spatiaaliset</a>
+<ul>
+<li><a href="09_harjoitus_09.html#postgresqln-ei-spatiaaliset-indeksit"><span class="toc-section-number">10.1</span> PostgreSQL:n ei-spatiaaliset indeksit</a></li>
+<li><a href="09_harjoitus_09.html#postgresqln-spatiaaliset-indeksit"><span class="toc-section-number">10.2</span> PostgreSQL:n spatiaaliset indeksit</a></li>
+</ul></li>
 <li class="has-sub"><a href="10_harjoitus_10.html#harjoitus-10-suorituskyvyn-optimointi"><span class="toc-section-number">11</span> Harjoitus 10: Suorituskyvyn optimointi</a>
 <ul>
 <li><a href="10_harjoitus_10.html#harjoitus-9.1-taulutilat"><span class="toc-section-number">11.1</span> Harjoitus 9.1: Taulutilat</a></li>
@@ -292,8 +296,59 @@ type="button" onclick="navToggle()" aria-label="Toggle navigation">
 <h3><span class="header-section-number">10.0.1</span> Valmistautuminen</h3>
 <p>Avaa <a href="/pgadmin">pgAdmin</a> selaimeen ja kirjaudu sisään. Avaa <strong>Query Tool</strong> (Valitse <em>trainingdatabase</em> <strong>-&gt;</strong> Ylhäältä <strong>Tools</strong> <strong>-&gt;</strong> <strong>Query Tool</strong>).</p>
 </div>
-<div id="postgresqln-ei-spatiaaliset-indeksit" class="section level3" number="10.0.2">
-<h3><span class="header-section-number">10.0.2</span> PostgreSQL:n ei-spatiaaliset indeksit</h3>
+<div id="postgresqln-ei-spatiaaliset-indeksit" class="section level2" number="10.1">
+<h2><span class="header-section-number">10.1</span> PostgreSQL:n ei-spatiaaliset indeksit</h2>
+<div id="postgresqln-query-planner-sekä-explain-analyze--komento" class="section level3" number="10.1.1">
+<h3><span class="header-section-number">10.1.1</span> PostgreSQL:n Query Planner sekä EXPLAIN ANALYZE -komento</h3>
+<p>Kun SQL-kysely ajetaan, kysely menee ensimmäiseksi nk. Plannerille, suunnittelijalle, joka määrittää mikä on optimaalisin tapa toteuttaa annetun
+SQL-syntaksin mukainen kysely tietokannassa (esimerkiksi milloin tulisi käyttää määriteltyjä indeksejä ja milloin hakea vain taulusta rivi kerrallaan),
+ja muokkaa kyselyä sen mukaan.</p>
+<p>Olet ehkä huomannutkin että kun ajat PgAdminissa kyselyn ruudussa käväisee vihreä palkki, joka kertoo kuinka monta tietuetta kysely palautti mutta
+myös sen, kuinka kauan kyselyyn kului aikaa millisekunteina. Vaikka tästä arvosta saakin osviittaa kyselyn kestosta, se sisältää myös esimerkiksi
+verkkoliikenteeseen kuluvan ajan ja ei siten ole kovin sopiva itse kyselyjen optimointia tarkasteltaessa. Tähän tarkoitukseen on olemassa komennot
+EXPLAIN sekä EXPLAIN ANALYZE. Näitä käytetään yksinkertaisesti kirjoittamalla kyseinen avainsana ennen varsinaista kyselyä. Nämä kaksi eroavat toisistaan
+siinä, että EXPLAIN-komennolla saa näkyviin Plannerin muodostaman suunnitelman kyselyn toteutuksesta, kun taas EXPLAIN ANALYZE suorittaa kyselyn ja
+palauttaa lisäksi tietoa itse suorituksen kestosta. Kestosta annetaan sekä suunnitelman tuottamiseen kulunut aika että (käytettäessä EXPLAIN ANALYZEä)
+sen suorittamiseen kuluva aika millisekunteina. Lisäksi kysely eri osien suhteellisia kustannuksia (Cost). On myös huomattava, että kumpikaan ei kuitenkaan
+palauta itse kyselyn tuottamia rivejä vaan ainoastaan tiedon siitä, millä tavoin kyselyä tultaisiin ajamaan.</p>
+<p>Tarkastellaan tätä muutamien esimerkkikyselyiden avulla:</p>
+<div class="code-box">
+<div class="sourceCode" id="cb140"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb140-1"><a href="09_harjoitus_09.html#cb140-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb140-2"><a href="09_harjoitus_09.html#cb140-2" aria-hidden="true" tabindex="-1"></a><span class="kw">EXPLAIN</span> <span class="kw">ANALYZE</span> <span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> helsinki.liikennevaylat;</span></code></pre></div>
+</div>
+<div class="code-box">
+<div class="sourceCode" id="cb141"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb141-1"><a href="09_harjoitus_09.html#cb141-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb141-2"><a href="09_harjoitus_09.html#cb141-2" aria-hidden="true" tabindex="-1"></a><span class="kw">EXPLAIN</span> <span class="kw">ANALYZE</span> <span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> helsinki.liikennevaylat <span class="kw">WHERE</span> pituus <span class="kw">BETWEEN</span> <span class="dv">50</span> <span class="kw">AND</span> <span class="dv">55</span>;</span></code></pre></div>
+</div>
+<div class="code-box">
+<div class="sourceCode" id="cb142"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb142-1"><a href="09_harjoitus_09.html#cb142-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb142-2"><a href="09_harjoitus_09.html#cb142-2" aria-hidden="true" tabindex="-1"></a><span class="kw">EXPLAIN</span> <span class="kw">ANALYZE</span> <span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> helsinki.liikennevaylat <span class="kw">WHERE</span> pituus <span class="op">&lt;</span> <span class="dv">13</span>;</span></code></pre></div>
+</div>
+<p>Luodaan sitten BTREE-indeksi kentälle “pituus”. Lyhimmillään tämä käy komennolla</p>
+<div class="code-box">
+<div class="sourceCode" id="cb143"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb143-1"><a href="09_harjoitus_09.html#cb143-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb143-2"><a href="09_harjoitus_09.html#cb143-2" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">INDEX</span> <span class="kw">ON</span> helsinki.liikennevaylat (pituus);</span></code></pre></div>
+</div>
+<p>Jos halutaan varmistua indeksin nimestä ja tyypistä, kirjoitetaan eksplisiittisesti</p>
+<div class="code-box">
+<div class="sourceCode" id="cb144"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb144-1"><a href="09_harjoitus_09.html#cb144-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb144-2"><a href="09_harjoitus_09.html#cb144-2" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">INDEX</span> liikennevaylat_pituus_idx <span class="kw">ON</span> helsinki.liikennevaylat <span class="kw">USING</span> BTREE (pituus);</span></code></pre></div>
+</div>
+<p>EXPLAIN ANALYZEn tuloksissa esiintyviä sanoja:
+- Seq Scan = sequential scanning, taulusta haetaan rivi kerrallaan
+- Bitmap Heap Scan
+- Bitmap Index Scan
+- Heap Blocks
+- Hash Join =</p>
+<p>cost
+row
+width
+actual time
+loops</p>
+</div>
+</div>
+<div id="postgresqln-spatiaaliset-indeksit" class="section level2" number="10.2">
+<h2><span class="header-section-number">10.2</span> PostgreSQL:n spatiaaliset indeksit</h2>
 
 </div>
 </div>
@@ -310,7 +365,7 @@ type="button" onclick="navToggle()" aria-label="Toggle navigation">
 
 <div class="footer-info">
 <h5 class="footer-title">PostgreSQL ja PostGISin perusteet</h5>
-<span class="footer-version">v2026-04-18</span>
+<span class="footer-version">v2026-04-19</span>
 <div class="license"><img src="img/by-nd.svg" width="80px" alt="CC-BY-ND"></div>
 </div>
 

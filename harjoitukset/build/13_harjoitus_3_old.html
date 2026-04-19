@@ -16,7 +16,7 @@
 
 <meta name="author" content="Gispo Oy" />
 
-<meta name="date" content="2026-04-18" />
+<meta name="date" content="2026-04-19" />
 
 
 <meta name="description" content="14 Harjoitus 3: SQL:n perusteet | PostgreSQL ja PostGISin perusteet">
@@ -190,7 +190,11 @@ type="button" onclick="navToggle()" aria-label="Toggle navigation">
 </ul></li>
 <li><a href="07_harjoitus_7.html#harjoitus-7-foreign-data-wrapper"><span class="toc-section-number">8</span> Harjoitus 7: Foreign Data Wrapper</a></li>
 <li><a href="08_harjoitus_8.html#harjoitus-8-postgresqln-yhteentoimivuus-muiden-ohjelmistojen-kanssa"><span class="toc-section-number">9</span> Harjoitus 8: PostgreSQL:n yhteentoimivuus muiden ohjelmistojen kanssa</a></li>
-<li><a href="09_harjoitus_09.html#harjoitus-9-indeksit---tavalliset-ja-spatiaaliset"><span class="toc-section-number">10</span> Harjoitus 9: Indeksit - tavalliset ja spatiaaliset</a></li>
+<li class="has-sub"><a href="09_harjoitus_09.html#harjoitus-9-indeksit---tavalliset-ja-spatiaaliset"><span class="toc-section-number">10</span> Harjoitus 9: Indeksit - tavalliset ja spatiaaliset</a>
+<ul>
+<li><a href="09_harjoitus_09.html#postgresqln-ei-spatiaaliset-indeksit"><span class="toc-section-number">10.1</span> PostgreSQL:n ei-spatiaaliset indeksit</a></li>
+<li><a href="09_harjoitus_09.html#postgresqln-spatiaaliset-indeksit"><span class="toc-section-number">10.2</span> PostgreSQL:n spatiaaliset indeksit</a></li>
+</ul></li>
 <li class="has-sub"><a href="10_harjoitus_10.html#harjoitus-10-suorituskyvyn-optimointi"><span class="toc-section-number">11</span> Harjoitus 10: Suorituskyvyn optimointi</a>
 <ul>
 <li><a href="10_harjoitus_10.html#harjoitus-9.1-taulutilat"><span class="toc-section-number">11.1</span> Harjoitus 9.1: Taulutilat</a></li>
@@ -299,72 +303,72 @@ type="button" onclick="navToggle()" aria-label="Toggle navigation">
 <h2><span class="header-section-number">14.1</span> Harjoitus 3.1</h2>
 <p>Seuraavaksi tutkitaan hiukan edellisessä harjoituksessa ladattuja paikkatietoaineistoja:</p>
 <div class="code-box">
-<div class="sourceCode" id="cb176"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb176-1"><a href="13_harjoitus_3_old.html#cb176-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span></span>
-<span id="cb176-2"><a href="13_harjoitus_3_old.html#cb176-2" aria-hidden="true" tabindex="-1"></a>kunta_ni1</span>
-<span id="cb176-3"><a href="13_harjoitus_3_old.html#cb176-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span></span>
-<span id="cb176-4"><a href="13_harjoitus_3_old.html#cb176-4" aria-hidden="true" tabindex="-1"></a>nlsfi.hallintoalue;</span></code></pre></div>
+<div class="sourceCode" id="cb181"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb181-1"><a href="13_harjoitus_3_old.html#cb181-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span></span>
+<span id="cb181-2"><a href="13_harjoitus_3_old.html#cb181-2" aria-hidden="true" tabindex="-1"></a>kunta_ni1</span>
+<span id="cb181-3"><a href="13_harjoitus_3_old.html#cb181-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span></span>
+<span id="cb181-4"><a href="13_harjoitus_3_old.html#cb181-4" aria-hidden="true" tabindex="-1"></a>nlsfi.hallintoalue;</span></code></pre></div>
 </div>
 <p>Hakuja voidaan rajoittaa <strong>WHERE</strong>–lausekkeella:</p>
 <div class="code-box">
-<div class="sourceCode" id="cb177"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb177-1"><a href="13_harjoitus_3_old.html#cb177-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span></span>
-<span id="cb177-2"><a href="13_harjoitus_3_old.html#cb177-2" aria-hidden="true" tabindex="-1"></a>kunta_ni1, wkb_geometry</span>
-<span id="cb177-3"><a href="13_harjoitus_3_old.html#cb177-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span></span>
-<span id="cb177-4"><a href="13_harjoitus_3_old.html#cb177-4" aria-hidden="true" tabindex="-1"></a>nlsfi.hallintoalue</span>
-<span id="cb177-5"><a href="13_harjoitus_3_old.html#cb177-5" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span></span>
-<span id="cb177-6"><a href="13_harjoitus_3_old.html#cb177-6" aria-hidden="true" tabindex="-1"></a>maaku_ni1 <span class="op">=</span> <span class="st">&#39;Lappi&#39;</span>;</span></code></pre></div>
+<div class="sourceCode" id="cb182"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb182-1"><a href="13_harjoitus_3_old.html#cb182-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span></span>
+<span id="cb182-2"><a href="13_harjoitus_3_old.html#cb182-2" aria-hidden="true" tabindex="-1"></a>kunta_ni1, wkb_geometry</span>
+<span id="cb182-3"><a href="13_harjoitus_3_old.html#cb182-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span></span>
+<span id="cb182-4"><a href="13_harjoitus_3_old.html#cb182-4" aria-hidden="true" tabindex="-1"></a>nlsfi.hallintoalue</span>
+<span id="cb182-5"><a href="13_harjoitus_3_old.html#cb182-5" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span></span>
+<span id="cb182-6"><a href="13_harjoitus_3_old.html#cb182-6" aria-hidden="true" tabindex="-1"></a>maaku_ni1 <span class="op">=</span> <span class="st">&#39;Lappi&#39;</span>;</span></code></pre></div>
 </div>
 <p>SQL-lauseisiin voidaan myös liittää erilaisia funktioita. Funktioiden avulla voidaan esimerkiksi laskea keskiarvoja tai keskihajontoja. Seuraavassa tarkastellaan kuntien nimien pituuksia:</p>
 <div class="code-box">
-<div class="sourceCode" id="cb178"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb178-1"><a href="13_harjoitus_3_old.html#cb178-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span></span>
-<span id="cb178-2"><a href="13_harjoitus_3_old.html#cb178-2" aria-hidden="true" tabindex="-1"></a><span class="fu">avg</span>(char_length(kunta_ni1)), <span class="fu">stddev</span>(char_length(kunta_ni1))</span>
-<span id="cb178-3"><a href="13_harjoitus_3_old.html#cb178-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span></span>
-<span id="cb178-4"><a href="13_harjoitus_3_old.html#cb178-4" aria-hidden="true" tabindex="-1"></a>nlsfi.hallintoalue</span>
-<span id="cb178-5"><a href="13_harjoitus_3_old.html#cb178-5" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span></span>
-<span id="cb178-6"><a href="13_harjoitus_3_old.html#cb178-6" aria-hidden="true" tabindex="-1"></a>maaku_ni1 <span class="op">=</span> <span class="st">&#39;Uusimaa&#39;</span>;</span></code></pre></div>
+<div class="sourceCode" id="cb183"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb183-1"><a href="13_harjoitus_3_old.html#cb183-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span></span>
+<span id="cb183-2"><a href="13_harjoitus_3_old.html#cb183-2" aria-hidden="true" tabindex="-1"></a><span class="fu">avg</span>(char_length(kunta_ni1)), <span class="fu">stddev</span>(char_length(kunta_ni1))</span>
+<span id="cb183-3"><a href="13_harjoitus_3_old.html#cb183-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span></span>
+<span id="cb183-4"><a href="13_harjoitus_3_old.html#cb183-4" aria-hidden="true" tabindex="-1"></a>nlsfi.hallintoalue</span>
+<span id="cb183-5"><a href="13_harjoitus_3_old.html#cb183-5" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span></span>
+<span id="cb183-6"><a href="13_harjoitus_3_old.html#cb183-6" aria-hidden="true" tabindex="-1"></a>maaku_ni1 <span class="op">=</span> <span class="st">&#39;Uusimaa&#39;</span>;</span></code></pre></div>
 </div>
 <p>Seuraavalla SQL-lauseella saamme selville, missä maakunnissa on keskimäärin pisimmät kuntien nimet:</p>
 <div class="code-box">
-<div class="sourceCode" id="cb179"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb179-1"><a href="13_harjoitus_3_old.html#cb179-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span></span>
-<span id="cb179-2"><a href="13_harjoitus_3_old.html#cb179-2" aria-hidden="true" tabindex="-1"></a>maaku_ni1, <span class="fu">avg</span>(char_length(kunta_ni1))</span>
-<span id="cb179-3"><a href="13_harjoitus_3_old.html#cb179-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span></span>
-<span id="cb179-4"><a href="13_harjoitus_3_old.html#cb179-4" aria-hidden="true" tabindex="-1"></a>nlsfi.hallintoalue</span>
-<span id="cb179-5"><a href="13_harjoitus_3_old.html#cb179-5" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span></span>
-<span id="cb179-6"><a href="13_harjoitus_3_old.html#cb179-6" aria-hidden="true" tabindex="-1"></a>maaku_ni1</span>
-<span id="cb179-7"><a href="13_harjoitus_3_old.html#cb179-7" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span></span>
-<span id="cb179-8"><a href="13_harjoitus_3_old.html#cb179-8" aria-hidden="true" tabindex="-1"></a><span class="fu">avg</span>(char_length(kunta_ni1)) <span class="kw">desc</span>;</span></code></pre></div>
+<div class="sourceCode" id="cb184"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb184-1"><a href="13_harjoitus_3_old.html#cb184-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span></span>
+<span id="cb184-2"><a href="13_harjoitus_3_old.html#cb184-2" aria-hidden="true" tabindex="-1"></a>maaku_ni1, <span class="fu">avg</span>(char_length(kunta_ni1))</span>
+<span id="cb184-3"><a href="13_harjoitus_3_old.html#cb184-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span></span>
+<span id="cb184-4"><a href="13_harjoitus_3_old.html#cb184-4" aria-hidden="true" tabindex="-1"></a>nlsfi.hallintoalue</span>
+<span id="cb184-5"><a href="13_harjoitus_3_old.html#cb184-5" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span></span>
+<span id="cb184-6"><a href="13_harjoitus_3_old.html#cb184-6" aria-hidden="true" tabindex="-1"></a>maaku_ni1</span>
+<span id="cb184-7"><a href="13_harjoitus_3_old.html#cb184-7" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span></span>
+<span id="cb184-8"><a href="13_harjoitus_3_old.html#cb184-8" aria-hidden="true" tabindex="-1"></a><span class="fu">avg</span>(char_length(kunta_ni1)) <span class="kw">desc</span>;</span></code></pre></div>
 </div>
 </div>
 <div id="harjoitus-3.2" class="section level2" number="14.2">
 <h2><span class="header-section-number">14.2</span> Harjoitus 3.2</h2>
 <p>Missä maakunnassa on keskimäärin pisimmät kuntien nimet?</p>
 <div class="code-box">
-<div class="sourceCode" id="cb180"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb180-1"><a href="13_harjoitus_3_old.html#cb180-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span></span>
-<span id="cb180-2"><a href="13_harjoitus_3_old.html#cb180-2" aria-hidden="true" tabindex="-1"></a><span class="op">..</span>.</span>
-<span id="cb180-3"><a href="13_harjoitus_3_old.html#cb180-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span></span>
-<span id="cb180-4"><a href="13_harjoitus_3_old.html#cb180-4" aria-hidden="true" tabindex="-1"></a><span class="op">..</span>.</span>
-<span id="cb180-5"><a href="13_harjoitus_3_old.html#cb180-5" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span></span>
-<span id="cb180-6"><a href="13_harjoitus_3_old.html#cb180-6" aria-hidden="true" tabindex="-1"></a><span class="op">..</span>.</span>
-<span id="cb180-7"><a href="13_harjoitus_3_old.html#cb180-7" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span></span>
-<span id="cb180-8"><a href="13_harjoitus_3_old.html#cb180-8" aria-hidden="true" tabindex="-1"></a><span class="op">..</span>. <span class="kw">desc</span></span>
-<span id="cb180-9"><a href="13_harjoitus_3_old.html#cb180-9" aria-hidden="true" tabindex="-1"></a><span class="kw">LIMIT</span> <span class="op">..</span>.;</span></code></pre></div>
+<div class="sourceCode" id="cb185"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb185-1"><a href="13_harjoitus_3_old.html#cb185-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span></span>
+<span id="cb185-2"><a href="13_harjoitus_3_old.html#cb185-2" aria-hidden="true" tabindex="-1"></a><span class="op">..</span>.</span>
+<span id="cb185-3"><a href="13_harjoitus_3_old.html#cb185-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span></span>
+<span id="cb185-4"><a href="13_harjoitus_3_old.html#cb185-4" aria-hidden="true" tabindex="-1"></a><span class="op">..</span>.</span>
+<span id="cb185-5"><a href="13_harjoitus_3_old.html#cb185-5" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span></span>
+<span id="cb185-6"><a href="13_harjoitus_3_old.html#cb185-6" aria-hidden="true" tabindex="-1"></a><span class="op">..</span>.</span>
+<span id="cb185-7"><a href="13_harjoitus_3_old.html#cb185-7" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span></span>
+<span id="cb185-8"><a href="13_harjoitus_3_old.html#cb185-8" aria-hidden="true" tabindex="-1"></a><span class="op">..</span>. <span class="kw">desc</span></span>
+<span id="cb185-9"><a href="13_harjoitus_3_old.html#cb185-9" aria-hidden="true" tabindex="-1"></a><span class="kw">LIMIT</span> <span class="op">..</span>.;</span></code></pre></div>
 </div>
 <button onclick="toggleAnswer(this)" class="btn answer_btn">
 vinkki
 </button>
 <div class="hidden-box">
 <div class="code-box">
-<div class="sourceCode" id="cb181"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb181-1"><a href="13_harjoitus_3_old.html#cb181-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- Täydennä tähän kyselyyn oikeat sarakkeet, skeema ja taulu. Tarkista millä funktiolla</span></span>
-<span id="cb181-2"><a href="13_harjoitus_3_old.html#cb181-2" aria-hidden="true" tabindex="-1"></a><span class="co">-- saat laskettua keskiarvon. Käytä char_length() funktiota, jolla saat palautettua</span></span>
-<span id="cb181-3"><a href="13_harjoitus_3_old.html#cb181-3" aria-hidden="true" tabindex="-1"></a><span class="co">-- merkkijonon pituuden.</span></span>
-<span id="cb181-4"><a href="13_harjoitus_3_old.html#cb181-4" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span></span>
-<span id="cb181-5"><a href="13_harjoitus_3_old.html#cb181-5" aria-hidden="true" tabindex="-1"></a>maakunta, keskiarvo_funktio(char_length(kunta))</span>
-<span id="cb181-6"><a href="13_harjoitus_3_old.html#cb181-6" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span></span>
-<span id="cb181-7"><a href="13_harjoitus_3_old.html#cb181-7" aria-hidden="true" tabindex="-1"></a>skeema.taulu</span>
-<span id="cb181-8"><a href="13_harjoitus_3_old.html#cb181-8" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span></span>
-<span id="cb181-9"><a href="13_harjoitus_3_old.html#cb181-9" aria-hidden="true" tabindex="-1"></a>maakunta</span>
-<span id="cb181-10"><a href="13_harjoitus_3_old.html#cb181-10" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span></span>
-<span id="cb181-11"><a href="13_harjoitus_3_old.html#cb181-11" aria-hidden="true" tabindex="-1"></a>keskiarvo_funktio(char_length(kunta)) <span class="kw">desc</span></span>
-<span id="cb181-12"><a href="13_harjoitus_3_old.html#cb181-12" aria-hidden="true" tabindex="-1"></a><span class="kw">LIMIT</span> <span class="dv">1</span>;</span></code></pre></div>
+<div class="sourceCode" id="cb186"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb186-1"><a href="13_harjoitus_3_old.html#cb186-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- Täydennä tähän kyselyyn oikeat sarakkeet, skeema ja taulu. Tarkista millä funktiolla</span></span>
+<span id="cb186-2"><a href="13_harjoitus_3_old.html#cb186-2" aria-hidden="true" tabindex="-1"></a><span class="co">-- saat laskettua keskiarvon. Käytä char_length() funktiota, jolla saat palautettua</span></span>
+<span id="cb186-3"><a href="13_harjoitus_3_old.html#cb186-3" aria-hidden="true" tabindex="-1"></a><span class="co">-- merkkijonon pituuden.</span></span>
+<span id="cb186-4"><a href="13_harjoitus_3_old.html#cb186-4" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span></span>
+<span id="cb186-5"><a href="13_harjoitus_3_old.html#cb186-5" aria-hidden="true" tabindex="-1"></a>maakunta, keskiarvo_funktio(char_length(kunta))</span>
+<span id="cb186-6"><a href="13_harjoitus_3_old.html#cb186-6" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span></span>
+<span id="cb186-7"><a href="13_harjoitus_3_old.html#cb186-7" aria-hidden="true" tabindex="-1"></a>skeema.taulu</span>
+<span id="cb186-8"><a href="13_harjoitus_3_old.html#cb186-8" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span></span>
+<span id="cb186-9"><a href="13_harjoitus_3_old.html#cb186-9" aria-hidden="true" tabindex="-1"></a>maakunta</span>
+<span id="cb186-10"><a href="13_harjoitus_3_old.html#cb186-10" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span></span>
+<span id="cb186-11"><a href="13_harjoitus_3_old.html#cb186-11" aria-hidden="true" tabindex="-1"></a>keskiarvo_funktio(char_length(kunta)) <span class="kw">desc</span></span>
+<span id="cb186-12"><a href="13_harjoitus_3_old.html#cb186-12" aria-hidden="true" tabindex="-1"></a><span class="kw">LIMIT</span> <span class="dv">1</span>;</span></code></pre></div>
 </div>
 </div>
 <button onclick="toggleAnswer(this)" class="btn answer_btn">
@@ -372,15 +376,15 @@ ratkaisu
 </button>
 <div class="hidden-box">
 <div class="code-box">
-<div class="sourceCode" id="cb182"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb182-1"><a href="13_harjoitus_3_old.html#cb182-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span></span>
-<span id="cb182-2"><a href="13_harjoitus_3_old.html#cb182-2" aria-hidden="true" tabindex="-1"></a>maaku_ni1, <span class="fu">avg</span>(char_length(kunta_ni1))</span>
-<span id="cb182-3"><a href="13_harjoitus_3_old.html#cb182-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span></span>
-<span id="cb182-4"><a href="13_harjoitus_3_old.html#cb182-4" aria-hidden="true" tabindex="-1"></a>nlsfi.hallintoalue</span>
-<span id="cb182-5"><a href="13_harjoitus_3_old.html#cb182-5" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span></span>
-<span id="cb182-6"><a href="13_harjoitus_3_old.html#cb182-6" aria-hidden="true" tabindex="-1"></a>maaku_ni1</span>
-<span id="cb182-7"><a href="13_harjoitus_3_old.html#cb182-7" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span></span>
-<span id="cb182-8"><a href="13_harjoitus_3_old.html#cb182-8" aria-hidden="true" tabindex="-1"></a><span class="fu">avg</span>(char_length(kunta_ni1)) <span class="kw">desc</span></span>
-<span id="cb182-9"><a href="13_harjoitus_3_old.html#cb182-9" aria-hidden="true" tabindex="-1"></a><span class="kw">LIMIT</span> <span class="dv">1</span>;</span></code></pre></div>
+<div class="sourceCode" id="cb187"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb187-1"><a href="13_harjoitus_3_old.html#cb187-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span></span>
+<span id="cb187-2"><a href="13_harjoitus_3_old.html#cb187-2" aria-hidden="true" tabindex="-1"></a>maaku_ni1, <span class="fu">avg</span>(char_length(kunta_ni1))</span>
+<span id="cb187-3"><a href="13_harjoitus_3_old.html#cb187-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span></span>
+<span id="cb187-4"><a href="13_harjoitus_3_old.html#cb187-4" aria-hidden="true" tabindex="-1"></a>nlsfi.hallintoalue</span>
+<span id="cb187-5"><a href="13_harjoitus_3_old.html#cb187-5" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span></span>
+<span id="cb187-6"><a href="13_harjoitus_3_old.html#cb187-6" aria-hidden="true" tabindex="-1"></a>maaku_ni1</span>
+<span id="cb187-7"><a href="13_harjoitus_3_old.html#cb187-7" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span></span>
+<span id="cb187-8"><a href="13_harjoitus_3_old.html#cb187-8" aria-hidden="true" tabindex="-1"></a><span class="fu">avg</span>(char_length(kunta_ni1)) <span class="kw">desc</span></span>
+<span id="cb187-9"><a href="13_harjoitus_3_old.html#cb187-9" aria-hidden="true" tabindex="-1"></a><span class="kw">LIMIT</span> <span class="dv">1</span>;</span></code></pre></div>
 </div>
 </div>
 </div>
@@ -388,33 +392,33 @@ ratkaisu
 <h2><span class="header-section-number">14.3</span> Harjoitus 3.3</h2>
 <p>Missä maakunnassa on keskimäärin lyhimmät kuntien nimet?</p>
 <div class="code-box">
-<div class="sourceCode" id="cb183"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb183-1"><a href="13_harjoitus_3_old.html#cb183-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span></span>
-<span id="cb183-2"><a href="13_harjoitus_3_old.html#cb183-2" aria-hidden="true" tabindex="-1"></a><span class="op">..</span>.</span>
-<span id="cb183-3"><a href="13_harjoitus_3_old.html#cb183-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span></span>
-<span id="cb183-4"><a href="13_harjoitus_3_old.html#cb183-4" aria-hidden="true" tabindex="-1"></a><span class="op">..</span>.</span>
-<span id="cb183-5"><a href="13_harjoitus_3_old.html#cb183-5" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span></span>
-<span id="cb183-6"><a href="13_harjoitus_3_old.html#cb183-6" aria-hidden="true" tabindex="-1"></a><span class="op">..</span>.</span>
-<span id="cb183-7"><a href="13_harjoitus_3_old.html#cb183-7" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span></span>
-<span id="cb183-8"><a href="13_harjoitus_3_old.html#cb183-8" aria-hidden="true" tabindex="-1"></a><span class="op">..</span>. <span class="kw">asc</span></span>
-<span id="cb183-9"><a href="13_harjoitus_3_old.html#cb183-9" aria-hidden="true" tabindex="-1"></a><span class="kw">LIMIT</span> <span class="op">..</span>.;</span></code></pre></div>
+<div class="sourceCode" id="cb188"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb188-1"><a href="13_harjoitus_3_old.html#cb188-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span></span>
+<span id="cb188-2"><a href="13_harjoitus_3_old.html#cb188-2" aria-hidden="true" tabindex="-1"></a><span class="op">..</span>.</span>
+<span id="cb188-3"><a href="13_harjoitus_3_old.html#cb188-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span></span>
+<span id="cb188-4"><a href="13_harjoitus_3_old.html#cb188-4" aria-hidden="true" tabindex="-1"></a><span class="op">..</span>.</span>
+<span id="cb188-5"><a href="13_harjoitus_3_old.html#cb188-5" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span></span>
+<span id="cb188-6"><a href="13_harjoitus_3_old.html#cb188-6" aria-hidden="true" tabindex="-1"></a><span class="op">..</span>.</span>
+<span id="cb188-7"><a href="13_harjoitus_3_old.html#cb188-7" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span></span>
+<span id="cb188-8"><a href="13_harjoitus_3_old.html#cb188-8" aria-hidden="true" tabindex="-1"></a><span class="op">..</span>. <span class="kw">asc</span></span>
+<span id="cb188-9"><a href="13_harjoitus_3_old.html#cb188-9" aria-hidden="true" tabindex="-1"></a><span class="kw">LIMIT</span> <span class="op">..</span>.;</span></code></pre></div>
 </div>
 <button onclick="toggleAnswer(this)" class="btn answer_btn">
 vinkki
 </button>
 <div class="hidden-box">
 <div class="code-box">
-<div class="sourceCode" id="cb184"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb184-1"><a href="13_harjoitus_3_old.html#cb184-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- Täydennä tähän kyselyyn oikeat sarakkeet, skeema ja taulu. Tarkista millä funktiolla</span></span>
-<span id="cb184-2"><a href="13_harjoitus_3_old.html#cb184-2" aria-hidden="true" tabindex="-1"></a><span class="co">-- saat laskettua keskiarvon. Käytä char_length() funktiota, jolla saat palautettua</span></span>
-<span id="cb184-3"><a href="13_harjoitus_3_old.html#cb184-3" aria-hidden="true" tabindex="-1"></a><span class="co">-- merkkijonon pituuden.</span></span>
-<span id="cb184-4"><a href="13_harjoitus_3_old.html#cb184-4" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span></span>
-<span id="cb184-5"><a href="13_harjoitus_3_old.html#cb184-5" aria-hidden="true" tabindex="-1"></a>maakunta, keskiarvo_funktio(char_length(kunta))</span>
-<span id="cb184-6"><a href="13_harjoitus_3_old.html#cb184-6" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span></span>
-<span id="cb184-7"><a href="13_harjoitus_3_old.html#cb184-7" aria-hidden="true" tabindex="-1"></a>skeema.taulu</span>
-<span id="cb184-8"><a href="13_harjoitus_3_old.html#cb184-8" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span></span>
-<span id="cb184-9"><a href="13_harjoitus_3_old.html#cb184-9" aria-hidden="true" tabindex="-1"></a>maakunta</span>
-<span id="cb184-10"><a href="13_harjoitus_3_old.html#cb184-10" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span></span>
-<span id="cb184-11"><a href="13_harjoitus_3_old.html#cb184-11" aria-hidden="true" tabindex="-1"></a>keskiarvo_funktio(char_length(kunta)) <span class="kw">asc</span></span>
-<span id="cb184-12"><a href="13_harjoitus_3_old.html#cb184-12" aria-hidden="true" tabindex="-1"></a><span class="kw">LIMIT</span> <span class="dv">1</span>;</span></code></pre></div>
+<div class="sourceCode" id="cb189"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb189-1"><a href="13_harjoitus_3_old.html#cb189-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- Täydennä tähän kyselyyn oikeat sarakkeet, skeema ja taulu. Tarkista millä funktiolla</span></span>
+<span id="cb189-2"><a href="13_harjoitus_3_old.html#cb189-2" aria-hidden="true" tabindex="-1"></a><span class="co">-- saat laskettua keskiarvon. Käytä char_length() funktiota, jolla saat palautettua</span></span>
+<span id="cb189-3"><a href="13_harjoitus_3_old.html#cb189-3" aria-hidden="true" tabindex="-1"></a><span class="co">-- merkkijonon pituuden.</span></span>
+<span id="cb189-4"><a href="13_harjoitus_3_old.html#cb189-4" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span></span>
+<span id="cb189-5"><a href="13_harjoitus_3_old.html#cb189-5" aria-hidden="true" tabindex="-1"></a>maakunta, keskiarvo_funktio(char_length(kunta))</span>
+<span id="cb189-6"><a href="13_harjoitus_3_old.html#cb189-6" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span></span>
+<span id="cb189-7"><a href="13_harjoitus_3_old.html#cb189-7" aria-hidden="true" tabindex="-1"></a>skeema.taulu</span>
+<span id="cb189-8"><a href="13_harjoitus_3_old.html#cb189-8" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span></span>
+<span id="cb189-9"><a href="13_harjoitus_3_old.html#cb189-9" aria-hidden="true" tabindex="-1"></a>maakunta</span>
+<span id="cb189-10"><a href="13_harjoitus_3_old.html#cb189-10" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span></span>
+<span id="cb189-11"><a href="13_harjoitus_3_old.html#cb189-11" aria-hidden="true" tabindex="-1"></a>keskiarvo_funktio(char_length(kunta)) <span class="kw">asc</span></span>
+<span id="cb189-12"><a href="13_harjoitus_3_old.html#cb189-12" aria-hidden="true" tabindex="-1"></a><span class="kw">LIMIT</span> <span class="dv">1</span>;</span></code></pre></div>
 </div>
 </div>
 <button onclick="toggleAnswer(this)" class="btn answer_btn">
@@ -422,15 +426,15 @@ ratkaisu
 </button>
 <div class="hidden-box">
 <div class="code-box">
-<div class="sourceCode" id="cb185"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb185-1"><a href="13_harjoitus_3_old.html#cb185-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span></span>
-<span id="cb185-2"><a href="13_harjoitus_3_old.html#cb185-2" aria-hidden="true" tabindex="-1"></a>maaku_ni1, <span class="fu">avg</span>(char_length(kunta_ni1))</span>
-<span id="cb185-3"><a href="13_harjoitus_3_old.html#cb185-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span></span>
-<span id="cb185-4"><a href="13_harjoitus_3_old.html#cb185-4" aria-hidden="true" tabindex="-1"></a>nlsfi.hallintoalue</span>
-<span id="cb185-5"><a href="13_harjoitus_3_old.html#cb185-5" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span></span>
-<span id="cb185-6"><a href="13_harjoitus_3_old.html#cb185-6" aria-hidden="true" tabindex="-1"></a>maaku_ni1</span>
-<span id="cb185-7"><a href="13_harjoitus_3_old.html#cb185-7" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span></span>
-<span id="cb185-8"><a href="13_harjoitus_3_old.html#cb185-8" aria-hidden="true" tabindex="-1"></a><span class="fu">avg</span>(char_length(kunta_ni1)) <span class="kw">asc</span></span>
-<span id="cb185-9"><a href="13_harjoitus_3_old.html#cb185-9" aria-hidden="true" tabindex="-1"></a><span class="kw">LIMIT</span> <span class="dv">1</span>;</span></code></pre></div>
+<div class="sourceCode" id="cb190"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb190-1"><a href="13_harjoitus_3_old.html#cb190-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span></span>
+<span id="cb190-2"><a href="13_harjoitus_3_old.html#cb190-2" aria-hidden="true" tabindex="-1"></a>maaku_ni1, <span class="fu">avg</span>(char_length(kunta_ni1))</span>
+<span id="cb190-3"><a href="13_harjoitus_3_old.html#cb190-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span></span>
+<span id="cb190-4"><a href="13_harjoitus_3_old.html#cb190-4" aria-hidden="true" tabindex="-1"></a>nlsfi.hallintoalue</span>
+<span id="cb190-5"><a href="13_harjoitus_3_old.html#cb190-5" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span></span>
+<span id="cb190-6"><a href="13_harjoitus_3_old.html#cb190-6" aria-hidden="true" tabindex="-1"></a>maaku_ni1</span>
+<span id="cb190-7"><a href="13_harjoitus_3_old.html#cb190-7" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span></span>
+<span id="cb190-8"><a href="13_harjoitus_3_old.html#cb190-8" aria-hidden="true" tabindex="-1"></a><span class="fu">avg</span>(char_length(kunta_ni1)) <span class="kw">asc</span></span>
+<span id="cb190-9"><a href="13_harjoitus_3_old.html#cb190-9" aria-hidden="true" tabindex="-1"></a><span class="kw">LIMIT</span> <span class="dv">1</span>;</span></code></pre></div>
 </div>
 </div>
 </div>
@@ -438,28 +442,28 @@ ratkaisu
 <h2><span class="header-section-number">14.4</span> Harjoitus 3.4</h2>
 <p>Mikä on Suomen pisin kunnan nimi?</p>
 <div class="code-box">
-<div class="sourceCode" id="cb186"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb186-1"><a href="13_harjoitus_3_old.html#cb186-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span></span>
-<span id="cb186-2"><a href="13_harjoitus_3_old.html#cb186-2" aria-hidden="true" tabindex="-1"></a><span class="op">..</span>.</span>
-<span id="cb186-3"><a href="13_harjoitus_3_old.html#cb186-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span></span>
-<span id="cb186-4"><a href="13_harjoitus_3_old.html#cb186-4" aria-hidden="true" tabindex="-1"></a><span class="op">..</span>.</span>
-<span id="cb186-5"><a href="13_harjoitus_3_old.html#cb186-5" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span></span>
-<span id="cb186-6"><a href="13_harjoitus_3_old.html#cb186-6" aria-hidden="true" tabindex="-1"></a><span class="op">..</span>.</span>
-<span id="cb186-7"><a href="13_harjoitus_3_old.html#cb186-7" aria-hidden="true" tabindex="-1"></a><span class="kw">LIMIT</span></span></code></pre></div>
+<div class="sourceCode" id="cb191"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb191-1"><a href="13_harjoitus_3_old.html#cb191-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span></span>
+<span id="cb191-2"><a href="13_harjoitus_3_old.html#cb191-2" aria-hidden="true" tabindex="-1"></a><span class="op">..</span>.</span>
+<span id="cb191-3"><a href="13_harjoitus_3_old.html#cb191-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span></span>
+<span id="cb191-4"><a href="13_harjoitus_3_old.html#cb191-4" aria-hidden="true" tabindex="-1"></a><span class="op">..</span>.</span>
+<span id="cb191-5"><a href="13_harjoitus_3_old.html#cb191-5" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span></span>
+<span id="cb191-6"><a href="13_harjoitus_3_old.html#cb191-6" aria-hidden="true" tabindex="-1"></a><span class="op">..</span>.</span>
+<span id="cb191-7"><a href="13_harjoitus_3_old.html#cb191-7" aria-hidden="true" tabindex="-1"></a><span class="kw">LIMIT</span></span></code></pre></div>
 </div>
 <button onclick="toggleAnswer(this)" class="btn answer_btn">
 vinkki
 </button>
 <div class="hidden-box">
 <div class="code-box">
-<div class="sourceCode" id="cb187"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb187-1"><a href="13_harjoitus_3_old.html#cb187-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- Täydennä tähän kyselyyn oikeat sarakkeet, skeema ja taulu. Valitse funktio,</span></span>
-<span id="cb187-2"><a href="13_harjoitus_3_old.html#cb187-2" aria-hidden="true" tabindex="-1"></a><span class="co">-- jolla saat tietoon merkkijonon pituuden.</span></span>
-<span id="cb187-3"><a href="13_harjoitus_3_old.html#cb187-3" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span></span>
-<span id="cb187-4"><a href="13_harjoitus_3_old.html#cb187-4" aria-hidden="true" tabindex="-1"></a>kunta</span>
-<span id="cb187-5"><a href="13_harjoitus_3_old.html#cb187-5" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span></span>
-<span id="cb187-6"><a href="13_harjoitus_3_old.html#cb187-6" aria-hidden="true" tabindex="-1"></a>skeema.taulu</span>
-<span id="cb187-7"><a href="13_harjoitus_3_old.html#cb187-7" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span></span>
-<span id="cb187-8"><a href="13_harjoitus_3_old.html#cb187-8" aria-hidden="true" tabindex="-1"></a>merkkijonon_pituus(kunta) <span class="kw">desc</span></span>
-<span id="cb187-9"><a href="13_harjoitus_3_old.html#cb187-9" aria-hidden="true" tabindex="-1"></a><span class="kw">LIMIT</span> <span class="dv">1</span>;</span></code></pre></div>
+<div class="sourceCode" id="cb192"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb192-1"><a href="13_harjoitus_3_old.html#cb192-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- Täydennä tähän kyselyyn oikeat sarakkeet, skeema ja taulu. Valitse funktio,</span></span>
+<span id="cb192-2"><a href="13_harjoitus_3_old.html#cb192-2" aria-hidden="true" tabindex="-1"></a><span class="co">-- jolla saat tietoon merkkijonon pituuden.</span></span>
+<span id="cb192-3"><a href="13_harjoitus_3_old.html#cb192-3" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span></span>
+<span id="cb192-4"><a href="13_harjoitus_3_old.html#cb192-4" aria-hidden="true" tabindex="-1"></a>kunta</span>
+<span id="cb192-5"><a href="13_harjoitus_3_old.html#cb192-5" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span></span>
+<span id="cb192-6"><a href="13_harjoitus_3_old.html#cb192-6" aria-hidden="true" tabindex="-1"></a>skeema.taulu</span>
+<span id="cb192-7"><a href="13_harjoitus_3_old.html#cb192-7" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span></span>
+<span id="cb192-8"><a href="13_harjoitus_3_old.html#cb192-8" aria-hidden="true" tabindex="-1"></a>merkkijonon_pituus(kunta) <span class="kw">desc</span></span>
+<span id="cb192-9"><a href="13_harjoitus_3_old.html#cb192-9" aria-hidden="true" tabindex="-1"></a><span class="kw">LIMIT</span> <span class="dv">1</span>;</span></code></pre></div>
 </div>
 </div>
 <button onclick="toggleAnswer(this)" class="btn answer_btn">
@@ -467,13 +471,13 @@ ratkaisu
 </button>
 <div class="hidden-box">
 <div class="code-box">
-<div class="sourceCode" id="cb188"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb188-1"><a href="13_harjoitus_3_old.html#cb188-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span></span>
-<span id="cb188-2"><a href="13_harjoitus_3_old.html#cb188-2" aria-hidden="true" tabindex="-1"></a>kunta_ni1 <span class="kw">as</span> <span class="ot">&quot;Kunta&quot;</span></span>
-<span id="cb188-3"><a href="13_harjoitus_3_old.html#cb188-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span></span>
-<span id="cb188-4"><a href="13_harjoitus_3_old.html#cb188-4" aria-hidden="true" tabindex="-1"></a>nlsfi.hallintoalue</span>
-<span id="cb188-5"><a href="13_harjoitus_3_old.html#cb188-5" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span></span>
-<span id="cb188-6"><a href="13_harjoitus_3_old.html#cb188-6" aria-hidden="true" tabindex="-1"></a>char_length(kunta_ni1) <span class="kw">desc</span></span>
-<span id="cb188-7"><a href="13_harjoitus_3_old.html#cb188-7" aria-hidden="true" tabindex="-1"></a><span class="kw">LIMIT</span> <span class="dv">1</span>;</span></code></pre></div>
+<div class="sourceCode" id="cb193"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb193-1"><a href="13_harjoitus_3_old.html#cb193-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span></span>
+<span id="cb193-2"><a href="13_harjoitus_3_old.html#cb193-2" aria-hidden="true" tabindex="-1"></a>kunta_ni1 <span class="kw">as</span> <span class="ot">&quot;Kunta&quot;</span></span>
+<span id="cb193-3"><a href="13_harjoitus_3_old.html#cb193-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span></span>
+<span id="cb193-4"><a href="13_harjoitus_3_old.html#cb193-4" aria-hidden="true" tabindex="-1"></a>nlsfi.hallintoalue</span>
+<span id="cb193-5"><a href="13_harjoitus_3_old.html#cb193-5" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span></span>
+<span id="cb193-6"><a href="13_harjoitus_3_old.html#cb193-6" aria-hidden="true" tabindex="-1"></a>char_length(kunta_ni1) <span class="kw">desc</span></span>
+<span id="cb193-7"><a href="13_harjoitus_3_old.html#cb193-7" aria-hidden="true" tabindex="-1"></a><span class="kw">LIMIT</span> <span class="dv">1</span>;</span></code></pre></div>
 </div>
 </div>
 </div>
@@ -481,51 +485,51 @@ ratkaisu
 <h2><span class="header-section-number">14.5</span> Harjoitus 3.5</h2>
 <p>Montako 5 kirjaimista suomenkielistä kunnan nimeä Suomessa on?</p>
 <div class="code-box">
-<div class="sourceCode" id="cb189"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb189-1"><a href="13_harjoitus_3_old.html#cb189-1" aria-hidden="true" tabindex="-1"></a><span class="kw">WITH</span> <span class="op">..</span>. <span class="kw">AS</span></span>
-<span id="cb189-2"><a href="13_harjoitus_3_old.html#cb189-2" aria-hidden="true" tabindex="-1"></a>(</span>
-<span id="cb189-3"><a href="13_harjoitus_3_old.html#cb189-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">SELECT</span> <span class="op">..</span>.</span>
-<span id="cb189-4"><a href="13_harjoitus_3_old.html#cb189-4" aria-hidden="true" tabindex="-1"></a><span class="kw">UNION</span></span>
-<span id="cb189-5"><a href="13_harjoitus_3_old.html#cb189-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">SELECT</span> <span class="op">..</span>.</span>
-<span id="cb189-6"><a href="13_harjoitus_3_old.html#cb189-6" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb189-7"><a href="13_harjoitus_3_old.html#cb189-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb189-8"><a href="13_harjoitus_3_old.html#cb189-8" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span></span>
-<span id="cb189-9"><a href="13_harjoitus_3_old.html#cb189-9" aria-hidden="true" tabindex="-1"></a><span class="op">..</span>.</span>
-<span id="cb189-10"><a href="13_harjoitus_3_old.html#cb189-10" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span></span>
-<span id="cb189-11"><a href="13_harjoitus_3_old.html#cb189-11" aria-hidden="true" tabindex="-1"></a><span class="op">..</span>.;</span></code></pre></div>
+<div class="sourceCode" id="cb194"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb194-1"><a href="13_harjoitus_3_old.html#cb194-1" aria-hidden="true" tabindex="-1"></a><span class="kw">WITH</span> <span class="op">..</span>. <span class="kw">AS</span></span>
+<span id="cb194-2"><a href="13_harjoitus_3_old.html#cb194-2" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb194-3"><a href="13_harjoitus_3_old.html#cb194-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">SELECT</span> <span class="op">..</span>.</span>
+<span id="cb194-4"><a href="13_harjoitus_3_old.html#cb194-4" aria-hidden="true" tabindex="-1"></a><span class="kw">UNION</span></span>
+<span id="cb194-5"><a href="13_harjoitus_3_old.html#cb194-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">SELECT</span> <span class="op">..</span>.</span>
+<span id="cb194-6"><a href="13_harjoitus_3_old.html#cb194-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb194-7"><a href="13_harjoitus_3_old.html#cb194-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb194-8"><a href="13_harjoitus_3_old.html#cb194-8" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span></span>
+<span id="cb194-9"><a href="13_harjoitus_3_old.html#cb194-9" aria-hidden="true" tabindex="-1"></a><span class="op">..</span>.</span>
+<span id="cb194-10"><a href="13_harjoitus_3_old.html#cb194-10" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span></span>
+<span id="cb194-11"><a href="13_harjoitus_3_old.html#cb194-11" aria-hidden="true" tabindex="-1"></a><span class="op">..</span>.;</span></code></pre></div>
 </div>
 <button onclick="toggleAnswer(this)" class="btn answer_btn">
 vinkki
 </button>
 <div class="hidden-box">
 <div class="code-box">
-<div class="sourceCode" id="cb190"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb190-1"><a href="13_harjoitus_3_old.html#cb190-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- käytä CTE (Common Table Expression)- lauseketta</span></span>
-<span id="cb190-2"><a href="13_harjoitus_3_old.html#cb190-2" aria-hidden="true" tabindex="-1"></a><span class="kw">WITH</span> ltr5 <span class="kw">AS</span></span>
-<span id="cb190-3"><a href="13_harjoitus_3_old.html#cb190-3" aria-hidden="true" tabindex="-1"></a>(</span>
-<span id="cb190-4"><a href="13_harjoitus_3_old.html#cb190-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">-- Valitse kunnat, jossa kunnan ykköskieli (kieli_ni1) on &#39;Suomi&#39; ja kunnan suomenkielinen nimi on</span></span>
-<span id="cb190-5"><a href="13_harjoitus_3_old.html#cb190-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">-- viisi merkkiä pitkä.</span></span>
-<span id="cb190-6"><a href="13_harjoitus_3_old.html#cb190-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">SELECT</span></span>
-<span id="cb190-7"><a href="13_harjoitus_3_old.html#cb190-7" aria-hidden="true" tabindex="-1"></a>    <span class="op">..</span>.</span>
-<span id="cb190-8"><a href="13_harjoitus_3_old.html#cb190-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">FROM</span></span>
-<span id="cb190-9"><a href="13_harjoitus_3_old.html#cb190-9" aria-hidden="true" tabindex="-1"></a>    <span class="op">..</span>.</span>
-<span id="cb190-10"><a href="13_harjoitus_3_old.html#cb190-10" aria-hidden="true" tabindex="-1"></a>    <span class="kw">WHERE</span></span>
-<span id="cb190-11"><a href="13_harjoitus_3_old.html#cb190-11" aria-hidden="true" tabindex="-1"></a>    <span class="op">..</span>. <span class="kw">AND</span> <span class="op">..</span>.</span>
-<span id="cb190-12"><a href="13_harjoitus_3_old.html#cb190-12" aria-hidden="true" tabindex="-1"></a><span class="kw">UNION</span> <span class="co">-- yhdistä kyselyiden tulokset UNION- operaattorilla</span></span>
-<span id="cb190-13"><a href="13_harjoitus_3_old.html#cb190-13" aria-hidden="true" tabindex="-1"></a>    <span class="co">-- valitse kunnat, jossa kunnan kakkoskieli (kieli_ni2) on &#39;Suomi&#39; ja kunnan suomenkielinen nimi on</span></span>
-<span id="cb190-14"><a href="13_harjoitus_3_old.html#cb190-14" aria-hidden="true" tabindex="-1"></a>    <span class="co">-- viisi merkkiä pitkä. </span></span>
-<span id="cb190-15"><a href="13_harjoitus_3_old.html#cb190-15" aria-hidden="true" tabindex="-1"></a>    <span class="co">-- Huomioi oikea kunnan nimen sarake (kunta_ni1 vai kunta_ni2)</span></span>
-<span id="cb190-16"><a href="13_harjoitus_3_old.html#cb190-16" aria-hidden="true" tabindex="-1"></a>    <span class="kw">SELECT</span></span>
-<span id="cb190-17"><a href="13_harjoitus_3_old.html#cb190-17" aria-hidden="true" tabindex="-1"></a>    <span class="op">..</span>.</span>
-<span id="cb190-18"><a href="13_harjoitus_3_old.html#cb190-18" aria-hidden="true" tabindex="-1"></a>    <span class="kw">FROM</span></span>
-<span id="cb190-19"><a href="13_harjoitus_3_old.html#cb190-19" aria-hidden="true" tabindex="-1"></a>    <span class="op">..</span>.</span>
-<span id="cb190-20"><a href="13_harjoitus_3_old.html#cb190-20" aria-hidden="true" tabindex="-1"></a>    <span class="kw">WHERE</span></span>
-<span id="cb190-21"><a href="13_harjoitus_3_old.html#cb190-21" aria-hidden="true" tabindex="-1"></a>    <span class="op">..</span>. <span class="kw">AND</span> <span class="op">..</span>.</span>
-<span id="cb190-22"><a href="13_harjoitus_3_old.html#cb190-22" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb190-23"><a href="13_harjoitus_3_old.html#cb190-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb190-24"><a href="13_harjoitus_3_old.html#cb190-24" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span></span>
-<span id="cb190-25"><a href="13_harjoitus_3_old.html#cb190-25" aria-hidden="true" tabindex="-1"></a><span class="fu">count</span>() <span class="kw">AS</span> <span class="op">..</span>. <span class="co">-- käytä count() funktiota (valitse yllä määritellystä CTE:stä sopiva sarake).</span></span>
-<span id="cb190-26"><a href="13_harjoitus_3_old.html#cb190-26" aria-hidden="true" tabindex="-1"></a>               <span class="co">-- Voit myös määrittää sille aliaksen &#39;AS&#39;- lausekkeen jälkeen.</span></span>
-<span id="cb190-27"><a href="13_harjoitus_3_old.html#cb190-27" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span></span>
-<span id="cb190-28"><a href="13_harjoitus_3_old.html#cb190-28" aria-hidden="true" tabindex="-1"></a><span class="op">..</span>.; <span class="co">-- viittaa aikaisemmin määriteltyyn CTE:hen</span></span></code></pre></div>
+<div class="sourceCode" id="cb195"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb195-1"><a href="13_harjoitus_3_old.html#cb195-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- käytä CTE (Common Table Expression)- lauseketta</span></span>
+<span id="cb195-2"><a href="13_harjoitus_3_old.html#cb195-2" aria-hidden="true" tabindex="-1"></a><span class="kw">WITH</span> ltr5 <span class="kw">AS</span></span>
+<span id="cb195-3"><a href="13_harjoitus_3_old.html#cb195-3" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb195-4"><a href="13_harjoitus_3_old.html#cb195-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">-- Valitse kunnat, jossa kunnan ykköskieli (kieli_ni1) on &#39;Suomi&#39; ja kunnan suomenkielinen nimi on</span></span>
+<span id="cb195-5"><a href="13_harjoitus_3_old.html#cb195-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">-- viisi merkkiä pitkä.</span></span>
+<span id="cb195-6"><a href="13_harjoitus_3_old.html#cb195-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">SELECT</span></span>
+<span id="cb195-7"><a href="13_harjoitus_3_old.html#cb195-7" aria-hidden="true" tabindex="-1"></a>    <span class="op">..</span>.</span>
+<span id="cb195-8"><a href="13_harjoitus_3_old.html#cb195-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">FROM</span></span>
+<span id="cb195-9"><a href="13_harjoitus_3_old.html#cb195-9" aria-hidden="true" tabindex="-1"></a>    <span class="op">..</span>.</span>
+<span id="cb195-10"><a href="13_harjoitus_3_old.html#cb195-10" aria-hidden="true" tabindex="-1"></a>    <span class="kw">WHERE</span></span>
+<span id="cb195-11"><a href="13_harjoitus_3_old.html#cb195-11" aria-hidden="true" tabindex="-1"></a>    <span class="op">..</span>. <span class="kw">AND</span> <span class="op">..</span>.</span>
+<span id="cb195-12"><a href="13_harjoitus_3_old.html#cb195-12" aria-hidden="true" tabindex="-1"></a><span class="kw">UNION</span> <span class="co">-- yhdistä kyselyiden tulokset UNION- operaattorilla</span></span>
+<span id="cb195-13"><a href="13_harjoitus_3_old.html#cb195-13" aria-hidden="true" tabindex="-1"></a>    <span class="co">-- valitse kunnat, jossa kunnan kakkoskieli (kieli_ni2) on &#39;Suomi&#39; ja kunnan suomenkielinen nimi on</span></span>
+<span id="cb195-14"><a href="13_harjoitus_3_old.html#cb195-14" aria-hidden="true" tabindex="-1"></a>    <span class="co">-- viisi merkkiä pitkä. </span></span>
+<span id="cb195-15"><a href="13_harjoitus_3_old.html#cb195-15" aria-hidden="true" tabindex="-1"></a>    <span class="co">-- Huomioi oikea kunnan nimen sarake (kunta_ni1 vai kunta_ni2)</span></span>
+<span id="cb195-16"><a href="13_harjoitus_3_old.html#cb195-16" aria-hidden="true" tabindex="-1"></a>    <span class="kw">SELECT</span></span>
+<span id="cb195-17"><a href="13_harjoitus_3_old.html#cb195-17" aria-hidden="true" tabindex="-1"></a>    <span class="op">..</span>.</span>
+<span id="cb195-18"><a href="13_harjoitus_3_old.html#cb195-18" aria-hidden="true" tabindex="-1"></a>    <span class="kw">FROM</span></span>
+<span id="cb195-19"><a href="13_harjoitus_3_old.html#cb195-19" aria-hidden="true" tabindex="-1"></a>    <span class="op">..</span>.</span>
+<span id="cb195-20"><a href="13_harjoitus_3_old.html#cb195-20" aria-hidden="true" tabindex="-1"></a>    <span class="kw">WHERE</span></span>
+<span id="cb195-21"><a href="13_harjoitus_3_old.html#cb195-21" aria-hidden="true" tabindex="-1"></a>    <span class="op">..</span>. <span class="kw">AND</span> <span class="op">..</span>.</span>
+<span id="cb195-22"><a href="13_harjoitus_3_old.html#cb195-22" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb195-23"><a href="13_harjoitus_3_old.html#cb195-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb195-24"><a href="13_harjoitus_3_old.html#cb195-24" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span></span>
+<span id="cb195-25"><a href="13_harjoitus_3_old.html#cb195-25" aria-hidden="true" tabindex="-1"></a><span class="fu">count</span>() <span class="kw">AS</span> <span class="op">..</span>. <span class="co">-- käytä count() funktiota (valitse yllä määritellystä CTE:stä sopiva sarake).</span></span>
+<span id="cb195-26"><a href="13_harjoitus_3_old.html#cb195-26" aria-hidden="true" tabindex="-1"></a>               <span class="co">-- Voit myös määrittää sille aliaksen &#39;AS&#39;- lausekkeen jälkeen.</span></span>
+<span id="cb195-27"><a href="13_harjoitus_3_old.html#cb195-27" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span></span>
+<span id="cb195-28"><a href="13_harjoitus_3_old.html#cb195-28" aria-hidden="true" tabindex="-1"></a><span class="op">..</span>.; <span class="co">-- viittaa aikaisemmin määriteltyyn CTE:hen</span></span></code></pre></div>
 </div>
 </div>
 <button onclick="toggleAnswer(this)" class="btn answer_btn">
@@ -533,29 +537,29 @@ ratkaisu
 </button>
 <div class="hidden-box">
 <div class="code-box">
-<div class="sourceCode" id="cb191"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb191-1"><a href="13_harjoitus_3_old.html#cb191-1" aria-hidden="true" tabindex="-1"></a><span class="kw">WITH</span> ltr5 <span class="kw">AS</span></span>
-<span id="cb191-2"><a href="13_harjoitus_3_old.html#cb191-2" aria-hidden="true" tabindex="-1"></a>(</span>
-<span id="cb191-3"><a href="13_harjoitus_3_old.html#cb191-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">SELECT</span></span>
-<span id="cb191-4"><a href="13_harjoitus_3_old.html#cb191-4" aria-hidden="true" tabindex="-1"></a>    kunta_ni1 <span class="kw">as</span> <span class="ot">&quot;Kunta&quot;</span>, maaku_ni1 <span class="kw">as</span> <span class="ot">&quot;Maakunta&quot;</span>, char_length(kunta_ni1) <span class="kw">as</span> <span class="ot">&quot;Pituus&quot;</span>,</span>
-<span id="cb191-5"><a href="13_harjoitus_3_old.html#cb191-5" aria-hidden="true" tabindex="-1"></a>    kieli_ni1, <span class="st">&#39;Ykköskieli&#39;</span> <span class="kw">as</span> <span class="ot">&quot;Kielisyys&quot;</span></span>
-<span id="cb191-6"><a href="13_harjoitus_3_old.html#cb191-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">FROM</span></span>
-<span id="cb191-7"><a href="13_harjoitus_3_old.html#cb191-7" aria-hidden="true" tabindex="-1"></a>    nlsfi.hallintoalue</span>
-<span id="cb191-8"><a href="13_harjoitus_3_old.html#cb191-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">WHERE</span></span>
-<span id="cb191-9"><a href="13_harjoitus_3_old.html#cb191-9" aria-hidden="true" tabindex="-1"></a>    char_length(kunta_ni1) <span class="op">=</span> <span class="dv">5</span> <span class="kw">AND</span> kieli_ni1 <span class="op">=</span> <span class="st">&#39;Suomi&#39;</span></span>
-<span id="cb191-10"><a href="13_harjoitus_3_old.html#cb191-10" aria-hidden="true" tabindex="-1"></a><span class="kw">UNION</span></span>
-<span id="cb191-11"><a href="13_harjoitus_3_old.html#cb191-11" aria-hidden="true" tabindex="-1"></a>    <span class="kw">SELECT</span></span>
-<span id="cb191-12"><a href="13_harjoitus_3_old.html#cb191-12" aria-hidden="true" tabindex="-1"></a>    kunta_ni2 <span class="kw">as</span> <span class="ot">&quot;Kunta&quot;</span>, maaku_ni2 <span class="kw">as</span> <span class="ot">&quot;Maakunta&quot;</span>, char_length(kunta_ni2) <span class="kw">as</span> <span class="ot">&quot;Pituus&quot;</span>,</span>
-<span id="cb191-13"><a href="13_harjoitus_3_old.html#cb191-13" aria-hidden="true" tabindex="-1"></a>    kieli_ni2, <span class="st">&#39;Kakkoskieli&#39;</span> <span class="kw">as</span> <span class="ot">&quot;Kielisyys&quot;</span></span>
-<span id="cb191-14"><a href="13_harjoitus_3_old.html#cb191-14" aria-hidden="true" tabindex="-1"></a>    <span class="kw">FROM</span></span>
-<span id="cb191-15"><a href="13_harjoitus_3_old.html#cb191-15" aria-hidden="true" tabindex="-1"></a>    nlsfi.hallintoalue</span>
-<span id="cb191-16"><a href="13_harjoitus_3_old.html#cb191-16" aria-hidden="true" tabindex="-1"></a>    <span class="kw">WHERE</span></span>
-<span id="cb191-17"><a href="13_harjoitus_3_old.html#cb191-17" aria-hidden="true" tabindex="-1"></a>    char_length(kunta_ni2) <span class="op">=</span> <span class="dv">5</span> <span class="kw">AND</span> kieli_ni2 <span class="op">=</span> <span class="st">&#39;Suomi&#39;</span></span>
-<span id="cb191-18"><a href="13_harjoitus_3_old.html#cb191-18" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb191-19"><a href="13_harjoitus_3_old.html#cb191-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb191-20"><a href="13_harjoitus_3_old.html#cb191-20" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span></span>
-<span id="cb191-21"><a href="13_harjoitus_3_old.html#cb191-21" aria-hidden="true" tabindex="-1"></a><span class="fu">count</span>(<span class="ot">&quot;Kunta&quot;</span>) <span class="kw">AS</span> <span class="ot">&quot;5-kirjaimisia suomenkielisiä kunta&quot;</span></span>
-<span id="cb191-22"><a href="13_harjoitus_3_old.html#cb191-22" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span></span>
-<span id="cb191-23"><a href="13_harjoitus_3_old.html#cb191-23" aria-hidden="true" tabindex="-1"></a>ltr5;</span></code></pre></div>
+<div class="sourceCode" id="cb196"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb196-1"><a href="13_harjoitus_3_old.html#cb196-1" aria-hidden="true" tabindex="-1"></a><span class="kw">WITH</span> ltr5 <span class="kw">AS</span></span>
+<span id="cb196-2"><a href="13_harjoitus_3_old.html#cb196-2" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb196-3"><a href="13_harjoitus_3_old.html#cb196-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">SELECT</span></span>
+<span id="cb196-4"><a href="13_harjoitus_3_old.html#cb196-4" aria-hidden="true" tabindex="-1"></a>    kunta_ni1 <span class="kw">as</span> <span class="ot">&quot;Kunta&quot;</span>, maaku_ni1 <span class="kw">as</span> <span class="ot">&quot;Maakunta&quot;</span>, char_length(kunta_ni1) <span class="kw">as</span> <span class="ot">&quot;Pituus&quot;</span>,</span>
+<span id="cb196-5"><a href="13_harjoitus_3_old.html#cb196-5" aria-hidden="true" tabindex="-1"></a>    kieli_ni1, <span class="st">&#39;Ykköskieli&#39;</span> <span class="kw">as</span> <span class="ot">&quot;Kielisyys&quot;</span></span>
+<span id="cb196-6"><a href="13_harjoitus_3_old.html#cb196-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">FROM</span></span>
+<span id="cb196-7"><a href="13_harjoitus_3_old.html#cb196-7" aria-hidden="true" tabindex="-1"></a>    nlsfi.hallintoalue</span>
+<span id="cb196-8"><a href="13_harjoitus_3_old.html#cb196-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">WHERE</span></span>
+<span id="cb196-9"><a href="13_harjoitus_3_old.html#cb196-9" aria-hidden="true" tabindex="-1"></a>    char_length(kunta_ni1) <span class="op">=</span> <span class="dv">5</span> <span class="kw">AND</span> kieli_ni1 <span class="op">=</span> <span class="st">&#39;Suomi&#39;</span></span>
+<span id="cb196-10"><a href="13_harjoitus_3_old.html#cb196-10" aria-hidden="true" tabindex="-1"></a><span class="kw">UNION</span></span>
+<span id="cb196-11"><a href="13_harjoitus_3_old.html#cb196-11" aria-hidden="true" tabindex="-1"></a>    <span class="kw">SELECT</span></span>
+<span id="cb196-12"><a href="13_harjoitus_3_old.html#cb196-12" aria-hidden="true" tabindex="-1"></a>    kunta_ni2 <span class="kw">as</span> <span class="ot">&quot;Kunta&quot;</span>, maaku_ni2 <span class="kw">as</span> <span class="ot">&quot;Maakunta&quot;</span>, char_length(kunta_ni2) <span class="kw">as</span> <span class="ot">&quot;Pituus&quot;</span>,</span>
+<span id="cb196-13"><a href="13_harjoitus_3_old.html#cb196-13" aria-hidden="true" tabindex="-1"></a>    kieli_ni2, <span class="st">&#39;Kakkoskieli&#39;</span> <span class="kw">as</span> <span class="ot">&quot;Kielisyys&quot;</span></span>
+<span id="cb196-14"><a href="13_harjoitus_3_old.html#cb196-14" aria-hidden="true" tabindex="-1"></a>    <span class="kw">FROM</span></span>
+<span id="cb196-15"><a href="13_harjoitus_3_old.html#cb196-15" aria-hidden="true" tabindex="-1"></a>    nlsfi.hallintoalue</span>
+<span id="cb196-16"><a href="13_harjoitus_3_old.html#cb196-16" aria-hidden="true" tabindex="-1"></a>    <span class="kw">WHERE</span></span>
+<span id="cb196-17"><a href="13_harjoitus_3_old.html#cb196-17" aria-hidden="true" tabindex="-1"></a>    char_length(kunta_ni2) <span class="op">=</span> <span class="dv">5</span> <span class="kw">AND</span> kieli_ni2 <span class="op">=</span> <span class="st">&#39;Suomi&#39;</span></span>
+<span id="cb196-18"><a href="13_harjoitus_3_old.html#cb196-18" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb196-19"><a href="13_harjoitus_3_old.html#cb196-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb196-20"><a href="13_harjoitus_3_old.html#cb196-20" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span></span>
+<span id="cb196-21"><a href="13_harjoitus_3_old.html#cb196-21" aria-hidden="true" tabindex="-1"></a><span class="fu">count</span>(<span class="ot">&quot;Kunta&quot;</span>) <span class="kw">AS</span> <span class="ot">&quot;5-kirjaimisia suomenkielisiä kunta&quot;</span></span>
+<span id="cb196-22"><a href="13_harjoitus_3_old.html#cb196-22" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span></span>
+<span id="cb196-23"><a href="13_harjoitus_3_old.html#cb196-23" aria-hidden="true" tabindex="-1"></a>ltr5;</span></code></pre></div>
 </div>
 </div>
 </div>
@@ -563,31 +567,31 @@ ratkaisu
 <h2><span class="header-section-number">14.6</span> Harjoitus 3.6</h2>
 <p>Missä kunnissa suomen- ja ruotsinkielinen nimi on eri, mutta samanpituinen? Järjestä tulokset kunnan nimen pituuden mukaan laskevasti.</p>
 <div class="code-box">
-<div class="sourceCode" id="cb192"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb192-1"><a href="13_harjoitus_3_old.html#cb192-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span></span>
-<span id="cb192-2"><a href="13_harjoitus_3_old.html#cb192-2" aria-hidden="true" tabindex="-1"></a><span class="op">..</span>.</span>
-<span id="cb192-3"><a href="13_harjoitus_3_old.html#cb192-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span></span>
-<span id="cb192-4"><a href="13_harjoitus_3_old.html#cb192-4" aria-hidden="true" tabindex="-1"></a><span class="op">..</span>.</span>
-<span id="cb192-5"><a href="13_harjoitus_3_old.html#cb192-5" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span></span>
-<span id="cb192-6"><a href="13_harjoitus_3_old.html#cb192-6" aria-hidden="true" tabindex="-1"></a><span class="op">..</span>.</span>
-<span id="cb192-7"><a href="13_harjoitus_3_old.html#cb192-7" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span></span>
-<span id="cb192-8"><a href="13_harjoitus_3_old.html#cb192-8" aria-hidden="true" tabindex="-1"></a><span class="op">..</span>. <span class="kw">DESC</span>;</span></code></pre></div>
+<div class="sourceCode" id="cb197"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb197-1"><a href="13_harjoitus_3_old.html#cb197-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span></span>
+<span id="cb197-2"><a href="13_harjoitus_3_old.html#cb197-2" aria-hidden="true" tabindex="-1"></a><span class="op">..</span>.</span>
+<span id="cb197-3"><a href="13_harjoitus_3_old.html#cb197-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span></span>
+<span id="cb197-4"><a href="13_harjoitus_3_old.html#cb197-4" aria-hidden="true" tabindex="-1"></a><span class="op">..</span>.</span>
+<span id="cb197-5"><a href="13_harjoitus_3_old.html#cb197-5" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span></span>
+<span id="cb197-6"><a href="13_harjoitus_3_old.html#cb197-6" aria-hidden="true" tabindex="-1"></a><span class="op">..</span>.</span>
+<span id="cb197-7"><a href="13_harjoitus_3_old.html#cb197-7" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span></span>
+<span id="cb197-8"><a href="13_harjoitus_3_old.html#cb197-8" aria-hidden="true" tabindex="-1"></a><span class="op">..</span>. <span class="kw">DESC</span>;</span></code></pre></div>
 </div>
 <button onclick="toggleAnswer(this)" class="btn answer_btn">
 vinkki
 </button>
 <div class="hidden-box">
 <div class="code-box">
-<div class="sourceCode" id="cb193"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb193-1"><a href="13_harjoitus_3_old.html#cb193-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- Täydennä oikeat sarakkeet</span></span>
-<span id="cb193-2"><a href="13_harjoitus_3_old.html#cb193-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span></span>
-<span id="cb193-3"><a href="13_harjoitus_3_old.html#cb193-3" aria-hidden="true" tabindex="-1"></a>kunnan_nimi_fi, kunnan_nimi_sv, char_length(kunnan_nimi_fi) <span class="kw">AS</span> <span class="ot">&quot;Pituus&quot;</span></span>
-<span id="cb193-4"><a href="13_harjoitus_3_old.html#cb193-4" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span></span>
-<span id="cb193-5"><a href="13_harjoitus_3_old.html#cb193-5" aria-hidden="true" tabindex="-1"></a>nlsfi.hallintoalue</span>
-<span id="cb193-6"><a href="13_harjoitus_3_old.html#cb193-6" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span></span>
-<span id="cb193-7"><a href="13_harjoitus_3_old.html#cb193-7" aria-hidden="true" tabindex="-1"></a>kunnan_nimi_fi <span class="op">..</span>. kunnan_nimi_sv <span class="kw">AND</span> char_length(kunnan_nimi_fi) <span class="op">..</span>. char_length(kunnan_nimi_sv)</span>
-<span id="cb193-8"><a href="13_harjoitus_3_old.html#cb193-8" aria-hidden="true" tabindex="-1"></a><span class="co">-- korvaa tyhjäksi jätetyt kohdat &#39;...&#39; oikeilla operaattoreilla</span></span>
-<span id="cb193-9"><a href="13_harjoitus_3_old.html#cb193-9" aria-hidden="true" tabindex="-1"></a><span class="co">-- kts. tarvittaessa linkki alhaalta dokumentaatioon</span></span>
-<span id="cb193-10"><a href="13_harjoitus_3_old.html#cb193-10" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span></span>
-<span id="cb193-11"><a href="13_harjoitus_3_old.html#cb193-11" aria-hidden="true" tabindex="-1"></a>char_length(kunnan_nimi_fi) <span class="kw">DESC</span>;</span></code></pre></div>
+<div class="sourceCode" id="cb198"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb198-1"><a href="13_harjoitus_3_old.html#cb198-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- Täydennä oikeat sarakkeet</span></span>
+<span id="cb198-2"><a href="13_harjoitus_3_old.html#cb198-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span></span>
+<span id="cb198-3"><a href="13_harjoitus_3_old.html#cb198-3" aria-hidden="true" tabindex="-1"></a>kunnan_nimi_fi, kunnan_nimi_sv, char_length(kunnan_nimi_fi) <span class="kw">AS</span> <span class="ot">&quot;Pituus&quot;</span></span>
+<span id="cb198-4"><a href="13_harjoitus_3_old.html#cb198-4" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span></span>
+<span id="cb198-5"><a href="13_harjoitus_3_old.html#cb198-5" aria-hidden="true" tabindex="-1"></a>nlsfi.hallintoalue</span>
+<span id="cb198-6"><a href="13_harjoitus_3_old.html#cb198-6" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span></span>
+<span id="cb198-7"><a href="13_harjoitus_3_old.html#cb198-7" aria-hidden="true" tabindex="-1"></a>kunnan_nimi_fi <span class="op">..</span>. kunnan_nimi_sv <span class="kw">AND</span> char_length(kunnan_nimi_fi) <span class="op">..</span>. char_length(kunnan_nimi_sv)</span>
+<span id="cb198-8"><a href="13_harjoitus_3_old.html#cb198-8" aria-hidden="true" tabindex="-1"></a><span class="co">-- korvaa tyhjäksi jätetyt kohdat &#39;...&#39; oikeilla operaattoreilla</span></span>
+<span id="cb198-9"><a href="13_harjoitus_3_old.html#cb198-9" aria-hidden="true" tabindex="-1"></a><span class="co">-- kts. tarvittaessa linkki alhaalta dokumentaatioon</span></span>
+<span id="cb198-10"><a href="13_harjoitus_3_old.html#cb198-10" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span></span>
+<span id="cb198-11"><a href="13_harjoitus_3_old.html#cb198-11" aria-hidden="true" tabindex="-1"></a>char_length(kunnan_nimi_fi) <span class="kw">DESC</span>;</span></code></pre></div>
 </div>
 <p><a href="https://www.postgresql.org/docs/9.0/functions-comparison.html">Operaattorit PostgreSQL:n dokumentaatiossa.</a></p>
 </div>
@@ -596,14 +600,14 @@ ratkaisu
 </button>
 <div class="hidden-box">
 <div class="code-box">
-<div class="sourceCode" id="cb194"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb194-1"><a href="13_harjoitus_3_old.html#cb194-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span></span>
-<span id="cb194-2"><a href="13_harjoitus_3_old.html#cb194-2" aria-hidden="true" tabindex="-1"></a>kunta_ni1, kunta_ni2, char_length(kunta_ni1) <span class="kw">AS</span> <span class="ot">&quot;Pituus&quot;</span></span>
-<span id="cb194-3"><a href="13_harjoitus_3_old.html#cb194-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span></span>
-<span id="cb194-4"><a href="13_harjoitus_3_old.html#cb194-4" aria-hidden="true" tabindex="-1"></a>nlsfi.hallintoalue</span>
-<span id="cb194-5"><a href="13_harjoitus_3_old.html#cb194-5" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span></span>
-<span id="cb194-6"><a href="13_harjoitus_3_old.html#cb194-6" aria-hidden="true" tabindex="-1"></a>kunta_ni1 <span class="op">&lt;&gt;</span> kunta_ni2 <span class="kw">AND</span> char_length(kunta_ni1) <span class="op">=</span> char_length(kunta_ni2)</span>
-<span id="cb194-7"><a href="13_harjoitus_3_old.html#cb194-7" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span></span>
-<span id="cb194-8"><a href="13_harjoitus_3_old.html#cb194-8" aria-hidden="true" tabindex="-1"></a>char_length(kunta_ni1) <span class="kw">DESC</span>;</span></code></pre></div>
+<div class="sourceCode" id="cb199"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb199-1"><a href="13_harjoitus_3_old.html#cb199-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span></span>
+<span id="cb199-2"><a href="13_harjoitus_3_old.html#cb199-2" aria-hidden="true" tabindex="-1"></a>kunta_ni1, kunta_ni2, char_length(kunta_ni1) <span class="kw">AS</span> <span class="ot">&quot;Pituus&quot;</span></span>
+<span id="cb199-3"><a href="13_harjoitus_3_old.html#cb199-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span></span>
+<span id="cb199-4"><a href="13_harjoitus_3_old.html#cb199-4" aria-hidden="true" tabindex="-1"></a>nlsfi.hallintoalue</span>
+<span id="cb199-5"><a href="13_harjoitus_3_old.html#cb199-5" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span></span>
+<span id="cb199-6"><a href="13_harjoitus_3_old.html#cb199-6" aria-hidden="true" tabindex="-1"></a>kunta_ni1 <span class="op">&lt;&gt;</span> kunta_ni2 <span class="kw">AND</span> char_length(kunta_ni1) <span class="op">=</span> char_length(kunta_ni2)</span>
+<span id="cb199-7"><a href="13_harjoitus_3_old.html#cb199-7" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span></span>
+<span id="cb199-8"><a href="13_harjoitus_3_old.html#cb199-8" aria-hidden="true" tabindex="-1"></a>char_length(kunta_ni1) <span class="kw">DESC</span>;</span></code></pre></div>
 </div>
 </div>
 
@@ -622,7 +626,7 @@ ratkaisu
 
 <div class="footer-info">
 <h5 class="footer-title">PostgreSQL ja PostGISin perusteet</h5>
-<span class="footer-version">v2026-04-18</span>
+<span class="footer-version">v2026-04-19</span>
 <div class="license"><img src="img/by-nd.svg" width="80px" alt="CC-BY-ND"></div>
 </div>
 

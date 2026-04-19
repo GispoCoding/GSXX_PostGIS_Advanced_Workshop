@@ -16,7 +16,7 @@
 
 <meta name="author" content="Gispo Oy" />
 
-<meta name="date" content="2026-04-18" />
+<meta name="date" content="2026-04-19" />
 
 
 <meta name="description" content="12 Harjoitus 1: Työkalujen käyttöönotto | PostgreSQL ja PostGISin perusteet">
@@ -190,7 +190,11 @@ type="button" onclick="navToggle()" aria-label="Toggle navigation">
 </ul></li>
 <li><a href="07_harjoitus_7.html#harjoitus-7-foreign-data-wrapper"><span class="toc-section-number">8</span> Harjoitus 7: Foreign Data Wrapper</a></li>
 <li><a href="08_harjoitus_8.html#harjoitus-8-postgresqln-yhteentoimivuus-muiden-ohjelmistojen-kanssa"><span class="toc-section-number">9</span> Harjoitus 8: PostgreSQL:n yhteentoimivuus muiden ohjelmistojen kanssa</a></li>
-<li><a href="09_harjoitus_09.html#harjoitus-9-indeksit---tavalliset-ja-spatiaaliset"><span class="toc-section-number">10</span> Harjoitus 9: Indeksit - tavalliset ja spatiaaliset</a></li>
+<li class="has-sub"><a href="09_harjoitus_09.html#harjoitus-9-indeksit---tavalliset-ja-spatiaaliset"><span class="toc-section-number">10</span> Harjoitus 9: Indeksit - tavalliset ja spatiaaliset</a>
+<ul>
+<li><a href="09_harjoitus_09.html#postgresqln-ei-spatiaaliset-indeksit"><span class="toc-section-number">10.1</span> PostgreSQL:n ei-spatiaaliset indeksit</a></li>
+<li><a href="09_harjoitus_09.html#postgresqln-spatiaaliset-indeksit"><span class="toc-section-number">10.2</span> PostgreSQL:n spatiaaliset indeksit</a></li>
+</ul></li>
 <li class="has-sub"><a href="10_harjoitus_10.html#harjoitus-10-suorituskyvyn-optimointi"><span class="toc-section-number">11</span> Harjoitus 10: Suorituskyvyn optimointi</a>
 <ul>
 <li><a href="10_harjoitus_10.html#harjoitus-9.1-taulutilat"><span class="toc-section-number">11.1</span> Harjoitus 9.1: Taulutilat</a></li>
@@ -363,7 +367,7 @@ komennon tuloksen. Voit myös tallentaa SQL-komentosi
 <p>Nyt voidaan lisätä PostGIS-lisäosa <strong>trainingdatabase</strong>-tietokantaan
 seuraavalla SQL-komennolla:</p>
 <div class="code-box">
-<div class="sourceCode" id="cb148"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb148-1"><a href="11_harjoitus_1_old.html#cb148-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> EXTENSION <span class="cf">IF</span> <span class="kw">NOT</span> <span class="kw">EXISTS</span> postgis;</span></code></pre></div>
+<div class="sourceCode" id="cb153"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb153-1"><a href="11_harjoitus_1_old.html#cb153-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> EXTENSION <span class="cf">IF</span> <span class="kw">NOT</span> <span class="kw">EXISTS</span> postgis;</span></code></pre></div>
 </div>
 <div class="hint-box">
 <p>Mitä spatial_ref_sys-taulu sisältää?</p>
@@ -372,11 +376,11 @@ sisältävät?</p>
 </div>
 <p>Uusi taulu voidaan luoda kirjoittamalla seuraava SQL-komentojono <strong>Query Tool</strong>:n SQL-editoriin.</p>
 <div class="code-box">
-<div class="sourceCode" id="cb149"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb149-1"><a href="11_harjoitus_1_old.html#cb149-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- PostgreSQL ja PostGISin perusteet</span></span>
-<span id="cb149-2"><a href="11_harjoitus_1_old.html#cb149-2" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> test_tmp(</span>
-<span id="cb149-3"><a href="11_harjoitus_1_old.html#cb149-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">id</span> serial,</span>
-<span id="cb149-4"><a href="11_harjoitus_1_old.html#cb149-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">time</span> <span class="dt">time</span>,</span>
-<span id="cb149-5"><a href="11_harjoitus_1_old.html#cb149-5" aria-hidden="true" tabindex="-1"></a>    num <span class="dt">integer</span>);</span></code></pre></div>
+<div class="sourceCode" id="cb154"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb154-1"><a href="11_harjoitus_1_old.html#cb154-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- PostgreSQL ja PostGISin perusteet</span></span>
+<span id="cb154-2"><a href="11_harjoitus_1_old.html#cb154-2" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> test_tmp(</span>
+<span id="cb154-3"><a href="11_harjoitus_1_old.html#cb154-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">id</span> serial,</span>
+<span id="cb154-4"><a href="11_harjoitus_1_old.html#cb154-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">time</span> <span class="dt">time</span>,</span>
+<span id="cb154-5"><a href="11_harjoitus_1_old.html#cb154-5" aria-hidden="true" tabindex="-1"></a>    num <span class="dt">integer</span>);</span></code></pre></div>
 </div>
 <div class="hint-box">
 <p>Huomaa, että kahdella viivalla “--” alkavat rivit ovat
@@ -386,20 +390,20 @@ suoritettaessa.</p>
 <p>Tauluja voi luoda myös SQL-kyselyiden tulosten perusteella.</p>
 <p>Lisätään yllä luotuun tauluun tietueita seuraavalla SQL-komennolla:</p>
 <div class="code-box">
-<div class="sourceCode" id="cb150"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb150-1"><a href="11_harjoitus_1_old.html#cb150-1" aria-hidden="true" tabindex="-1"></a><span class="kw">INSERT</span> <span class="kw">INTO</span> test_tmp (<span class="dt">time</span>,num)</span>
-<span id="cb150-2"><a href="11_harjoitus_1_old.html#cb150-2" aria-hidden="true" tabindex="-1"></a>(<span class="kw">SELECT</span> now(), generate_series(<span class="dv">1</span>,<span class="dv">5000</span>));</span></code></pre></div>
+<div class="sourceCode" id="cb155"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb155-1"><a href="11_harjoitus_1_old.html#cb155-1" aria-hidden="true" tabindex="-1"></a><span class="kw">INSERT</span> <span class="kw">INTO</span> test_tmp (<span class="dt">time</span>,num)</span>
+<span id="cb155-2"><a href="11_harjoitus_1_old.html#cb155-2" aria-hidden="true" tabindex="-1"></a>(<span class="kw">SELECT</span> now(), generate_series(<span class="dv">1</span>,<span class="dv">5000</span>));</span></code></pre></div>
 </div>
 <p>Tietueita voi lisätä myös SQL-kyselyjen tulosten perusteella.</p>
 <p>Voit listata tauluusi tekemiä tietueita esimerkiksi seuraavalla
 komennolla:</p>
 <div class="code-box">
-<div class="sourceCode" id="cb151"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb151-1"><a href="11_harjoitus_1_old.html#cb151-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span></span>
-<span id="cb151-2"><a href="11_harjoitus_1_old.html#cb151-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> test_tmp</span>
-<span id="cb151-3"><a href="11_harjoitus_1_old.html#cb151-3" aria-hidden="true" tabindex="-1"></a><span class="kw">LIMIT</span> <span class="dv">10</span>;</span></code></pre></div>
+<div class="sourceCode" id="cb156"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb156-1"><a href="11_harjoitus_1_old.html#cb156-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span></span>
+<span id="cb156-2"><a href="11_harjoitus_1_old.html#cb156-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> test_tmp</span>
+<span id="cb156-3"><a href="11_harjoitus_1_old.html#cb156-3" aria-hidden="true" tabindex="-1"></a><span class="kw">LIMIT</span> <span class="dv">10</span>;</span></code></pre></div>
 </div>
 <p>Voit poistaa luodun taulun seuraavalla komennolla:</p>
 <div class="code-box">
-<div class="sourceCode" id="cb152"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb152-1"><a href="11_harjoitus_1_old.html#cb152-1" aria-hidden="true" tabindex="-1"></a><span class="kw">DROP</span> <span class="kw">TABLE</span> test_tmp;</span></code></pre></div>
+<div class="sourceCode" id="cb157"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb157-1"><a href="11_harjoitus_1_old.html#cb157-1" aria-hidden="true" tabindex="-1"></a><span class="kw">DROP</span> <span class="kw">TABLE</span> test_tmp;</span></code></pre></div>
 </div>
 </div>
 <div id="pg_dump-ja-pg_restore-1" class="section level3" number="12.1.4">
@@ -424,7 +428,7 @@ psql-komentorivityökalua. Kirjaudu ensin sisään WeTTY- terminaaliemulaattorii
 <p>Ota yhteys omaan tietokantaklusteriisi
 komennolla:</p>
 <div class="commandline-box">
-<div class="sourceCode" id="cb153"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb153-1"><a href="11_harjoitus_1_old.html#cb153-1" aria-hidden="true" tabindex="-1"></a><span class="ex">psql</span> <span class="at">-U</span> postgres <span class="at">-h</span> dbhost</span></code></pre></div>
+<div class="sourceCode" id="cb158"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb158-1"><a href="11_harjoitus_1_old.html#cb158-1" aria-hidden="true" tabindex="-1"></a><span class="ex">psql</span> <span class="at">-U</span> postgres <span class="at">-h</span> dbhost</span></code></pre></div>
 </div>
 <p><img src="img/psql_start.png" /></p>
 <div id="psqln-käyttäminen-1" class="section level3" number="12.2.1">
@@ -449,7 +453,7 @@ automaatisointiin. Edellä mainitut yhteydenottokomennot ovat oivia
 esimerkkejä ei-interaktiivisista psql-komennoista. Kokeile ajaa seuraava
 komento komentorivillä:</p>
 <div class="commandline-box">
-<div class="sourceCode" id="cb155"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb155-1"><a href="11_harjoitus_1_old.html#cb155-1" aria-hidden="true" tabindex="-1"></a><span class="ex">psql</span> <span class="at">-U</span> postgres <span class="at">-h</span> dbhost <span class="at">-c</span> <span class="st">&quot;select current_database();&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb160"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb160-1"><a href="11_harjoitus_1_old.html#cb160-1" aria-hidden="true" tabindex="-1"></a><span class="ex">psql</span> <span class="at">-U</span> postgres <span class="at">-h</span> dbhost <span class="at">-c</span> <span class="st">&quot;select current_database();&quot;</span></span></code></pre></div>
 </div>
 </div>
 <div id="tietokannan-luonti-1" class="section level3" number="12.2.2">
@@ -457,7 +461,7 @@ komento komentorivillä:</p>
 <p>createdb on komentorivityökalu helpottamaan tietokannan luomista.
 Helpoimmillaan uuden tietokannan luominen onnistuukin komennolla:</p>
 <div class="commandline-box">
-<div class="sourceCode" id="cb156"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb156-1"><a href="11_harjoitus_1_old.html#cb156-1" aria-hidden="true" tabindex="-1"></a><span class="ex">createdb</span> <span class="at">-U</span> postgres <span class="at">-h</span> dbhost uuden_tietokannan_nimi</span></code></pre></div>
+<div class="sourceCode" id="cb161"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb161-1"><a href="11_harjoitus_1_old.html#cb161-1" aria-hidden="true" tabindex="-1"></a><span class="ex">createdb</span> <span class="at">-U</span> postgres <span class="at">-h</span> dbhost uuden_tietokannan_nimi</span></code></pre></div>
 </div>
 <p><img src="img/createdb.png" /></p>
 </div>
@@ -466,7 +470,7 @@ Helpoimmillaan uuden tietokannan luominen onnistuukin komennolla:</p>
 <p>dropdb samoin kuin createdb on komentorivityökalu. Helpoimmillaan
 tietokannan voi poistaa komennolla:</p>
 <div class="commandline-box">
-<div class="sourceCode" id="cb157"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb157-1"><a href="11_harjoitus_1_old.html#cb157-1" aria-hidden="true" tabindex="-1"></a><span class="ex">dropdb</span> <span class="at">-U</span> postgres <span class="at">-h</span> dbhost poistettavan_tietokannan_nimi</span></code></pre></div>
+<div class="sourceCode" id="cb162"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb162-1"><a href="11_harjoitus_1_old.html#cb162-1" aria-hidden="true" tabindex="-1"></a><span class="ex">dropdb</span> <span class="at">-U</span> postgres <span class="at">-h</span> dbhost poistettavan_tietokannan_nimi</span></code></pre></div>
 </div>
 </div>
 <div id="tietokantayhteyden-sulkeminen-2" class="section level3" number="12.2.4">
@@ -480,12 +484,12 @@ tietokannan voi poistaa komennolla:</p>
 <h3><span class="header-section-number">12.2.5</span> Tiedot asennuksista</h3>
 <p>PostgreSQL:n version voit kysyä SQL-komennolla:</p>
 <div class="code-box">
-<div class="sourceCode" id="cb158"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb158-1"><a href="11_harjoitus_1_old.html#cb158-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> version();</span></code></pre></div>
+<div class="sourceCode" id="cb163"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb163-1"><a href="11_harjoitus_1_old.html#cb163-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> version();</span></code></pre></div>
 </div>
 <p>Asennetut lisäosat voit tarkistaa SQL-lauseella:</p>
 <div class="code-box">
-<div class="sourceCode" id="cb159"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb159-1"><a href="11_harjoitus_1_old.html#cb159-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span></span>
-<span id="cb159-2"><a href="11_harjoitus_1_old.html#cb159-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> pg_extension;</span></code></pre></div>
+<div class="sourceCode" id="cb164"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb164-1"><a href="11_harjoitus_1_old.html#cb164-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span></span>
+<span id="cb164-2"><a href="11_harjoitus_1_old.html#cb164-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> pg_extension;</span></code></pre></div>
 </div>
 </div>
 <div id="tietokantayhteyden-sulkeminen-3" class="section level3" number="12.2.6">
@@ -528,7 +532,7 @@ suositellaan salattavaksi TLS:n avulla.</p>
 
 <div class="footer-info">
 <h5 class="footer-title">PostgreSQL ja PostGISin perusteet</h5>
-<span class="footer-version">v2026-04-18</span>
+<span class="footer-version">v2026-04-19</span>
 <div class="license"><img src="img/by-nd.svg" width="80px" alt="CC-BY-ND"></div>
 </div>
 

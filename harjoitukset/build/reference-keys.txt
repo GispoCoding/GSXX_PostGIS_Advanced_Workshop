@@ -83,6 +83,8 @@ valmistautuminen-6
 harjoitus-9-indeksit---tavalliset-ja-spatiaaliset
 valmistautuminen-7
 postgresqln-ei-spatiaaliset-indeksit
+postgresqln-query-planner-sekä-explain-analyze--komento
+postgresqln-spatiaaliset-indeksit
 harjoitus-10-suorituskyvyn-optimointi
 harjoitus-9.1-taulutilat
 harjoitus-9.6-tietokannan-ja-taulun-taulutilan-muuttaminen

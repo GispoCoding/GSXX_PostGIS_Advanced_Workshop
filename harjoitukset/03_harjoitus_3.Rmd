@@ -6,13 +6,19 @@
 
 ### Valmistautuminen
 
-Avaa [pgAdmin](/pgadmin) selaimeen ja kirjaudu sisään.  Avaa **Query Tool** (Valitse _trainingdatabase_ **->** Ylhäältä **Tools** **->** **Query Tool**).
+Avaa [pgAdmin](/pgadmin) selaimeen ja kirjaudu sisään.  Avaa **Query Tool** (Valitse _trainingdatabase_ **->** Ylhäältä **Tools** **->** **Query Tool**). Selaimesta kannattaa avata
+myös PostGISin funktioiden koottu dokumentaatiosivu [linkki](https://postgis.net/docs/manual-3.6/PostGIS_Special_Functions_Index.html)
 
 ### Yksinkertaisia SQL-hakuja
 
 ## Harjoitus 3.1
 
 ## PostGISin perusfunktiot geometrioiden käsittelyyn
+
+- Hae viheralueiden keskikohdat
+- Tee 5 m bufferi puille
+- Tee alueista, joiden bufferit menevät päällekkäin envelopella yhtenäisiä aluekohteita
+
 
 - dokumentaatio 
 
