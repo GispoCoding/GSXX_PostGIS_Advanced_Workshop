@@ -72,6 +72,18 @@ CREATE INDEX liikennevaylat_pituus_idx ON helsinki.liikennevaylat USING BTREE (p
 ```
 :::
 
+Samaten indeksin poistaminen on helppoa:
+
+:::code-box
+```sql
+
+DROP INDEX liikennevaylat_pituus_idx;
+
+```
+:::
+
+Aja edellä annettuja kyselyjä ensin ilman indeksiä ja indeksin määrittelyn jälkeen (voit koittaa ajaa kyselyn muutaman kerran saadaksesi keskiarvon)
+
 
 
 
@@ -90,5 +102,10 @@ row
 width
 actual time
 loops
+
+Katso koko SELECT pg_size_pretty(pg_relation_size(‘users_username_idx’));
+
+Muut työkalut: https://explain.depesz.com/, https://explain.dalibo.com/ voi käyttää myös lokaalisti käytettävä versio, html-tiedosto?
+ 
 
 ## PostgreSQL:n spatiaaliset indeksit
