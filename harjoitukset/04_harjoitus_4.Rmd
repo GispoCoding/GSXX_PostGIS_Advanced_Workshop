@@ -10,16 +10,13 @@ Avaa [pgAdmin](/pgadmin) selaimeen ja kirjaudu sisään. Avaa **Query Tool** (Va
 
 ## Harjoitus: tavallinen näkymä
 
-Muodosta puurekisteri-aineistosta näkymä "puut_kaupunginosittain", jossa on tieto myös siitä, missä kaupunginosassa puu on.
+Edellisessä harjoituksessa muodostimme kyselyn teiden varsilla olevien puiden löytämiseksi. Tehdään tämän perusteella uusi kysely, johon haluamme liittää kuhunkin 
+tulokseen vielä tiedon siitä, missä kaupunginosassa puu on 
 
 :::code-box
 ```sql
-CREATE VIEW puut_kaupunginosittain AS (
-SELECT
-
-FROM
-);
-
+SELECT 
+-- aiemmat puut + liitos kaupunginosaan, josta valitaan nimi
 ```
 :::
 
@@ -28,14 +25,16 @@ FROM
 ::: hidden-box
 :::code-box
 ```sql
-CREATE VIEW puut_kaupunginosittain AS (
-    SELECT a.*, b.nimi_fi  
-    FROM helsinki.___ a 
-    JOIN helsinki.___ b 
-    ON ... 
+-- käytetään esimerkiksi common table expressionia
+WITH teiden_puut AS (
+    <Aiempi kysely>
+)
+SELECT teiden_puut.*, k.nimi_fi FROM teiden_puut
+JOIN kaupunginosajako k
+ON ...;
 -- Millä ST-funktiolla spatiaalinen predikaatti, joka
 -- palauttaa tosi kun puu tietyn kaupunginosan sisällä
-);
+
 ```
 :::
 :::
@@ -45,53 +44,34 @@ CREATE VIEW puut_kaupunginosittain AS (
 :::hidden-box
 :::code-box
 ```sql
-CREATE VIEW puut_kaupunginosittain AS (
-    SELECT a.*, b.nimi_fi  
-    FROM helsinki.puurekisteri_piste a 
-    JOIN helsinki.kaupunginosajako b 
-    ON ST_Within(a.wkb_geometry, b.wkb_geometry)
-);
+WITH teiden_puut AS (
+    SELECT DISTINCT p.* FROM puurekisteri p
+    JOIN liikennevaylat l 
+    ON ST_DWithin(p.geom, l.geom, 5)
+)
+SELECT teiden_puut.*, k.nimi_fi FROM teiden_puut
+JOIN kaupunginosajako k
+ON ST_Within(teiden_puut.geom, k.geom);
 ```
 :::
 :::
 
-
-
-## Harjoitus 8.5: Geometrioiden yhdistäminen
-
-Muodosta (yhdistä) hallintoalueista maakuntien raja -aineisto:
-
+Luodaan tämän kyselyn perusteella ensin varsinainen tietokantataulu seuraavalla tavalla:
 :::code-box
 ```sql
-
-DROP TABLE IF EXISTS tmp.maakunnat;
-
-CREATE TABLE tmp.maakunnat as (
-    SELECT
-    ST_Union(wkb_geometry), maaku_ni1 as "Maakunnan nimi"
-    FROM
-    nlsfi.hallintoalue
-    GROUP BY
-    maaku_ni1
+CREATE TABLE IF NOT EXISTS tienvarren_puut AS (
+<kysely>
 );
 ```
 :::
 
-Vastaavasti, aineiston voi muodostaa myös hyödyntämällä näkymiä:
-
+Luodaan tämän jälkeen vaihtoehtoisesti samasta kyselystä normaali näkymä syntaksilla:
 :::code-box
 ```sql
-DROP VIEW IF EXISTS tmp.view_maakunta;
-
-CREATE VIEW tmp.view_maakunta AS (
-    SELECT
-    ST_Union(wkb_geometry), maaku_ni1
-    FROM
-    nlsfi.hallintoalue
-    GROUP BY
-    maaku_ni1
-);
+CREATE OR REPLACE VIEW AS (
+<kysely>
+)
 ```
 :::
 
-
+Kumman luomiseen kului enemmän aikaa? Kumman käyttö on nopeampaa?

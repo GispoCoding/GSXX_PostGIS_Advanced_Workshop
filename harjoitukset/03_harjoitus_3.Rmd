@@ -197,8 +197,6 @@ FROM kaupunginosajako;
 
 ## Harjoitus 4.3: Spatiaaliset relaatiot
 
-- Luodaan vaikka jo pohja kyselylle seuraavan harkan näkymiä varten
-
 
 ### Käytettäviä funktioita
 
@@ -218,7 +216,7 @@ Tässä harjoituksessa voi hyödyntää ainakin näitä funktioita:
 | ST_Within(geometry A, geometry B) | Palauttaa "TOSI", jos A on B:n sisäpuolella |
 
 
-Hae puut, jotka sijaitsevat tieliikenneväylien varrella (lähempänä kuin 5 tiestä).
+Hae puut, jotka sijaitsevat tieliikenneväylien varrella (lähempänä kuin 5 m tiestä).
 
 :::code-box
 ```sql
@@ -298,6 +296,47 @@ ON ST_Crosses(a.geom, b.geom)
 ```
 :::
 :::
+
+Hae puurekisterin yksinäiset puut, eli sellaiset, jotka ovat yli 50 m päässä mistä tahansa muusta puurekisterin 
+puusta.
+
+:::code-box
+```sql
+SELECT
+...
+```
+:::
+
+<button onclick="toggleAnswer(this)" class="btn answer_btn">vinkki</button>
+
+::: hidden-box
+:::code-box
+```sql
+-- täydennä oikeat funktiot vinkkien perusteella.
+-- täydennä funktioiden argumentit '...'- kohtiin
+SELECT ...
+FROM puurekisteri
+LEFT JOIN puurekisteri
+WHERE ...
+AND <sopiva ST-funktio> 
+...
+```
+:::
+:::
+
+<button onclick="toggleAnswer(this)" class="btn answer_btn">ratkaisu</button>
+
+:::hidden-box
+:::code-box
+```sql
+SELECT p1.* FROM puurekisteri p1
+LEFT JOIN puurekisteri p2
+ON p1.fid <> p2.fid
+AND ST_DWithin(p1.geom, p2.geom, 50);
+```
+:::
+:::
+
 
 
 ## Harjoitus 6.4
@@ -446,140 +485,6 @@ dist;
 
 
 
-## Harjoitus 4.3: Funktiot
-
-Kokeile myös seuraavia funktioita Hangon kunnan geometriatietoihin liittyen:
-
--   ST_Boundary
-
-::: code-box
-``` sql
-SELECT
-...
-FROM
-...
-WHERE
-...;
-```
-:::
-
-<button onclick="toggleAnswer(this)" class="btn answer_btn">vinkki</button>
-
-::: hidden-box
-:::code-box
-```sql
-SELECT
-kunta_ni1, maaku_ni1, ST_Boundary() -- valitse funktioon geometria- sarake
-FROM
-skeema.taulu
-WHERE
-...; -- valitse Hangon kunta nimen perusteella.
-```
-:::
-:::
-
-<button onclick="toggleAnswer(this)" class="btn answer_btn">ratkaisu</button>
-
-::: hidden-box
-::: code-box
-``` sql
-SELECT
-kunta_ni1, maaku_ni1, ST_Boundary(wkb_geometry)
-FROM
-nlsfi.hallintoalue
-WHERE
-kunta_ni1 = 'Hanko';
-```
-:::
-:::
-
--   ST_Centroid
-
-::: code-box
-``` sql
-SELECT
-...
-FROM
-...
-WHERE
-...;
-```
-:::
-
-<button onclick="toggleAnswer(this)" class="btn answer_btn">vinkki</button>
-
-::: hidden-box
-:::code-box
-```sql
-kunta_ni1, maaku_ni1, ST_Centroid() -- valitse funktioon geometria- sarake
-FROM
-skeema.taulu
-WHERE
-...; -- valitse Hangon kunta nimen perusteella.
-```
-:::
-:::
-
-<button onclick="toggleAnswer(this)" class="btn answer_btn">ratkaisu</button>
-
-
-::: hidden-box
-::: code-box
-``` sql
-SELECT
-kunta_ni1, maaku_ni1, ST_Centroid(wkb_geometry)
-FROM
-nlsfi.hallintoalue
-WHERE
-kunta_ni1 = 'Hanko';
-```
-:::
-:::
-
--   ST_Envelope
-
-::: code-box
-``` sql
-SELECT
-...
-FROM
-...
-WHERE
-...;
-```
-:::
-
-<button onclick="toggleAnswer(this)" class="btn answer_btn">vinkki</button>
-
-::: hidden-box
-:::code-box
-```sql
-kunta_ni1, maaku_ni1, ST_Envelope() -- valitse funktioon geometria- sarake
-FROM
-skeema.taulu
-WHERE
-...; -- valitse Hangon kunta nimen perusteella.
-```
-:::
-:::
-
-<button onclick="toggleAnswer(this)" class="btn answer_btn">ratkaisu</button>
-
-::: hidden-box
-::: code-box
-``` sql
-SELECT
-kunta_ni1, maaku_ni1, ST_Envelope(wkb_geometry)
-FROM
-nlsfi.hallintoalue
-WHERE
-kunta_ni1 = 'Hanko';
-```
-:::
-:::
-
-Huomaa, miten vastauksena tuleva geometrian tyyppi vaihtelee eri funktioiden kohdalla.
-
 
 
 ### Käytettäviä funktioita
@@ -717,55 +622,7 @@ srid = 2392;
 ```
 :::
 
-#### Puuttuvia koordinaattijärjestelmiä
 
-EUREF-FIN -pohjaisten koordinaattijärjestelmien käyttöönotossa on EPSG-tietokantaan tuotettu erilaisia versioita ns. GK-koordinaattijärjestelmistä.
-
-## Harjoitus 7.4: Koordinaattijärjestelmien määrittelyt
-
-Tarkista mitkä määrittelyt koulutuksessa käytettävässä tietokannassa on ETRS-GK24FIN -koordinaattijärjestelmälle.
-
-Tutki ensin spatial_ref_sys-taulun kenttiä. Päättele mistä kentästä voi löytyä tiedot koordinaattijärjestelmän tiedoista. Käytä LIKE-operaattoria.
-
-:::code-box
-```sql
-SELECT ...
-FROM
-...
-WHERE
-...
-```
-:::
-
-<button onclick="toggleAnswer(this)" class="btn answer_btn">vinkki</button>
-
-::: hidden-box
-:::code-box
-```sql
-SELECT *
-FROM
-spatial_ref_sys
-WHERE
-"srtext" LIKE '...';
--- täydennä '...' kohtaan arvo siten, että kysely palauttaa
--- ETRS-GK24FIN- koordinaattijärjestelmän määritelmän.
-```
-:::
-:::
-
-<button onclick="toggleAnswer(this)" class="btn answer_btn">ratkaisu</button>
-
-:::hidden-box
-:::code-box
-```sql
-SELECT *
-FROM
-spatial_ref_sys
-WHERE
-"srtext" LIKE '%ETRS-GK24FIN%';
-```
-:::
-:::
 
 ## Harjoitus 7.5: Koordinaattijärjestelmien vertailu
 
@@ -961,258 +818,5 @@ WHERE icao != 'NZSP';
 :::
 :::
 
-Ratkaistuasi ongelman, tarkista tulos QGIS-ohjelmiston avulla.
 
 
-Kirjoitetaan yhdessä **SQL-terminaaliin** seuraava komento:
-
-:::code-box
-```sql
-SELECT
-ST_Centroid(wkb_geometry) as "Centroids of first 10"
-FROM
-nlsfi.hallintoalue
-LIMIT 10;
-```
-:::
-
-Komento tuottaa kymmenen ensimmäisen alueen keskipisteet.
-
-## Harjoitus 8.2: Keskipisteiden määritys
-
-Ovatko kaikki keskipisteet alueiden sisäpuolella? Kuinka monta pistettä jää ulkopuolelle?
-
-:::code-box
-```sql
-SELECT ...
-```
-:::
-
-Huomaa, että saat selville vastauksen myös tulostamalla kaikkien sellaisten kuntien nimet, joiden keskipiste jää alueen ulkopuolelle ja laskemalla tulostaulukon rivien lukumäärän.
-
-<button onclick="toggleAnswer(this)" class="btn answer_btn">vinkki</button>
-
-::: hidden-box
-:::code-box
-```sql
--- vaihtoehto 1 ST_Contains- funktiolla
--- CTE:llä
-WITH notin AS(
-    SELECT
-    ...
-    FROM
-    ...
-    WHERE
-    NOT ...
-
-SELECT
-count(...)
-FROM
-notin;
-```
-:::
-
-:::code-box
-```sql
--- vaihtoehto 2 - ST_Within- funktiolla
-SELECT
-...
-FROM
-...
-WHERE
-NOT ...;
-```
-:::
-:::
-
-Ratkaisuvaihtoehto 1 (käytetään **ST_Contains**-funktiota):
-
-<button onclick="toggleAnswer(this)" class="btn answer_btn">ratkaisu</button>
-
-:::hidden-box
-:::code-box
-```sql
-WITH notin AS(
-    SELECT
-    kunta_ni1 as "withST_Contains"
-    FROM
-    nlsfi.hallintoalue
-    WHERE
-    NOT ST_Contains(wkb_geometry, ST_Centroid(wkb_geometry)))
-
-SELECT
-count(notin."withST_Contains")
-FROM
-notin;
-```
-:::
-:::
-
-Ratkaisuvaihtoehto 2 (käytetään **ST_Within**-funktiota):
-
-<button onclick="toggleAnswer(this)" class="btn answer_btn">ratkaisu</button>
-
-:::hidden-box
-:::code-box
-```sql
-SELECT
-kunta_ni1 as "with ST_Within"
-FROM
-nlsfi.hallintoalue
-WHERE
-NOT ST_Within(ST_Centroid(wkb_geometry), wkb_geometry);
-```
-:::
-:::
-
-## Harjoitus 8.3: Etäisyydet
-
-Miten paljon harjoituksessa 8.2 löydettyjen kuntien painokeskipisteet eroavat **ST_PointOnSurface**–funktion pisteistä?
-
-:::code-box
-```sql
-SELECT
-...
-FROM
-...
-WHERE
-NOT ...;
-```
-:::
-
-<button onclick="toggleAnswer(this)" class="btn answer_btn">vinkki</button>
-
-::: hidden-box
-:::code-box
-```sql
--- Millä PostGIS- funktiolla voit laskea etäisyyden pisteiden välillä?
-SELECT
-kunta_ni1 as "Kunta",
-round(etäisyys(ST_PointOnSurface(wkb_geometry), ST_centroid(wkb_geometry)))
-as "Distance PntOnSurface and Centroid"
-FROM
-nlsfi.hallintoalue
-WHERE
-NOT ...;
--- rajaa pois pisteet, jotka ei ole polygonin sisällä.
-```
-:::
-:::
-
-<button onclick="toggleAnswer(this)" class="btn answer_btn">ratkaisu</button>
-
-:::hidden-box
-:::code-box
-```sql
-SELECT
-kunta_ni1 as "Kunta",
-round(ST_Distance(ST_PointOnSurface(wkb_geometry), ST_centroid(wkb_geometry)))
-as "Distance PntOnSurface and Centroid"
-FROM
-nlsfi.hallintoalue
-WHERE
-NOT ST_Within(ST_Centroid(wkb_geometry), wkb_geometry);
-```
-:::
-:::
-
-## Harjoitus 8.4: Vyöhykkeet
-
-Muodostetaan tiestölle vyöhyke:
-
-:::code-box
-```sql
-SELECT
-ogc_fid, ST_Buffer(wkb_geometry, 100) as geom
-FROM
-nlsfi.tieviiva
-WHERE
-tienumero = 66;
-```
-:::
-
-Muodosta vyöhykkeestä näkymä ja visualisoi se QGISissä. Voit myös muodostaa useamman vyöhykkeen eri etäisyyksille.
-
-:::code-box
-```sql
-DROP VIEW IF EXISTS nlsfi.view_road_buffer;
-
-CREATE VIEW nlsfi.view_roadbuffed AS (
-    WITH buffers AS (
-        ...
-        UNION
-        ...
-    )
-    SELECT
-    row_number() OVER() AS vid, geom, buffer
-    FROM
-    buffers
-);
-```
-:::
-
-<button onclick="toggleAnswer(this)" class="btn answer_btn">vinkki</button>
-
-::: hidden-box
-:::code-box
-```sql
-DROP VIEW IF EXISTS nlsfi.view_roadbuffer;
-
-CREATE VIEW nlsfi.view_roadbuffer AS (
-    WITH buffers AS (
-        SELECT
-        ..., 100 as buffer -- täydennä ST_Buffer funktio
-        FROM
-        nlsfi.tieviiva
-        WHERE
-        ... -- valitse tienumeron 66 mukaan
-        UNION
-        SELECT
-        ..., 250 as buffer -- täydennä ST_Buffer funktio
-        FROM
-        nlsfi.tieviiva
-        WHERE -- valitse tienumeron 66 mukaan
-        ...
-    )
-    SELECT
-    row_number() OVER() AS vid, geom, buffer
-    FROM
-    buffers
-);
-```
-:::
-:::
-
-<button onclick="toggleAnswer(this)" class="btn answer_btn">ratkaisu</button>
-
-:::hidden-box
-:::code-box
-```sql
-DROP VIEW IF EXISTS nlsfi.view_roadbuffer;
-
-CREATE VIEW nlsfi.view_roadbuffer AS (
-    WITH buffers AS (
-        SELECT
-        ST_Buffer(wkb_geometry, 100) as geom, 100 as buffer
-        FROM
-        nlsfi.tieviiva
-        WHERE
-        tienumero = 66
-        UNION
-        SELECT
-        ST_Buffer(wkb_geometry, 250) as geom, 250 as buffer
-        FROM
-        nlsfi.tieviiva
-        WHERE
-        tienumero = 66
-    )
-    SELECT
-    row_number() OVER() AS vid, geom, buffer
-    FROM
-    buffers
-);
-```
-:::
-:::
-
-> Editoi alkuperäistä tieviivaa QGIS:ssä.
