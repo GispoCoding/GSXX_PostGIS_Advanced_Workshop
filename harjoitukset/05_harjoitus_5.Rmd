@@ -8,6 +8,47 @@
 
 Avaa [pgAdmin](/pgadmin) selaimeen ja kirjaudu sisään.  Avaa **Query Tool** (Valitse _trainingdatabase_ **->** Ylhäältä **Tools** **->** **Query Tool**).
 
+## Harjoitus:
+
+## Harjoitus: Triggeri näkymän päivittämiseen
+
+Loimme aiemmassa harjoituksessa yksinkertaisen näkymän "puut_kaupunginosittain". Mikäli koitit muokata kohteita tämän näkymän kautta esimerkiksi pgAdminin 
+tai QGISin kautta, tulit huomaamaan että muokkauksia tallentaessa (COMMIT) törmäsit virheeseen:
+
+![](qgis_view_commit_error.png). 
+
+Tämä johtuu siitä, että näkymien päivittäminen edellyttää useamman ehdon täyttymistä (https://www.postgresql.org/docs/current/sql-createview.html, updatable views), 
+ja ei onnistu suoraan, jos näkymä koostuu esim. tauluista joilla on liitoksia toisiin tauluihin. Sen sijaan tällaisille näkymille voidaan määritellä INSTEAD OF -tyyppinen
+triggeri. Samaten, jos kohteita halutaan poistaa tai muokata näkymän kautta, täytyy näille operaatiolle luoda omat INSTEAD OF -tyyppiset triggerinsä.
+
+Luo triggeri olemassaolevan kohteen muokkaamiselle
+
+:::code-box
+```sql
+CREATE OR REPLACE FUNCTION puut_view_update()
+RETURNS trigger AS $$
+BEGIN
+  UPDATE helsinki.puurekisteri_piste
+  SET wkb_geometry = NEW.wkb_geometry
+  WHERE id = OLD.id;
+
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+```
+:::
+
+:::code-box
+```sql
+CREATE TRIGGER puut_update
+INSTEAD OF UPDATE ON puut_kaupunginosittain
+FOR EACH ROW
+EXECUTE FUNCTION puut_view_update();
+```
+:::
+
+
 ## Harjoitus 5.1
 
 Luodaan aluksi tietokantaan uusi taulu, johon muodostetaan erilaisia geometrioita:

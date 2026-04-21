@@ -8,6 +8,53 @@
 
 Avaa [pgAdmin](/pgadmin) selaimeen ja kirjaudu sisään. Avaa **Query Tool** (Valitse *trainingdatabase* **-\>** Ylhäältä **Tools** **-\>** **Query Tool**).
 
+## Harjoitus: tavallinen näkymä
+
+Muodosta puurekisteri-aineistosta näkymä "puut_kaupunginosittain", jossa on tieto myös siitä, missä kaupunginosassa puu on.
+
+:::code-box
+```sql
+CREATE VIEW puut_kaupunginosittain AS (
+SELECT
+
+FROM
+);
+
+```
+:::
+
+<button onclick="toggleAnswer(this)" class="btn answer_btn">vinkki</button>
+
+::: hidden-box
+:::code-box
+```sql
+CREATE VIEW puut_kaupunginosittain AS (
+    SELECT a.*, b.nimi_fi  
+    FROM helsinki.___ a 
+    JOIN helsinki.___ b 
+    ON ... 
+-- Millä ST-funktiolla spatiaalinen predikaatti, joka
+-- palauttaa tosi kun puu tietyn kaupunginosan sisällä
+);
+```
+:::
+:::
+
+<button onclick="toggleAnswer(this)" class="btn answer_btn">ratkaisu</button>
+
+:::hidden-box
+:::code-box
+```sql
+CREATE VIEW puut_kaupunginosittain AS (
+    SELECT a.*, b.nimi_fi  
+    FROM helsinki.puurekisteri_piste a 
+    JOIN helsinki.kaupunginosajako b 
+    ON ST_Within(a.wkb_geometry, b.wkb_geometry)
+);
+```
+:::
+:::
+
 
 
 ## Harjoitus 8.5: Geometrioiden yhdistäminen

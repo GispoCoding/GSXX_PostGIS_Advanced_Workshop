@@ -1,10 +1,10 @@
-# Harjoitus 1: Työkalujen käyttöönotto
+# Työkalujen käyttöönotto
 
 **Harjoituksen sisältö** - Harjoituksessa tutustutaan pgAdmin 4 -käyttöliittymään sekä psql:ään. Lisäksi harjoituksessa luodaan uusi paikkatietokanta.
 
 **Harjoituksen tavoite** - Harjoituksen jälkeen opiskelija hallitsee pgAdmin 4 -käyttöliittymän ja psql:n perusteet.
 
-## Harjoitus 1.1: pgAdmin 4
+## pgAdmin 4
 
 ```{r include=FALSE}
 pg_user <- Sys.getenv("PG_USER")
@@ -107,65 +107,7 @@ sisältävät?
 :::
 
 
-Uusi taulu voidaan luoda kirjoittamalla seuraava SQL-komentojono **Query Tool**:n SQL-editoriin.
-
-::: code-box
-``` sql
--- PostgreSQL ja PostGISin perusteet
-CREATE TABLE test_tmp(
-    id serial,
-    time time,
-    num integer);
-```
-:::
-
-::: hint-box
-Huomaa, että kahdella viivalla "\-\-" alkavat rivit ovat
-kommenttirivejä, eikä niitä oteta huomioon SQL-komentoa
-suoritettaessa.
-:::
-
-Tauluja voi luoda myös SQL-kyselyiden tulosten perusteella.
-
-Lisätään yllä luotuun tauluun tietueita seuraavalla SQL-komennolla:
-
-::: code-box
-``` sql
-INSERT INTO test_tmp (time,num)
-(SELECT now(), generate_series(1,5000));
-```
-:::
-
-Tietueita voi lisätä myös SQL-kyselyjen tulosten perusteella.
-
-Voit listata tauluusi tekemiä tietueita esimerkiksi seuraavalla
-komennolla:
-
-::: code-box
-``` sql
-SELECT *
-FROM test_tmp
-LIMIT 10;
-```
-:::
-
-Voit poistaa luodun taulun seuraavalla komennolla:
-
-::: code-box
-``` sql
-DROP TABLE test_tmp;
-```
-:::
-
-### pg_dump ja pg_restore
-
-Tietokannan tai yksittäisten taulujen varmuuskopioiden luomiseen ja
-palauttamiseen on omat komentoriviohjelmansa:
-[pg_dump](https://www.postgresql.org/docs/13/app-pgdump.html) ja
-[pg_restore](https://www.postgresql.org/docs/13/app-pgrestore.html).
-Muun muassa pgAdmin käyttää näitä sisäisesti.
-
-## Harjoitus 1.2: psql
+## Psql-komentorivityökalu
 
 SQL-komentoja voi suorittaa pgAdminin (ja QGISin Tietokannan hallinta
 -lisäosan) lisäksi myös psql-komentorivin kautta. Avaa

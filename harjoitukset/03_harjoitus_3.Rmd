@@ -2,19 +2,13 @@
 
 **Harjoituksen sisältö** - Harjoituksessa tutustutaan eri PostGIS-funktioihin sekä geometry- ja geography-geometriakenttien eroihin ja käyttöön.
 
-**Harjoituksen tavoite** - Harjoituksen tarkoituksena on tutustua PostGIS-laajennoksen sisältöön.
+**Harjoituksen tavoite** - Harjoituksen tarkoituksena on tutustua PostGIS-laajennoksen sisältöön ja sen sisältämien funktoiden dokumentaatioon sekä käyttöön.
 
 ### Valmistautuminen
 
-Avaa [pgAdmin](/pgadmin) selaimeen ja kirjaudu sisään.  Avaa **Query Tool** (Valitse _trainingdatabase_ **->** Ylhäältä **Tools** **->** **Query Tool**).
+Avaa [pgAdmin](/pgadmin) selaimeen ja kirjaudu sisään.  Avaa **Query Tool** (Valitse _trainingdatabase_ **->** Ylhäältä **Tools** **->** **Query Tool**). Selaimesta kannattaa avata
+myös PostGISin funktioiden koottu dokumentaatiosivu [linkki](https://postgis.net/docs/manual-3.6/PostGIS_Special_Functions_Index.html)
 
-### Yksinkertaisia SQL-hakuja
-
-## Harjoitus 3.1
-
-## PostGISin perusfunktiot geometrioiden käsittelyyn
-
-- dokumentaatio 
 
 ## PostGISin perusfunktiot geometrioiden määrittelyyn
 
@@ -63,13 +57,13 @@ Tarkastellaan ensin paikkatietojen tallennusmuotoa PostGIS-paikkatietokannassa. 
 ::: code-box
 ``` sql
 SELECT
-nimi_fi, wkb_geometry
-FROM
-nlsfi.kaupunginosajako;
+nimi_fi, geom
+FROM kaupunginosajako;
 ```
 :::
 
-Tuloksesta nähdään, että sarakkeen wkb_geometry sisältö on koneluettavassa binäärimuodossa. 
+Tuloksesta nähdään, että sarakkeen wkb_geometry sisältö on koneluettavassa binäärimuodossa. Tarkista myös geometrioiden tyypit, joko geometry_columns-taulusta edeltä tai ST_GeometryType() 
+funktiolla.
 
 ::: hint-box
 Vinkki: On mahdollista tarkastella geometrioita suoraan graafisessa käyttöliittymässä klikkaamalla pientä karttaikonia ![](img/pgadmin_geom.png) geometriasarakkeen päällä. Mikäli aineistot ovat WGS84-koordinaattijärjestelmässä (EPSG: 4326), pgAdmin myös lisää niihin suoraan taustakartan OpenStreetMapista.
@@ -80,21 +74,135 @@ Aineistojen koordinaatistot löytyvät SRID-sarakkeesta. Yhdessä SRID-sarakkees
 ::: code-box
 ``` sql
 SELECT
-nimi_fi, ST_AsText(wkb_geometry)
-FROM
-nlsfi.kaupunginosajako;
+nimi_fi, ST_AsText(geom)
+FROM kaupunginosajako;
 ```
 :::
 
 
-## Spatiaaliset relaatiot
+## Harjoitus 4.2: PostGISin perusfunktiot geometrioiden käsittelyyn
+
+Testataan ensin Postgisin perusfunktioita, kuten ST_Centroid(), ST_Buffer() ja ST_Boundary(). Voit avata näiden dokumentaatiosivut edellä olevasta linkistä.
+
+Muodosta 5 metrin vyöhykkeet puurekisterin pisteiden ympärille:
+:::code-box
+```sql
+SELECT ST_Buffer(geom, 5) FROM puurekisteri;
+...
+```
+:::
+
+ST_Buffer() toimii myös negatiivisilla arvoilla:
+
+:::code-box
+```sql
+SELECT ST_Buffer(geom, -100) FROM kaupunginosajako;
+...
+```
+:::
+
+
+Hae viheralueiden keskipisteet ylre_viheralueet-taulusta. 
+
+:::code-box
+```sql
+SELECT ST_Centroid(geom) FROM ylre_viheralueet;
+...
+```
+:::
+
+Jos alue ei ole konveksi, vaan enemmänkin "vääntynyt", ST_Centroid()-funktion antama piste ei ole välttämättä alueen sisällä. 
+Ovatko nyt kaikki keskipisteet itse viheralueen sisällä? Voit tutkia tätä funktiolla ST_PointOnSurface(), joka on eräänlainen 
+yleistys keskipisteelle, mutta on aina alueen sisällä. Mikä on suurin etäisyys näiden kahden pisteen välillä? Entä suurin etäisyys
+centroidin ja itse viheralueen välillä?
+
+:::code-box
+```sql
+SELECT
+...
+```
+:::
+
+<button onclick="toggleAnswer(this)" class="btn answer_btn">vinkki</button>
+
+::: hidden-box
+:::code-box
+```sql
+-- täydennä oikeat funktiot vinkkien perusteella.
+-- täydennä funktioiden argumentit '...'- kohtiin
+SELECT ST_Distance(<geom1>, <geom2>)
+-- sorttausta jne.
+
+```
+:::
+:::
+
+<button onclick="toggleAnswer(this)" class="btn answer_btn">ratkaisu</button>
+
+:::hidden-box
+:::code-box
+```sql
+-- Kahden eri tyyppisen pisteen välinen ero
+SELECT 
+fid, puiston_ni, round(ST_Distance(ST_PointOnSurface(geom), ST_Centroid(geom))::numeric, 2) as dist 
+FROM ylre_viheralueet 
+ORDER BY dist DESC
+LIMIT 1
+
+-- Centroidin ja itse geometrian ero
+SELECT 
+fid, puiston_ni, round(ST_Distance(geom, ST_Centroid(geom))::numeric, 2) as dist 
+FROM ylre_viheralueet 
+ORDER BY dist DESC
+LIMIT 1
+
+```
+:::
+:::
+
+Muodosta Helsingin kaupunginosajaon perusteella kaupungin rajat.
+
+:::code-box
+```sql
+SELECT
+...
+```
+:::
+
+<button onclick="toggleAnswer(this)" class="btn answer_btn">vinkki</button>
+
+::: hidden-box
+:::code-box
+```sql
+-- täydennä oikeat funktiot vinkkien perusteella.
+-- täydennä funktioiden argumentit '...'- kohtiin
+SELECT ST_Boundary(<yhdistelmä kaupunginosista>)
+
+```
+:::
+:::
+
+<button onclick="toggleAnswer(this)" class="btn answer_btn">ratkaisu</button>
+
+:::hidden-box
+:::code-box
+```sql
+SELECT
+ST_Boundary(ST_Union(geom)) AS rajat
+FROM kaupunginosajako; 
+```
+:::
+:::
+
+
+## Harjoitus 4.3: Spatiaaliset relaatiot
 
 - Luodaan vaikka jo pohja kyselylle seuraavan harkan näkymiä varten
 
 
 ### Käytettäviä funktioita
 
-Tässä harjoituksessa hyödynnetään ainakin näitä funktioita:
+Tässä harjoituksessa voi hyödyntää ainakin näitä funktioita:
 
 | PostGIS-funktio | Toiminta |
 |:--: | :---: |
@@ -109,30 +217,12 @@ Tässä harjoituksessa hyödynnetään ainakin näitä funktioita:
 | ST_Touches(geometry A, geometry B) | Palauttaa "TOSI", jos A:n reuna koskettaa B:tä |
 | ST_Within(geometry A, geometry B) | Palauttaa "TOSI", jos A on B:n sisäpuolella |
 
-## Harjoitus 6.1
 
-Etsitään ne kunnat, joissa on lentokenttä:
-
-:::code-box
-```sql
-SELECT
-a.kunta_ni1
-FROM 
-nlsfi.hallintoalue a, nlsfi.lentokenttapiste b
-WHERE
-ST_Contains(a.wkb_geometry, b.wkb_geometry);
-```
-:::
-
-Huomaa kuinka kirjaimia a ja b käytetään kyselyssä aliaksina, eli sarakkeiden korvaavina niminä. Aliasten käyttö helpottaa varsinkin pitkien kyselyiden tulkitsemista ja kirjoittamista. Voit lukea lisää aliaksista esimerkiksi täältä: [postgresql-alias](https://www.postgresqltutorial.com/postgresql-alias/).
-
-Montako lentokenttää Suomessa on?
+Hae puut, jotka sijaitsevat tieliikenneväylien varrella (lähempänä kuin 5 tiestä).
 
 :::code-box
 ```sql
 SELECT
-...
-FROM
 ...
 ```
 :::
@@ -142,91 +232,37 @@ FROM
 ::: hidden-box
 :::code-box
 ```sql
--- Millä funktiolla voit laskea tietueiden määrän?
-SELECT
-funktio(id)
-FROM
-nlsfi.taulu;
--- Täydennä oikea taulu
-```
-:::
-:::
-
-<button onclick="toggleAnswer(this)" class="btn answer_btn">ratkaisu</button>
-
-:::hidden-box
-:::code-box
-```sql
-SELECT
-count(ogc_fid)
-FROM
-nlsfi.lentokenttapiste;
-```
-:::
-:::
-
-Jos lisäät SELECT-komentoon parametrin DISTINCT, saat selville kuinka monta lentokentällistä kuntaa Suomessa on.
-
-:::code-box
-```sql
-SELECT
-
-FROM
-(SELECT DISTINCT
-
-FROM
-
-WHERE
-ST_Contains(..., ...));
-```
-:::
-
-<button onclick="toggleAnswer(this)" class="btn answer_btn">vinkki</button>
-
-::: hidden-box
-:::code-box
-```sql
--- käytä sisäkkäistä kyselyä
--- sisäkkäiselle kyselyllä annetaan alias
-SELECT
-funktio(kunta_distinct)
-FROM
-(SELECT DISTINCT
-a.kunta_ni1 as kunta_distinct
-FROM
-nlsfi.hallintoalue a, nlsfi.lentokenttapiste b
-WHERE
-sisältää(... , ... )) as ...;
--- Millä PostGIS- funktiolla voit tarkastaa onko geometria b geometrian a sisällä?
-```
-:::
-:::
-
-<button onclick="toggleAnswer(this)" class="btn answer_btn">ratkaisu</button>
-
-:::hidden-box
-:::code-box
-```sql
-SELECT
-count(kunta_distinct)
-FROM
-(SELECT DISTINCT
-a.kunta_ni1 as kunta_distinct
-FROM
-nlsfi.hallintoalue a, nlsfi.lentokenttapiste b
-WHERE
-ST_Contains(a.wkb_geometry, b.wkb_geometry)) as DistincKunta;
-```
-:::
-:::
-
-## Harjoitus 6.2
-
-Missä Suomen kunnissa on kaksi lentokenttää?
-
-:::code-box
-```sql
+-- täydennä oikeat funktiot vinkkien perusteella.
+-- täydennä funktioiden argumentit '...'- kohtiin
 SELECT ...
+FROM puurekisteri
+JOIN liikennevaylat
+ON <sopiva ST-funktio> 
+
+```
+:::
+:::
+
+<button onclick="toggleAnswer(this)" class="btn answer_btn">ratkaisu</button>
+
+:::hidden-box
+:::code-box
+```sql
+SELECT DISTINCT p.fid, p.* FROM puurekisteri p 
+JOIN liikennevaylat l 
+ON ST_DWithin(p.geom, l.geom, 5)
+```
+:::
+:::
+
+Hae liikenneväylät, jotka menevät kaupunginosasta toiseen. Millä kyselyllä saisit molempien
+tasojen (liikennevaylat, kaupunginosajako) geometriat näkymään pgAdminissa, jotta voisit vakuuttua 
+kyselyn palauttamien tuloksien oikeellisuudesta?
+
+:::code-box
+```sql
+SELECT
+...
 ```
 :::
 
@@ -235,131 +271,35 @@ SELECT ...
 ::: hidden-box
 :::code-box
 ```sql
--- Vaihtoehto 1
--- Käytä CTE:tä
-WITH apm AS (
-SELECT DISTINCT
-a.kunta_ni1, COUNT(...) OVER(PARTITION BY ...) AS CountAirports
-FROM
-nlsfi.hallintoalue a, nlsfi.lentokenttapiste b
-WHERE
-sisältää(a.wkb_geometry, b.wkb_geometry)
-ORDER BY
-CountAirports DESC
-)
+-- täydennä oikeat funktiot vinkkien perusteella.
+-- täydennä funktioiden argumentit '...'- kohtiin
+SELECT ...
+FROM puurekisteri
+JOIN liikennevaylat
+ON <sopiva ST-funktio> 
 
--- tarkastele tuloksia:
-
-SELECT
-kunta_ni1 as "Municipality", countairports AS "Count of Airports"
-FROM
-apm
-WHERE
-CountAirports = 2;
-```
-:::
-
-:::code-box
-```sql
--- Vaihtoehto 2
-SELECT 
-a.kunta_ni1 as "Kunta", count(...) as "Lkm"
-FROM
-nlsfi.hallintoalue a, nlsfi.lentokenttapiste b
-WHERE
-sisältää(a.wkb_geometry, b.wkb_geometry)
-GROUP BY
-a.kunta_ni1
-HAVING count(...) = ...;
-
--- täydennä tyhjät kohdat. Valitse oikea PostGIS- funktio
 ```
 :::
 :::
-
-Perusteellinen ratkaisuvaihtoehto:
 
 <button onclick="toggleAnswer(this)" class="btn answer_btn">ratkaisu</button>
 
 :::hidden-box
 :::code-box
 ```sql
-WITH apm AS (
-SELECT DISTINCT
-a.kunta_ni1, COUNT(a.kunta_ni1) OVER(PARTITION BY a.kunta_ni1) AS CountAirports
-FROM
-nlsfi.hallintoalue a, nlsfi.lentokenttapiste b
-WHERE
-ST_Contains(a.wkb_geometry, b.wkb_geometry)
-ORDER BY
-CountAirports DESC
-)
+SELECT a.geom FROM liikennevaylat a 
+JOIN kaupunginosajako b
+ON ST_Crosses(a.geom, b.geom)
+-- Visuaalisena apuna voidaan siis myös käyttää seuraavaa:
+--SELECT ST_Union(a.geom, ST_Boundary(b.geom)) FROM liikennevaylat a 
+--JOIN kaupunginosajako b
+--ON ST_Crosses(a.geom, b.geom)
 
-SELECT
-kunta_ni1 as "Municipality", countairports AS "Count of Airports"
-FROM
-apm
-WHERE
-CountAirports = 2;
 ```
 :::
 :::
 
-Pelkistetympi ratkaisuvaihtoehto:
 
-<button onclick="toggleAnswer(this)" class="btn answer_btn">ratkaisu</button>
-
-:::hidden-box
-:::code-box
-```sql
-SELECT 
-a.kunta_ni1 as "Kunta", count(*) as "Lkm"
-FROM
-nlsfi.hallintoalue a, nlsfi.lentokenttapiste b
-WHERE
-ST_Contains(a.wkb_geometry, b.wkb_geometry)
-GROUP BY
-a.kunta_ni1
-HAVING count(*) = 2;
-```
-:::
-:::
-
-Suorita ao. SQL-lause. Mitä sillä saadaan selville?
-
-:::code-box
-```sql
-SELECT
-ST_ASText(a.wkb_geometry), a.ogc_fid
-FROM
-nlsfi.lentokenttapiste a, nlsfi.lentokenttapiste b
-WHERE
-ST_Equals(a.wkb_geometry,b.wkb_geometry) AND a.ogc_fid <> b.ogc_fid;
-```
-:::
-
-<button onclick="toggleAnswer(this)" class="btn answer_btn">ratkaisu</button>
-
-:::hidden-box
-SQL- kysely palauttaa ne tietueet, joiden geometria on identtinen, mutta id eri.
-:::
-
-## Harjoitus 6.3
-Etsitään ne kunnat, joissa ei ole rautatietä:
-
-:::code-box
-```sql
-SELECT 
-b.kunta_ni1
-FROM
-(SELECT
- ST_union(wkb_geometry) as wkb_geometry
- FROM
- nlsfi.rautatieviiva) as a, nlsfi.hallintoalue b
-WHERE
-ST_Disjoint(a.wkb_geometry, b.wkb_geometry);
-```
-:::
 ## Harjoitus 6.4
 Etsitään kolme lähintä lentokenttää.
 
@@ -504,59 +444,6 @@ dist;
 
 
 
-
-## ------------------------------------------------------
-
-Seuraavaksi tutkitaan hiukan edellisessä harjoituksessa ladattuja paikkatietoaineistoja:
-
-:::code-box
-```sql
-SELECT
---
-FROM
---;
-```
-:::
-
-
-<button onclick="toggleAnswer(this)" class="btn answer_btn">vinkki</button>
-
-::: hidden-box
-:::code-box
-```sql
--- Täydennä tähän kyselyyn oikeat sarakkeet, skeema ja taulu. Tarkista millä funktiolla
--- saat laskettua keskiarvon. Käytä char_length() funktiota, jolla saat palautettua
--- merkkijonon pituuden.
-SELECT
---
-FROM
-skeema.taulu
-GROUP BY
---
-ORDER BY
---
-LIMIT 1;
-```
-:::
-:::
-
-<button onclick="toggleAnswer(this)" class="btn answer_btn">ratkaisu</button>
-
-::: hidden-box
-:::code-box
-```sql
-SELECT
-maaku_ni1, avg(char_length(kunta_ni1))
-FROM
-nlsfi.hallintoalue
-GROUP BY
-maaku_ni1
-ORDER BY
-avg(char_length(kunta_ni1)) desc
-LIMIT 1;
-```
-:::
-:::
 
 
 ## Harjoitus 4.3: Funktiot
