@@ -9,3 +9,18 @@ muihin tietokantoihin tai ulkoisiin datalähteisiin.
 
 Avaa [pgAdmin](/pgadmin) selaimeen ja kirjaudu sisään.  Avaa **Query Tool** (Valitse _trainingdatabase_ **->** Ylhäältä **Tools** **->** **Query Tool**). Käytössä tulee olla myös web-selain, joka mahdollistaa pääsyn Maanmittauslaitoksen koordinaattien muunnospalveluun.
 
+
+## Harjoitus 
+
+Jos koitat kysellä toisen tietokannan tauluista (kuten worlddatabase) esimerkiksi kyselyllä
+
+:::code-box
+```sql
+SELECT * FROM countries;
+```
+:::
+
+PostgreSQL palauttaa virheen ("ERROR:  cross-database references are not implemented"). Luodaan nyt 
+foreign data wrapper, jotta voimme tuoda tämän "ulkoisen" tietokannan tiedot tietokantaan foreign tablen
+muodossa.
+
