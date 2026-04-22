@@ -16,7 +16,6 @@ tulokseen vielä tiedon siitä, missä kaupunginosassa puu on
 :::code-box
 ```sql
 SELECT 
--- aiemmat puut + liitos kaupunginosaan, josta valitaan nimi
 ```
 :::
 
@@ -152,11 +151,13 @@ WHERE fid = 1;
 :::
 
 Huomataan ainakin, että:
+
 - Taulun datan muokkaus, joten komento toimii
+
 - Näkymiä ei voinut muokata, vaan se antoi virheen
 
 Itse asiassa tavallisten näkymien täytyy toteuttaa useita ehtoja, jotta niiden dataa voisi suoraan 
-muokata: ()[https://www.postgresql.org/docs/current/sql-createview.html]. Tähän palataan vielä seuraavassa 
+muokata: [](https://www.postgresql.org/docs/current/sql-createview.html). Tähän palataan vielä seuraavassa 
 harjoituksessa, mutta muokataan vielä samalla tavoin lähtötaulun dataa, ja tarkastellaan sen vaikutusta näkymiin.
 
 :::code-box
@@ -190,5 +191,29 @@ SELECT * FROM mview_tienvarren_puut WHERE puistonnim = 'EI NIMEÄ';
 
 ### Materialisoitujen näkymien päivitys
 
+Materialisoitu näkymä on siis taulunkaltainen näkymä, jonka data on tallennettu fyysisenä kopioidaan
+levylle, eikä siis päivity vaikka sen määrittelevässä luontikyselyssä esiintyvien taulujen data muuttuu. 
+Kysely materialisoitujen näkymien kautta on kuitenkin yleensä tehokkaampaa, sillä ne sallivat indeksoinnin.
+Ne ovat hyviä käyttää varsinkin silloin, kun tulosten ei tarvitse olla koko ajan ajantasaisia tai kun siihen 
+liittyvä data muuttuu vain harvoin tai tietyin väliajoin. Tällöin voidaan ajaa (esimerkiksi ajastetusti) komento
+joka päivittää materialisoidun näkymä. Se tapahtuu nyt komennolla
 
+:::code-box
+```sql
+REFRESH MATERIALIZED VIEW mview_tienvarren_puut;
+```
+:::
 
+joka käytännössä korvaa materialisoidun näkymän aiemman sisällön. 
+
+Aja edellinen komento ja tarkastele materialisoitua näkymää uudelleen
+
+:::code-box
+```sql
+SELECT * FROM mview_tienvarren_puut;
+```
+:::
+
+jolloin huomaat että data on päivittynyt.
+
+Lisätietoja: https://www.postgresql.org/docs/current/sql-refreshmaterializedview.html
