@@ -7,7 +7,7 @@
 ### Valmistautuminen
 
 Avaa [pgAdmin](/pgadmin) selaimeen ja kirjaudu sisään.  Avaa **Query Tool** (Valitse _trainingdatabase_ **->** Ylhäältä **Tools** **->** **Query Tool**). Selaimesta kannattaa avata
-myös PostGISin funktioiden koottu dokumentaatiosivu [linkki](https://postgis.net/docs/manual-3.6/PostGIS_Special_Functions_Index.html)
+myös PostGISin funktioiden koottu dokumentaatiosivu: [linkki](https://postgis.net/docs/manual-3.6/PostGIS_Special_Functions_Index.html)
 
 
 ## PostGISin perusfunktiot geometrioiden määrittelyyn
@@ -82,9 +82,12 @@ FROM kaupunginosajako;
 
 ## Harjoitus 4.2: PostGISin perusfunktiot geometrioiden käsittelyyn
 
+
 Testataan ensin Postgisin perusfunktioita, kuten ST_Centroid(), ST_Buffer() ja ST_Boundary(). Voit avata näiden dokumentaatiosivut edellä olevasta linkistä.
 
-Muodosta 5 metrin vyöhykkeet puurekisterin pisteiden ympärille:
+
+- Muodosta 5 metrin vyöhykkeet puurekisterin pisteiden ympärille:
+
 :::code-box
 ```sql
 SELECT ST_Buffer(geom, 5) FROM puurekisteri;
@@ -102,7 +105,7 @@ SELECT ST_Buffer(geom, -100) FROM kaupunginosajako;
 :::
 
 
-Hae viheralueiden keskipisteet ylre_viheralueet-taulusta. 
+- Hae viheralueiden keskipisteet ylre_viheralueet-taulusta. 
 
 :::code-box
 ```sql
@@ -111,7 +114,8 @@ SELECT ST_Centroid(geom) FROM ylre_viheralueet;
 ```
 :::
 
-Jos alue ei ole konveksi, vaan enemmänkin "vääntynyt", ST_Centroid()-funktion antama piste ei ole välttämättä alueen sisällä. 
+
+- Jos alue ei ole konveksi, vaan enemmänkin "vääntynyt", ST_Centroid()-funktion antama piste ei ole välttämättä alueen sisällä. 
 Ovatko nyt kaikki keskipisteet itse viheralueen sisällä? Voit tutkia tätä funktiolla ST_PointOnSurface(), joka on eräänlainen 
 yleistys keskipisteelle, mutta on aina alueen sisällä. Mikä on suurin etäisyys näiden kahden pisteen välillä? Entä suurin etäisyys
 centroidin ja itse viheralueen välillä?
@@ -160,7 +164,8 @@ LIMIT 1
 :::
 :::
 
-Muodosta Helsingin kaupunginosajaon perusteella kaupungin rajat.
+
+- Muodosta Helsingin kaupunginosajaon perusteella kaupungin rajat.
 
 :::code-box
 ```sql
@@ -216,7 +221,8 @@ Tässä harjoituksessa voi hyödyntää ainakin näitä funktioita:
 | ST_Within(geometry A, geometry B) | Palauttaa "TOSI", jos A on B:n sisäpuolella |
 
 
-Hae puut, jotka sijaitsevat tieliikenneväylien varrella (lähempänä kuin 5 m tiestä).
+
+- Hae puut, jotka sijaitsevat tieliikenneväylien varrella (lähempänä kuin 5 m tiestä).
 
 :::code-box
 ```sql
@@ -253,7 +259,7 @@ ON ST_DWithin(p.geom, l.geom, 5)
 :::
 :::
 
-Hae liikenneväylät, jotka menevät kaupunginosasta toiseen. Millä kyselyllä saisit molempien
+- Hae liikenneväylät, jotka menevät kaupunginosasta toiseen. Millä kyselyllä saisit molempien
 tasojen (liikennevaylat, kaupunginosajako) geometriat näkymään pgAdminissa, jotta voisit vakuuttua 
 kyselyn palauttamien tuloksien oikeellisuudesta?
 
@@ -297,7 +303,7 @@ ON ST_Crosses(a.geom, b.geom)
 :::
 :::
 
-Hae puurekisterin yksinäiset puut, eli sellaiset, jotka ovat yli 50 m päässä mistä tahansa muusta puurekisterin 
+- Hae puurekisterin yksinäiset puut, eli sellaiset, jotka ovat yli 50 m päässä mistä tahansa muusta puurekisterin 
 puusta.
 
 :::code-box
