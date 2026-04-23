@@ -7,7 +7,7 @@
 <meta charset="utf-8" />
 <meta name="generator" content="pandoc" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta property="og:title" content="10 Harjoitus 9: Indeksit - tavalliset ja spatiaaliset | PostgreSQL ja PostGISin perusteet" />
+<meta property="og:title" content="10 Harjoitus 9: Indeksit - tavalliset ja spatiaaliset | PostGIS-työpaja" />
 <meta property="og:type" content="book" />
 
 
@@ -16,12 +16,12 @@
 
 <meta name="author" content="Gispo Oy" />
 
-<meta name="date" content="2026-04-22" />
+<meta name="date" content="2026-04-23" />
 
 
-<meta name="description" content="10 Harjoitus 9: Indeksit - tavalliset ja spatiaaliset | PostgreSQL ja PostGISin perusteet">
+<meta name="description" content="10 Harjoitus 9: Indeksit - tavalliset ja spatiaaliset | PostGIS-työpaja">
 
-<title>10 Harjoitus 9: Indeksit - tavalliset ja spatiaaliset | PostgreSQL ja PostGISin perusteet</title>
+<title>10 Harjoitus 9: Indeksit - tavalliset ja spatiaaliset | PostGIS-työpaja</title>
 
 
 
@@ -120,7 +120,7 @@ type="button" onclick="navToggle()" aria-label="Toggle navigation">
 
 <div class="sidebar-title-wrapper">
 <img alt="Logo" width="100" src="img/gispo_white_sm.png" class="sidebar-logo">
-<div class="sidebar-title"><h1>PostgreSQL ja PostGISin perusteet</h1></div>
+<div class="sidebar-title"><h1>PostGIS-työpaja</h1></div>
 <div class="abstract-sidebar"><p>Kurssi PostGISin yleisimpiin käyttötapauksiin.</p></div>
 </div>
 
@@ -232,31 +232,31 @@ sen suorittamiseen kuluva aika millisekunteina. Lisäksi kysely eri osien suhtee
 palauta itse kyselyn tuottamia rivejä vaan ainoastaan tiedon siitä, millä tavoin kyselyä tultaisiin ajamaan.</p>
 <p>Tarkastellaan tätä muutamien esimerkkikyselyiden avulla:</p>
 <div class="code-box">
-<div class="sourceCode" id="cb129"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb129-1"><a href="09_harjoitus_09.html#cb129-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb129-2"><a href="09_harjoitus_09.html#cb129-2" aria-hidden="true" tabindex="-1"></a><span class="kw">EXPLAIN</span> <span class="kw">ANALYZE</span> <span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> helsinki.liikennevaylat;</span></code></pre></div>
+<div class="sourceCode" id="cb138"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb138-1"><a href="09_harjoitus_09.html#cb138-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb138-2"><a href="09_harjoitus_09.html#cb138-2" aria-hidden="true" tabindex="-1"></a><span class="kw">EXPLAIN</span> <span class="kw">ANALYZE</span> <span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> helsinki.liikennevaylat;</span></code></pre></div>
 </div>
 <div class="code-box">
-<div class="sourceCode" id="cb130"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb130-1"><a href="09_harjoitus_09.html#cb130-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb130-2"><a href="09_harjoitus_09.html#cb130-2" aria-hidden="true" tabindex="-1"></a><span class="kw">EXPLAIN</span> <span class="kw">ANALYZE</span> <span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> helsinki.liikennevaylat <span class="kw">WHERE</span> pituus <span class="kw">BETWEEN</span> <span class="dv">50</span> <span class="kw">AND</span> <span class="dv">55</span>;</span></code></pre></div>
+<div class="sourceCode" id="cb139"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb139-1"><a href="09_harjoitus_09.html#cb139-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb139-2"><a href="09_harjoitus_09.html#cb139-2" aria-hidden="true" tabindex="-1"></a><span class="kw">EXPLAIN</span> <span class="kw">ANALYZE</span> <span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> helsinki.liikennevaylat <span class="kw">WHERE</span> pituus <span class="kw">BETWEEN</span> <span class="dv">50</span> <span class="kw">AND</span> <span class="dv">55</span>;</span></code></pre></div>
 </div>
 <div class="code-box">
-<div class="sourceCode" id="cb131"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb131-1"><a href="09_harjoitus_09.html#cb131-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb131-2"><a href="09_harjoitus_09.html#cb131-2" aria-hidden="true" tabindex="-1"></a><span class="kw">EXPLAIN</span> <span class="kw">ANALYZE</span> <span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> helsinki.liikennevaylat <span class="kw">WHERE</span> pituus <span class="op">&lt;</span> <span class="dv">13</span>;</span></code></pre></div>
+<div class="sourceCode" id="cb140"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb140-1"><a href="09_harjoitus_09.html#cb140-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb140-2"><a href="09_harjoitus_09.html#cb140-2" aria-hidden="true" tabindex="-1"></a><span class="kw">EXPLAIN</span> <span class="kw">ANALYZE</span> <span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> helsinki.liikennevaylat <span class="kw">WHERE</span> pituus <span class="op">&lt;</span> <span class="dv">13</span>;</span></code></pre></div>
 </div>
 <p>Luodaan sitten BTREE-indeksi kentälle “pituus”. Lyhimmillään tämä käy komennolla</p>
 <div class="code-box">
-<div class="sourceCode" id="cb132"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb132-1"><a href="09_harjoitus_09.html#cb132-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb132-2"><a href="09_harjoitus_09.html#cb132-2" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">INDEX</span> <span class="kw">ON</span> helsinki.liikennevaylat (pituus);</span></code></pre></div>
+<div class="sourceCode" id="cb141"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb141-1"><a href="09_harjoitus_09.html#cb141-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb141-2"><a href="09_harjoitus_09.html#cb141-2" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">INDEX</span> <span class="kw">ON</span> helsinki.liikennevaylat (pituus);</span></code></pre></div>
 </div>
 <p>Jos halutaan varmistua indeksin nimestä ja tyypistä, kirjoitetaan eksplisiittisesti</p>
 <div class="code-box">
-<div class="sourceCode" id="cb133"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb133-1"><a href="09_harjoitus_09.html#cb133-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb133-2"><a href="09_harjoitus_09.html#cb133-2" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">INDEX</span> liikennevaylat_pituus_idx <span class="kw">ON</span> helsinki.liikennevaylat <span class="kw">USING</span> BTREE (pituus);</span></code></pre></div>
+<div class="sourceCode" id="cb142"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb142-1"><a href="09_harjoitus_09.html#cb142-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb142-2"><a href="09_harjoitus_09.html#cb142-2" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">INDEX</span> liikennevaylat_pituus_idx <span class="kw">ON</span> helsinki.liikennevaylat <span class="kw">USING</span> BTREE (pituus);</span></code></pre></div>
 </div>
 <p>Samaten indeksin poistaminen on helppoa:</p>
 <div class="code-box">
-<div class="sourceCode" id="cb134"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb134-1"><a href="09_harjoitus_09.html#cb134-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb134-2"><a href="09_harjoitus_09.html#cb134-2" aria-hidden="true" tabindex="-1"></a><span class="kw">DROP</span> <span class="kw">INDEX</span> liikennevaylat_pituus_idx;</span></code></pre></div>
+<div class="sourceCode" id="cb143"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb143-1"><a href="09_harjoitus_09.html#cb143-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb143-2"><a href="09_harjoitus_09.html#cb143-2" aria-hidden="true" tabindex="-1"></a><span class="kw">DROP</span> <span class="kw">INDEX</span> liikennevaylat_pituus_idx;</span></code></pre></div>
 </div>
 <p>Aja edellä annettuja kyselyjä ensin ilman indeksiä ja indeksin määrittelyn jälkeen (voit koittaa ajaa kyselyn muutaman kerran saadaksesi keskiarvon)</p>
 <p>EXPLAIN ANALYZEn tuloksissa esiintyviä sanoja:
@@ -291,8 +291,8 @@ loops</p>
 <div class="footer-container text-center">
 
 <div class="footer-info">
-<h5 class="footer-title">PostgreSQL ja PostGISin perusteet</h5>
-<span class="footer-version">v2026-04-22</span>
+<h5 class="footer-title">PostGIS-työpaja</h5>
+<span class="footer-version">v2026-04-23</span>
 <div class="license"><img src="img/by-nd.svg" width="80px" alt="CC-BY-ND"></div>
 </div>
 

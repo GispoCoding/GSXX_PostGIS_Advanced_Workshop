@@ -71,6 +71,7 @@ harjoitus-9.5-uuden-taulutilan-luominen
 harjoitus-7-foreign-data-wrapper
 valmistautuminen-5
 harjoitus-1
+foreign-data-wrapperin-luominen
 harjoitus-8-postgresqln-yhteentoimivuus-muiden-ohjelmistojen-kanssa
 valmistautuminen-6
 harjoitus-9-indeksit---tavalliset-ja-spatiaaliset

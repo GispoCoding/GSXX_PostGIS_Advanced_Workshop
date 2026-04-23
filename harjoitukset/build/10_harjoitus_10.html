@@ -7,7 +7,7 @@
 <meta charset="utf-8" />
 <meta name="generator" content="pandoc" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta property="og:title" content="11 Harjoitus 10: Suorituskyvyn optimointi | PostgreSQL ja PostGISin perusteet" />
+<meta property="og:title" content="11 Harjoitus 10: Suorituskyvyn optimointi | PostGIS-työpaja" />
 <meta property="og:type" content="book" />
 
 
@@ -16,12 +16,12 @@
 
 <meta name="author" content="Gispo Oy" />
 
-<meta name="date" content="2026-04-22" />
+<meta name="date" content="2026-04-23" />
 
 
-<meta name="description" content="11 Harjoitus 10: Suorituskyvyn optimointi | PostgreSQL ja PostGISin perusteet">
+<meta name="description" content="11 Harjoitus 10: Suorituskyvyn optimointi | PostGIS-työpaja">
 
-<title>11 Harjoitus 10: Suorituskyvyn optimointi | PostgreSQL ja PostGISin perusteet</title>
+<title>11 Harjoitus 10: Suorituskyvyn optimointi | PostGIS-työpaja</title>
 
 
 
@@ -120,7 +120,7 @@ type="button" onclick="navToggle()" aria-label="Toggle navigation">
 
 <div class="sidebar-title-wrapper">
 <img alt="Logo" width="100" src="img/gispo_white_sm.png" class="sidebar-logo">
-<div class="sidebar-title"><h1>PostgreSQL ja PostGISin perusteet</h1></div>
+<div class="sidebar-title"><h1>PostGIS-työpaja</h1></div>
 <div class="abstract-sidebar"><p>Kurssi PostGISin yleisimpiin käyttötapauksiin.</p></div>
 </div>
 
@@ -215,7 +215,7 @@ type="button" onclick="navToggle()" aria-label="Toggle navigation">
 <h2><span class="header-section-number">11.1</span> Harjoitus 9.1: Taulutilat</h2>
 <p>Tarkista koulutuspalvelimen oletustaulutilojen sijainti. Käyttäjien tiedot sijaitsevat <strong>pg_default</strong>-taulutilassa, joka on data_directoryn base-hakemistossa. Järjestelmän yleiset tiedot sijaitsevat <strong>pg_global</strong>-taulutilassa, joka on data_directoryn global-hakemistossa. Datahakemiston sijainnin voit tarkistaa komennolla:</p>
 <div class="code-box">
-<div class="sourceCode" id="cb135"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb135-1"><a href="10_harjoitus_10.html#cb135-1" aria-hidden="true" tabindex="-1"></a>SHOW data_directory;</span></code></pre></div>
+<div class="sourceCode" id="cb144"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb144-1"><a href="10_harjoitus_10.html#cb144-1" aria-hidden="true" tabindex="-1"></a>SHOW data_directory;</span></code></pre></div>
 </div>
 </div>
 <div id="harjoitus-9.6-tietokannan-ja-taulun-taulutilan-muuttaminen" class="section level2" number="11.2">
@@ -229,43 +229,43 @@ type="button" onclick="navToggle()" aria-label="Toggle navigation">
 <li>Avaa tämän jälkeen sivupaneelista postgres-tietokanta ja avaa <strong>Query tool</strong> (voit tehdä tämän myös psql:n avulla). Anna komento:</li>
 </ol>
 <div class="code-box">
-<div class="sourceCode" id="cb136"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb136-1"><a href="10_harjoitus_10.html#cb136-1" aria-hidden="true" tabindex="-1"></a><span class="kw">ALTER</span> <span class="kw">DATABASE</span> trainingdatabase</span>
-<span id="cb136-2"><a href="10_harjoitus_10.html#cb136-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SET</span> <span class="kw">TABLESPACE</span> tmp_tablespace;</span></code></pre></div>
+<div class="sourceCode" id="cb145"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb145-1"><a href="10_harjoitus_10.html#cb145-1" aria-hidden="true" tabindex="-1"></a><span class="kw">ALTER</span> <span class="kw">DATABASE</span> trainingdatabase</span>
+<span id="cb145-2"><a href="10_harjoitus_10.html#cb145-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SET</span> <span class="kw">TABLESPACE</span> tmp_tablespace;</span></code></pre></div>
 </div>
 <div class="hint-box">
 <p>Mikäli tämä ei onnistu, ja pgAdmin4 kertoo, että tietokantaan on aktiivisia yhteyksiä, yritä kirjautua ulos ja takaisin sisään pgAdminiin.</p>
 </div>
 <p>Voit tarkistaa tietokannan taulutilan sijainnin SQL-kyselyllä:</p>
 <div class="code-box">
-<div class="sourceCode" id="cb137"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb137-1"><a href="10_harjoitus_10.html#cb137-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span></span>
-<span id="cb137-2"><a href="10_harjoitus_10.html#cb137-2" aria-hidden="true" tabindex="-1"></a>spcname, pg_tablespace_location(<span class="kw">oid</span>)</span>
-<span id="cb137-3"><a href="10_harjoitus_10.html#cb137-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span></span>
-<span id="cb137-4"><a href="10_harjoitus_10.html#cb137-4" aria-hidden="true" tabindex="-1"></a>pg_tablespace;</span></code></pre></div>
+<div class="sourceCode" id="cb146"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb146-1"><a href="10_harjoitus_10.html#cb146-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span></span>
+<span id="cb146-2"><a href="10_harjoitus_10.html#cb146-2" aria-hidden="true" tabindex="-1"></a>spcname, pg_tablespace_location(<span class="kw">oid</span>)</span>
+<span id="cb146-3"><a href="10_harjoitus_10.html#cb146-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span></span>
+<span id="cb146-4"><a href="10_harjoitus_10.html#cb146-4" aria-hidden="true" tabindex="-1"></a>pg_tablespace;</span></code></pre></div>
 </div>
 <p>Luo testausta varten tilapäinen taulu:</p>
 <div class="code-box">
-<div class="sourceCode" id="cb138"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb138-1"><a href="10_harjoitus_10.html#cb138-1" aria-hidden="true" tabindex="-1"></a><span class="kw">DROP</span> <span class="kw">TABLE</span> <span class="cf">IF</span> <span class="kw">EXISTS</span> tmp_table;</span>
-<span id="cb138-2"><a href="10_harjoitus_10.html#cb138-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb138-3"><a href="10_harjoitus_10.html#cb138-3" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> tmp_table <span class="kw">AS</span></span>
-<span id="cb138-4"><a href="10_harjoitus_10.html#cb138-4" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> x</span>
-<span id="cb138-5"><a href="10_harjoitus_10.html#cb138-5" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span></span>
-<span id="cb138-6"><a href="10_harjoitus_10.html#cb138-6" aria-hidden="true" tabindex="-1"></a>generate_series(<span class="dv">2</span>,<span class="dv">5000</span>,<span class="dv">2</span>) <span class="kw">AS</span> x;</span></code></pre></div>
+<div class="sourceCode" id="cb147"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb147-1"><a href="10_harjoitus_10.html#cb147-1" aria-hidden="true" tabindex="-1"></a><span class="kw">DROP</span> <span class="kw">TABLE</span> <span class="cf">IF</span> <span class="kw">EXISTS</span> tmp_table;</span>
+<span id="cb147-2"><a href="10_harjoitus_10.html#cb147-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb147-3"><a href="10_harjoitus_10.html#cb147-3" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> tmp_table <span class="kw">AS</span></span>
+<span id="cb147-4"><a href="10_harjoitus_10.html#cb147-4" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> x</span>
+<span id="cb147-5"><a href="10_harjoitus_10.html#cb147-5" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span></span>
+<span id="cb147-6"><a href="10_harjoitus_10.html#cb147-6" aria-hidden="true" tabindex="-1"></a>generate_series(<span class="dv">2</span>,<span class="dv">5000</span>,<span class="dv">2</span>) <span class="kw">AS</span> x;</span></code></pre></div>
 </div>
 <p>Taulun käyttämän taulutilan voit tarkistaa seuraavalla komennolla:</p>
 <div class="code-box">
-<div class="sourceCode" id="cb139"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb139-1"><a href="10_harjoitus_10.html#cb139-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span></span>
-<span id="cb139-2"><a href="10_harjoitus_10.html#cb139-2" aria-hidden="true" tabindex="-1"></a>tablename, <span class="kw">tablespace</span></span>
-<span id="cb139-3"><a href="10_harjoitus_10.html#cb139-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span></span>
-<span id="cb139-4"><a href="10_harjoitus_10.html#cb139-4" aria-hidden="true" tabindex="-1"></a>pg_tables</span>
-<span id="cb139-5"><a href="10_harjoitus_10.html#cb139-5" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span></span>
-<span id="cb139-6"><a href="10_harjoitus_10.html#cb139-6" aria-hidden="true" tabindex="-1"></a>tablename <span class="op">=</span> <span class="st">&#39;tmp_table&#39;</span>;</span></code></pre></div>
+<div class="sourceCode" id="cb148"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb148-1"><a href="10_harjoitus_10.html#cb148-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span></span>
+<span id="cb148-2"><a href="10_harjoitus_10.html#cb148-2" aria-hidden="true" tabindex="-1"></a>tablename, <span class="kw">tablespace</span></span>
+<span id="cb148-3"><a href="10_harjoitus_10.html#cb148-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span></span>
+<span id="cb148-4"><a href="10_harjoitus_10.html#cb148-4" aria-hidden="true" tabindex="-1"></a>pg_tables</span>
+<span id="cb148-5"><a href="10_harjoitus_10.html#cb148-5" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span></span>
+<span id="cb148-6"><a href="10_harjoitus_10.html#cb148-6" aria-hidden="true" tabindex="-1"></a>tablename <span class="op">=</span> <span class="st">&#39;tmp_table&#39;</span>;</span></code></pre></div>
 </div>
 <p>Muuta taulun taulutilaa seuraavalla komennolla:</p>
 <div class="code-box">
-<div class="sourceCode" id="cb140"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb140-1"><a href="10_harjoitus_10.html#cb140-1" aria-hidden="true" tabindex="-1"></a><span class="kw">ALTER</span> <span class="kw">TABLE</span></span>
-<span id="cb140-2"><a href="10_harjoitus_10.html#cb140-2" aria-hidden="true" tabindex="-1"></a>tmp_table</span>
-<span id="cb140-3"><a href="10_harjoitus_10.html#cb140-3" aria-hidden="true" tabindex="-1"></a><span class="kw">SET</span> <span class="kw">TABLESPACE</span></span>
-<span id="cb140-4"><a href="10_harjoitus_10.html#cb140-4" aria-hidden="true" tabindex="-1"></a>tmp_tablespace;</span></code></pre></div>
+<div class="sourceCode" id="cb149"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb149-1"><a href="10_harjoitus_10.html#cb149-1" aria-hidden="true" tabindex="-1"></a><span class="kw">ALTER</span> <span class="kw">TABLE</span></span>
+<span id="cb149-2"><a href="10_harjoitus_10.html#cb149-2" aria-hidden="true" tabindex="-1"></a>tmp_table</span>
+<span id="cb149-3"><a href="10_harjoitus_10.html#cb149-3" aria-hidden="true" tabindex="-1"></a><span class="kw">SET</span> <span class="kw">TABLESPACE</span></span>
+<span id="cb149-4"><a href="10_harjoitus_10.html#cb149-4" aria-hidden="true" tabindex="-1"></a>tmp_tablespace;</span></code></pre></div>
 </div>
 <p>Tarkista, että taulun taulutila on nyt muuttunut. Voit myös käyttää pgAdminin käyttöliittymää taulutilojen tarkastamiseen.</p>
 </div>
@@ -273,16 +273,16 @@ type="button" onclick="navToggle()" aria-label="Toggle navigation">
 <h2><span class="header-section-number">11.3</span> Harjoitus 9.7: Indeksin taulutilan muuttaminen</h2>
 <p>Voit luoda indeksin tauluun komennolla:</p>
 <div class="code-box">
-<div class="sourceCode" id="cb141"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb141-1"><a href="10_harjoitus_10.html#cb141-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">INDEX</span></span>
-<span id="cb141-2"><a href="10_harjoitus_10.html#cb141-2" aria-hidden="true" tabindex="-1"></a>idx_tmp_x</span>
-<span id="cb141-3"><a href="10_harjoitus_10.html#cb141-3" aria-hidden="true" tabindex="-1"></a><span class="kw">ON</span> tmp_table(x);</span></code></pre></div>
+<div class="sourceCode" id="cb150"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb150-1"><a href="10_harjoitus_10.html#cb150-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">INDEX</span></span>
+<span id="cb150-2"><a href="10_harjoitus_10.html#cb150-2" aria-hidden="true" tabindex="-1"></a>idx_tmp_x</span>
+<span id="cb150-3"><a href="10_harjoitus_10.html#cb150-3" aria-hidden="true" tabindex="-1"></a><span class="kw">ON</span> tmp_table(x);</span></code></pre></div>
 </div>
 <p>Indeksit luodaan oletusarvoisesti <strong>pg_default</strong>-taulutilaan. Usein käytetyt indeksit voi olla tarpeen tallentaa sellaiseen taulutilaan, joka käyttää palvelimessa olevaa nopeinta levyä (esimerkiksi SSD-levyt). Indeksien taulutilan muuttaminen onnistuu seuraavasti:</p>
 <div class="code-box">
-<div class="sourceCode" id="cb142"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb142-1"><a href="10_harjoitus_10.html#cb142-1" aria-hidden="true" tabindex="-1"></a><span class="kw">ALTER</span> <span class="kw">INDEX</span></span>
-<span id="cb142-2"><a href="10_harjoitus_10.html#cb142-2" aria-hidden="true" tabindex="-1"></a>idx_tmp_x</span>
-<span id="cb142-3"><a href="10_harjoitus_10.html#cb142-3" aria-hidden="true" tabindex="-1"></a><span class="kw">SET</span> <span class="kw">TABLESPACE</span></span>
-<span id="cb142-4"><a href="10_harjoitus_10.html#cb142-4" aria-hidden="true" tabindex="-1"></a>tmp_tablespace;</span></code></pre></div>
+<div class="sourceCode" id="cb151"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb151-1"><a href="10_harjoitus_10.html#cb151-1" aria-hidden="true" tabindex="-1"></a><span class="kw">ALTER</span> <span class="kw">INDEX</span></span>
+<span id="cb151-2"><a href="10_harjoitus_10.html#cb151-2" aria-hidden="true" tabindex="-1"></a>idx_tmp_x</span>
+<span id="cb151-3"><a href="10_harjoitus_10.html#cb151-3" aria-hidden="true" tabindex="-1"></a><span class="kw">SET</span> <span class="kw">TABLESPACE</span></span>
+<span id="cb151-4"><a href="10_harjoitus_10.html#cb151-4" aria-hidden="true" tabindex="-1"></a>tmp_tablespace;</span></code></pre></div>
 </div>
 
 </div>
@@ -298,8 +298,8 @@ type="button" onclick="navToggle()" aria-label="Toggle navigation">
 <div class="footer-container text-center">
 
 <div class="footer-info">
-<h5 class="footer-title">PostgreSQL ja PostGISin perusteet</h5>
-<span class="footer-version">v2026-04-22</span>
+<h5 class="footer-title">PostGIS-työpaja</h5>
+<span class="footer-version">v2026-04-23</span>
 <div class="license"><img src="img/by-nd.svg" width="80px" alt="CC-BY-ND"></div>
 </div>
 
