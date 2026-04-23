@@ -1,4 +1,4 @@
-# Harjoitus 7: Foreign Data Wrapper 
+# Harjoitus 7: Foreign Data Wrapper ja yhteentoimivuus muiden ohjelmistojen kanssa
 
 **Harjoituksen sisältö** - Harjoituksessa tutustutaan Postgresin FDW-ominaisuuteen ja miten sillä saadaan yhdistettyä tietokanta 
 muihin tietokantoihin tai ulkoisiin datalähteisiin.
@@ -9,8 +9,6 @@ muihin tietokantoihin tai ulkoisiin datalähteisiin.
 
 Avaa [pgAdmin](/pgadmin) selaimeen ja kirjaudu sisään.  Avaa **Query Tool** (Valitse _trainingdatabase_ **->** Ylhäältä **Tools** **->** **Query Tool**). Käytössä tulee olla myös web-selain, joka mahdollistaa pääsyn Maanmittauslaitoksen koordinaattien muunnospalveluun.
 
-
-## Harjoitus 
 
 Jos koitat kysellä toisen tietokannan tauluista (kuten worlddatabase) esimerkiksi kyselyllä
 
@@ -24,7 +22,7 @@ PostgreSQL palauttaa virheen ("ERROR:  cross-database references are not impleme
 foreign data wrapper, jotta voimme tuoda tämän "ulkoisen" tietokannan tiedot tietokantaan foreign tablen
 muodossa. 
 
-### Foreign Data Wrapperin luominen
+## Harjoitus 7.1: Foreign Data Wrapperin luominen
 
 Foreign data wrapper (fdw) voidaan luoda myös pgAdminin käyttöliittymän kautta luomalla ensin vaadittava laajennos 
  

@@ -8,9 +8,8 @@
 
 Avaa [pgAdmin](/pgadmin) selaimeen ja kirjaudu sisään.  Avaa **Query Tool** (Valitse _trainingdatabase_ **->** Ylhäältä **Tools** **->** **Query Tool**).
 
-## Harjoitus:
 
-### Harjoitus: Triggeri näkymän päivittämiseen
+## Harjoitus 5.1: Triggeri näkymän päivittämiseen
 
 Loimme aiemmassa harjoituksessa yksinkertaisen näkymän "puut_kaupunginosittain". Mikäli koitit muokata kohteita tämän näkymän kautta esimerkiksi pgAdminin 
 tai QGISin kautta, tulit huomaamaan että muokkauksia tallentaessa (COMMIT) törmäsit virheeseen:
@@ -122,7 +121,7 @@ QGISiin tuotua tasoa muokkaamalla.
 - Entä, jos käyttäjä haluaa joko luoda uuden kohteen (INSTEAD OF INSERT) tai poistaa rivin (INSTEAD OF DELETE) näkymän kautta? Miten triggerin ja vastaavan funktion määrittely silloin kävisi? Yritä muodostaa näitä varten  kaksi uutta triggeriä ja funktiota.
 
 
-## Trigger kenttien päivittämiseen
+## Harjoitus 5.2: Trigger kenttien päivittämiseen
 
 Tehdään vielä toinen triggeri ja triggeri-funktio, tällä kertaa liikennevaylat-tauluun. Taulussa on
 mm. kentät "paivitetty" (date-tyyppiä) sekä "lisatietoj" (character varying (254)). Halutaan tehdä

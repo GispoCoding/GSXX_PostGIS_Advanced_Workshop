@@ -8,7 +8,7 @@
 
 Avaa [pgAdmin](/pgadmin) selaimeen ja kirjaudu sisään. Avaa **Query Tool** (Valitse *trainingdatabase* **-\>** Ylhäältä **Tools** **-\>** **Query Tool**).
 
-## Harjoitus: tavallinen näkymä
+## Harjoitus 4.1: tavallinen näkymä
 
 Edellisessä harjoituksessa muodostimme kyselyn teiden varsilla olevien puiden löytämiseksi. Tehdään tämän perusteella uusi kysely, johon haluamme liittää kuhunkin 
 tulokseen vielä tiedon siitä, missä kaupunginosassa puu on 
@@ -78,7 +78,7 @@ CREATE OR REPLACE VIEW view_tienvarren_puut AS (
 Kumman luomiseen kului enemmän aikaa? Kumpi on nopeampi käytössä?
 
 
-## Materialisoitu näkymä
+## Harjoitus 4.2: Materialisoitu näkymä
 
 Luo nyt vastaava näkymä materialisoituna, eli kyselyn palauttama data tallennetaan erikseen levylle tavallisen
 taulun tapaan. Materialisoidun näkymän luomisen syntaksi on (vrt. syntaksia taulun ja tavallisen näkymän tapaukseen): 
@@ -118,7 +118,7 @@ Nämä eri tyyppiset näkymät löytyvät pgAdminin valikosta eri valikkojen alt
 
 
 
-## Näkymien muokkaus ja datan päivitys
+## Harjoitus 4.3: Näkymien muokkaus ja datan päivitys
 
 Näkymät toimivat monin tavoin tavallisen tietokantataulun kaltaisesti, mutta siihen on valittu ja yhdistelty
 sen luovalla SQL-kyselyllä kussakin tapauksessa relevantit tiedot. Kenties tietoja voisi myös kätevästi päivittää 

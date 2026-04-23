@@ -10,7 +10,7 @@ Avaa [pgAdmin](/pgadmin) selaimeen ja kirjaudu sisään.  Avaa **Query Tool** (V
 myös PostGISin funktioiden koottu dokumentaatiosivu: [linkki](https://postgis.net/docs/manual-3.6/PostGIS_Special_Functions_Index.html)
 
 
-## PostGISin perusfunktiot geometrioiden määrittelyyn
+## 3.1: PostGISin perusfunktiot geometrioiden määrittelyyn
 
 -ST_AsWKT ja muut mahdolliset geometrioiden muodot: 
 -- Käytetään ainakin lentokenttätasoa (tai myös liikennevaylat-tasoa tai puurekisteri) tehdään uusi geometria, johon geometria kopioidaan wkb_geometry-kentästä, mutta 
@@ -32,7 +32,7 @@ Kaikki PostGIS-tietokannassa olevat paikkatietotaulut on rekisteröity metatieto
 |  [**raster_columns**]{style="color:purple"}   |         Rasteritietoa sisältävät paikkatietotaulut          |
 | [**raster_overviews**]{style="color:purple"}  | Yleistettyjä rasteriaineistoja sisältävät paikkatietotaulut |
 
-## Harjoitus 4.1: Geometrioiden metatiedot
+## Harjoitus 3.2: Geometrioiden metatiedot
 
 Tutki geometry_columns-taulua. Mitä tietoja eri tietokentät sisältävät?
 
@@ -80,7 +80,7 @@ FROM kaupunginosajako;
 :::
 
 
-## Harjoitus 4.2: PostGISin perusfunktiot geometrioiden käsittelyyn
+## Harjoitus 3.3: PostGISin perusfunktiot geometrioiden käsittelyyn
 
 
 Testataan ensin Postgisin perusfunktioita, kuten ST_Centroid(), ST_Buffer() ja ST_Boundary(). Voit avata näiden dokumentaatiosivut edellä olevasta linkistä.
@@ -200,7 +200,7 @@ FROM kaupunginosajako;
 :::
 
 
-## Harjoitus 4.3: Spatiaaliset relaatiot
+## Harjoitus 3.4: Spatiaaliset relaatiot
 
 
 ### Käytettäviä funktioita

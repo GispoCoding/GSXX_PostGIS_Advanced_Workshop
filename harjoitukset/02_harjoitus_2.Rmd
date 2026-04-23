@@ -8,101 +8,9 @@
 
 QGIS tulee olla asennettuna, jotta paikkatietoaineistoja voidaan ladata. Avaa myös [pgAdmin](/pgadmin) selaimeen ja kirjaudu sisään.  Avaa **Query Tool** (Valitse _trainingdatabase_ **->** Ylhäältä **Tools** **->** **Query Tool**).
 
-## Harjoitus 2.1: Tekstitiedoston lataaminen
-
-Monia pistemäisiä paikkatietoaineistoja on tallennettu CSV-tiedostoihin, jossa ne eivät varsinaisesti ole paikkatietomuodossa. Ensimmäisessä harjoituksessa ladataan globaali lentokenttiä kuvaava aineisto PostgreSQL-tietokantaan. Luodaan ensin harjoitustietokantaan taulu seuraavasti:
-
-::: code-box
-``` sql
-DROP TABLE IF EXISTS airports;
-
-CREATE TABLE airports
-(
-    id            integer,
-    name          text,
-    city          text,
-    country       text,
-    IATA_code     char(3),
-    ICAO_code     char(4),
-    latitude      numeric,
-    longitude     numeric,
-    altitude      numeric,
-    timezone      text,
-    dst           text,
-    tz_zone       text,
-    type          text,
-    source        text
-);
-```
-:::
-
-Kyseinen aineisto on ladattu valmiiksi [OpenFlights.org-sivustolta](http://openflights.org/data.html) päänäkymän data-kansioon.
-
-Tarkastele miltä kyseinen aineisto näyttää kansiossa. Voit avata tiedoston selaimeen [tästä linkistä](/data/airports.dat).
-
-Voit lukea CSV-tiedoston tiedot edellisessä vaiheessa luotuun tauluun seuravaalla komennolla:
 
 
-::: code-box
-``` sql
-COPY airports
-FROM '/home/student/data/airports.dat'
-WITH CSV;
-```
-:::
-
-
-**COPY**-komento viittaa tiedostoon kovalevyllä ja lataa sen. **COPY** voi viitata CSV:n lisäksi myös esimerkiksi [binääriformaatteihin tai tekstitiedostoihin.](https://www.postgresql.org/docs/current/sql-copy.html)
-
-Tarkista lopuksi, että tietokantataulussa on dataa.
-
-::: code-box
-``` sql
-SELECT *
-FROM airports
-LIMIT 10;
-```
-:::
-
-Aineistoa tarkastelemalla nähdään, että taulussa on koordinaatteja, mutta ne on tallennettu vain numeroarvoina; ei paikkatietotyyppinä.
-
-Jotta PostGIS:n toiminnallisuuksia voisi hyödyntää aineiston kanssa, tulee kyseiseen tauluun lisätä geometriasarake. PostGIS:ssä on valmis [funktio](https://postgis.net/docs/AddGeometryColumn.html) tähän tarkoitukseen. Tarkastele dokumentaatiosta miten kyseistä funktiota käytetään.
-
-::: code-box
-``` sql
-SELECT AddGeometryColumn ('airports','geom',4326,'POINT',2);
-```
-:::
-
-Tarkastele taulua uudelleen.
-
-::: code-box
-``` sql
-SELECT *
-FROM airports
-LIMIT 10;
-```
-:::
-
-Tauluun on ilmestynyt uusi sarake. Sarake ei kuitenkaan sisällä vielä mitään tietoa. Päivitetään taulun sisältö **UPDATE**-komennon avulla.
-
-Seuraavassa komennossa on ketjutettu useampi funktio sisäkkäin.
-
--   [ST_MakePoint](https://postgis.net/docs/ST_MakePoint.html) luo tekstikenttien perusteella pistemuotoisen geometrian
--   [ST_SetSRID](https://postgis.net/docs/ST_SetSRID.html) asettaa kyseiselle tietokentälle EPSG-koodin avulla koordinaattijärjestelmän
-
-::: code-box
-``` sql
-UPDATE airports
-SET geom = ST_SetSRID(ST_MakePoint(longitude, latitude),4326);
-```
-:::
-
-Tarkastele lopuksi aineistoa esimerkiksi pgAdminin karttatoiminnallisuuden avulla.
-
-![](img/pgadmin_geom.png)
-
-## Harjoitus 2.2: Paikkatietoaineiston lataaminen
+## Harjoitus 2.1: Paikkatietoaineiston lataaminen
 
 Harjoituksissa käytettävä Helsingin data-aineisto on ladattu valmiiksi harjoitussivun [data-kansioon](/data).
 
@@ -122,27 +30,26 @@ Paina **Testaa yhteyttä** -painiketta varmistaaksesi tietokantayhteyden toiminn
 
 Ota yhteys QGISista postgres-nimisen tietokannan lisäksi trainingdatabase-nimiseen tietokantaan, jossa tulemme operoimaan loppukurssin ajan. Tietokantayhteyden muodostaminen tapahtuu hyvin pitkälti samoin kuin yllä on kuvattu. Ainoastaan Name-kohtaan tulee syöttää jokin muu arvo (esim. gispo_trainingdatabase).
 
-Luo tässä vaiheessa harjoitustietokantaan uusi skeema, jonne Helsingin kaupungin avoimia data-aineistoja tullaan lataamaan, ja anna skeemalle nimeksi "helsinki". Skeemojen avulla on helpompi pitää aineistot järjestyksessä. Uuden skeeman voi luoda pgAdminin graafisen käyttöliittymän kautta, QGISin kautta tai seuraavalla SQL-komennolla:
-
-::: code-box
-``` sql
-CREATE SCHEMA IF NOT EXISTS helsinki;
-```
-:::
-
 
 Lataa [data-kansio](/data/helsinki_avoin_data.zip) omalle koneellesi. Aineistoja voi lisätä navigoimalla Tasot \> Lisää taso \> Lisää vektoritaso, klikkaamalla Lisää vektoritaso -kuvaketta tasojen hallinnan työkalupalkista tai ihan vain raahaamalla tasoja suoraan Selain-ikkunasta Tasot-ikkunaan.
 
 Lataa projektiisi ja tietokantoihisi seuraavat aineistot (käytä tietokanta-exportissa näitä nimiä tauluille, kts. alla):
 
 Trainingdatabase:
+
 - puurekisteri_piste
+
 - liikennevaylat
+
 - ylre_viheralueet
+
 - kaupunginosajako
 
+
 Worldatabase:
+
 - populated_places
+
 - countries
 
 
@@ -168,7 +75,7 @@ Tarkista mitä muita parametrejä prosessi pitää sisällään. Voit kuitenkin 
 ::: code-box
 ``` sql
 SELECT *
-FROM helsinki.kaupunginosajako
+FROM kaupunginosajako
 LIMIT 10;
 ```
 :::
