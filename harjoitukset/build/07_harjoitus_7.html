@@ -147,17 +147,6 @@ type="button" onclick="navToggle()" aria-label="Toggle navigation">
 <li><a href="03_harjoitus_3.html#harjoitus-4.1-geometrioiden-metatiedot"><span class="toc-section-number">4.2</span> Harjoitus 4.1: Geometrioiden metatiedot</a></li>
 <li><a href="03_harjoitus_3.html#harjoitus-4.2-postgisin-perusfunktiot-geometrioiden-käsittelyyn"><span class="toc-section-number">4.3</span> Harjoitus 4.2: PostGISin perusfunktiot geometrioiden käsittelyyn</a></li>
 <li><a href="03_harjoitus_3.html#harjoitus-4.3-spatiaaliset-relaatiot"><span class="toc-section-number">4.4</span> Harjoitus 4.3: Spatiaaliset relaatiot</a></li>
-<li><a href="03_harjoitus_3.html#harjoitus-6.4"><span class="toc-section-number">4.5</span> Harjoitus 6.4</a></li>
-<li><a href="03_harjoitus_3.html#harjoitus-6.5"><span class="toc-section-number">4.6</span> Harjoitus 6.5</a></li>
-<li><a href="03_harjoitus_3.html#harjoitus-6.6"><span class="toc-section-number">4.7</span> Harjoitus 6.6</a></li>
-<li><a href="03_harjoitus_3.html#harjoitus-6.7"><span class="toc-section-number">4.8</span> Harjoitus 6.7</a></li>
-<li><a href="03_harjoitus_3.html#harjoitus-7.1-koordinaattipisteen-konversio"><span class="toc-section-number">4.9</span> Harjoitus 7.1: Koordinaattipisteen konversio</a></li>
-<li><a href="03_harjoitus_3.html#harjoitus-7.2-koordinaattimuunnos"><span class="toc-section-number">4.10</span> Harjoitus 7.2: Koordinaattimuunnos</a></li>
-<li><a href="03_harjoitus_3.html#harjoitus-7.3-koordinaattimuunnosten-vertailu"><span class="toc-section-number">4.11</span> Harjoitus 7.3: Koordinaattimuunnosten vertailu</a></li>
-<li><a href="03_harjoitus_3.html#harjoitus-7.5-koordinaattijärjestelmien-vertailu"><span class="toc-section-number">4.12</span> Harjoitus 7.5: Koordinaattijärjestelmien vertailu</a></li>
-<li><a href="03_harjoitus_3.html#harjoitus-7.6-uuden-paikkatietotaulun-luominen"><span class="toc-section-number">4.13</span> Harjoitus 7.6: Uuden paikkatietotaulun luominen</a></li>
-<li><a href="03_harjoitus_3.html#harjoitus-7.7-toisen-geometriakentän-lisääminen"><span class="toc-section-number">4.14</span> Harjoitus 7.7: Toisen geometriakentän lisääminen</a></li>
-<li><a href="03_harjoitus_3.html#harjoitus-7.8-muunnoksen-tallennus-geometriakenttään"><span class="toc-section-number">4.15</span> Harjoitus 7.8: Muunnoksen tallennus geometriakenttään</a></li>
 </ul></li>
 <li class="has-sub"><a href="04_harjoitus_4.html#harjoitus-4-tavalliset-ja-materialisoidut-näkymät"><span class="toc-section-number">5</span> Harjoitus 4: Tavalliset ja materialisoidut näkymät</a>
 <ul>
@@ -168,12 +157,7 @@ type="button" onclick="navToggle()" aria-label="Toggle navigation">
 <li class="has-sub"><a href="05_harjoitus_5.html#harjoitus-5-triggerit-ja-niiden-luonti"><span class="toc-section-number">6</span> Harjoitus 5: Triggerit ja niiden luonti</a>
 <ul>
 <li><a href="05_harjoitus_5.html#harjoitus"><span class="toc-section-number">6.1</span> Harjoitus:</a></li>
-<li><a href="05_harjoitus_5.html#harjoitus-triggeri-näkymän-päivittämiseen"><span class="toc-section-number">6.2</span> Harjoitus: Triggeri näkymän päivittämiseen</a></li>
-<li><a href="05_harjoitus_5.html#harjoitus-5.1"><span class="toc-section-number">6.3</span> Harjoitus 5.1</a></li>
-<li><a href="05_harjoitus_5.html#harjoitus-5.2"><span class="toc-section-number">6.4</span> Harjoitus 5.2</a></li>
-<li><a href="05_harjoitus_5.html#harjoitus-5.3"><span class="toc-section-number">6.5</span> Harjoitus 5.3</a></li>
-<li><a href="05_harjoitus_5.html#harjoitus-5.4"><span class="toc-section-number">6.6</span> Harjoitus 5.4</a></li>
-<li><a href="05_harjoitus_5.html#harjoitus-5.5"><span class="toc-section-number">6.7</span> Harjoitus 5.5</a></li>
+<li><a href="05_harjoitus_5.html#trigger-kenttien-päivittämiseen"><span class="toc-section-number">6.2</span> Trigger kenttien päivittämiseen</a></li>
 </ul></li>
 <li class="has-sub"><a href="06_harjoitus_6.html#harjoitus-6-käyttäjähallinta"><span class="toc-section-number">7</span> Harjoitus 6: Käyttäjähallinta</a>
 <ul>
@@ -220,7 +204,7 @@ muihin tietokantoihin tai ulkoisiin datalähteisiin.</p>
 <h2><span class="header-section-number">8.1</span> Harjoitus</h2>
 <p>Jos koitat kysellä toisen tietokannan tauluista (kuten worlddatabase) esimerkiksi kyselyllä</p>
 <div class="code-box">
-<div class="sourceCode" id="cb128"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb128-1"><a href="07_harjoitus_7.html#cb128-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> populated_places;</span></code></pre></div>
+<div class="sourceCode" id="cb79"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb79-1"><a href="07_harjoitus_7.html#cb79-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> populated_places;</span></code></pre></div>
 </div>
 <p>PostgreSQL palauttaa virheen (“ERROR: cross-database references are not implemented”). Luodaan nyt
 foreign data wrapper, jotta voimme tuoda tämän “ulkoisen” tietokannan tiedot tietokantaan foreign tablen
@@ -231,43 +215,43 @@ muodossa.</p>
 <p><img src="img/pgadmin_fdw_ext.png" /></p>
 <p>Tämän jälkeen määritettäisiin itse fdw, mutta ajetaan tässä suoraan nämävastaavat SQL-komennot.</p>
 <div class="code-box">
-<div class="sourceCode" id="cb129"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb129-1"><a href="07_harjoitus_7.html#cb129-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> EXTENSION postgres_fdw;</span></code></pre></div>
+<div class="sourceCode" id="cb80"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb80-1"><a href="07_harjoitus_7.html#cb80-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> EXTENSION postgres_fdw;</span></code></pre></div>
 </div>
 <p>Tämän jälkeen voidaan luoda ns. foreign server:</p>
 <div class="code-box">
-<div class="sourceCode" id="cb130"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb130-1"><a href="07_harjoitus_7.html#cb130-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> SERVER foreign_worlddata_server</span>
-<span id="cb130-2"><a href="07_harjoitus_7.html#cb130-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">FOREIGN</span> <span class="kw">DATA</span> WRAPPER postgres_fdw</span>
-<span id="cb130-3"><a href="07_harjoitus_7.html#cb130-3" aria-hidden="true" tabindex="-1"></a>    OPTIONS (host <span class="st">&#39;dbhost&#39;</span>, port <span class="st">&#39;5439&#39;</span>, dbname <span class="st">&#39;worlddatabase&#39;</span>);</span></code></pre></div>
+<div class="sourceCode" id="cb81"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb81-1"><a href="07_harjoitus_7.html#cb81-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> SERVER foreign_worlddata_server</span>
+<span id="cb81-2"><a href="07_harjoitus_7.html#cb81-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">FOREIGN</span> <span class="kw">DATA</span> WRAPPER postgres_fdw</span>
+<span id="cb81-3"><a href="07_harjoitus_7.html#cb81-3" aria-hidden="true" tabindex="-1"></a>    OPTIONS (host <span class="st">&#39;dbhost&#39;</span>, port <span class="st">&#39;5439&#39;</span>, dbname <span class="st">&#39;worlddatabase&#39;</span>);</span></code></pre></div>
 </div>
 <p>Lisäksi täytyy luoda käyttäjien mäppäys lokaalin ja ulkoisen tietokannan käyttäjien välillä:</p>
 <div class="code-box">
-<div class="sourceCode" id="cb131"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb131-1"><a href="07_harjoitus_7.html#cb131-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="fu">USER</span> MAPPING <span class="cf">FOR</span> <span class="op">&lt;</span>local_user<span class="op">&gt;</span></span>
-<span id="cb131-2"><a href="07_harjoitus_7.html#cb131-2" aria-hidden="true" tabindex="-1"></a>        SERVER foreign_worlddata_server</span>
-<span id="cb131-3"><a href="07_harjoitus_7.html#cb131-3" aria-hidden="true" tabindex="-1"></a>        OPTIONS (<span class="fu">user</span> <span class="st">&#39;foreign_user&#39;</span>, <span class="kw">password</span> <span class="st">&#39;password&#39;</span>);</span></code></pre></div>
+<div class="sourceCode" id="cb82"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb82-1"><a href="07_harjoitus_7.html#cb82-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="fu">USER</span> MAPPING <span class="cf">FOR</span> <span class="op">&lt;</span>local_user<span class="op">&gt;</span></span>
+<span id="cb82-2"><a href="07_harjoitus_7.html#cb82-2" aria-hidden="true" tabindex="-1"></a>        SERVER foreign_worlddata_server</span>
+<span id="cb82-3"><a href="07_harjoitus_7.html#cb82-3" aria-hidden="true" tabindex="-1"></a>        OPTIONS (<span class="fu">user</span> <span class="st">&#39;foreign_user&#39;</span>, <span class="kw">password</span> <span class="st">&#39;password&#39;</span>);</span></code></pre></div>
 </div>
 <p>Tämän jälkeen voidaan tuoda dataa paikalliseen tietokantaan ns. ulkoisena tauluna (foreign table).
 Huomaa, että ulkoisen taulun kenttien tyyppien ja muiden ominaisuuksien pitää vastata datalähteen taulun
 vastaavia (lähtökohtaisesti myös kenttien nimien).</p>
 <div class="code-box">
-<div class="sourceCode" id="cb132"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb132-1"><a href="07_harjoitus_7.html#cb132-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">FOREIGN</span> <span class="kw">TABLE</span> worlddata_foreign_table (</span>
-<span id="cb132-2"><a href="07_harjoitus_7.html#cb132-2" aria-hidden="true" tabindex="-1"></a>        <span class="kw">id</span> <span class="dt">integer</span> <span class="kw">NOT</span> <span class="kw">NULL</span>,</span>
-<span id="cb132-3"><a href="07_harjoitus_7.html#cb132-3" aria-hidden="true" tabindex="-1"></a>        geom geometry,</span>
-<span id="cb132-4"><a href="07_harjoitus_7.html#cb132-4" aria-hidden="true" tabindex="-1"></a>        name <span class="dt">character</span> <span class="dt">varying</span>(<span class="dv">100</span>)</span>
-<span id="cb132-5"><a href="07_harjoitus_7.html#cb132-5" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb132-6"><a href="07_harjoitus_7.html#cb132-6" aria-hidden="true" tabindex="-1"></a>        SERVER foreign__worlddata_server</span>
-<span id="cb132-7"><a href="07_harjoitus_7.html#cb132-7" aria-hidden="true" tabindex="-1"></a>        OPTIONS (schema_name <span class="st">&#39;public&#39;</span>, table_name <span class="st">&#39;populated_places&#39;</span>);</span></code></pre></div>
+<div class="sourceCode" id="cb83"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb83-1"><a href="07_harjoitus_7.html#cb83-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">FOREIGN</span> <span class="kw">TABLE</span> worlddata_foreign_table (</span>
+<span id="cb83-2"><a href="07_harjoitus_7.html#cb83-2" aria-hidden="true" tabindex="-1"></a>        <span class="kw">id</span> <span class="dt">integer</span> <span class="kw">NOT</span> <span class="kw">NULL</span>,</span>
+<span id="cb83-3"><a href="07_harjoitus_7.html#cb83-3" aria-hidden="true" tabindex="-1"></a>        geom geometry,</span>
+<span id="cb83-4"><a href="07_harjoitus_7.html#cb83-4" aria-hidden="true" tabindex="-1"></a>        name <span class="dt">character</span> <span class="dt">varying</span>(<span class="dv">100</span>)</span>
+<span id="cb83-5"><a href="07_harjoitus_7.html#cb83-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb83-6"><a href="07_harjoitus_7.html#cb83-6" aria-hidden="true" tabindex="-1"></a>        SERVER foreign__worlddata_server</span>
+<span id="cb83-7"><a href="07_harjoitus_7.html#cb83-7" aria-hidden="true" tabindex="-1"></a>        OPTIONS (schema_name <span class="st">&#39;public&#39;</span>, table_name <span class="st">&#39;populated_places&#39;</span>);</span></code></pre></div>
 </div>
 <p>Edellä sisällytettiin tauluun vain osa ulkoisen taulun kentistä, mutta voit ottaa niitä mukaan lisääkin.
 Tee alussa toiseen tietokantaan yritetty kysely nyt ulkoiseen tauluun:</p>
 <div class="code-box">
-<div class="sourceCode" id="cb133"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb133-1"><a href="07_harjoitus_7.html#cb133-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> worlddata_foreign_table;</span></code></pre></div>
+<div class="sourceCode" id="cb84"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb84-1"><a href="07_harjoitus_7.html#cb84-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> worlddata_foreign_table;</span></code></pre></div>
 </div>
 <p>Koita yhdistää dataa paikallisten taulujen kanssa, tekemällä esimerkiksi liitoksia taulujen välille tai luomalla näkymän.</p>
 <p>Esimerkki:</p>
 <div class="code-box">
-<div class="sourceCode" id="cb134"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb134-1"><a href="07_harjoitus_7.html#cb134-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">from</span> worlddata_foreign_table A</span>
-<span id="cb134-2"><a href="07_harjoitus_7.html#cb134-2" aria-hidden="true" tabindex="-1"></a><span class="kw">JOIN</span> kaupunginosajako B</span>
-<span id="cb134-3"><a href="07_harjoitus_7.html#cb134-3" aria-hidden="true" tabindex="-1"></a><span class="kw">ON</span> ST_Intersects(ST_Transform(a.geom, <span class="dv">4326</span>), b.geom)</span></code></pre></div>
+<div class="sourceCode" id="cb85"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb85-1"><a href="07_harjoitus_7.html#cb85-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">from</span> worlddata_foreign_table A</span>
+<span id="cb85-2"><a href="07_harjoitus_7.html#cb85-2" aria-hidden="true" tabindex="-1"></a><span class="kw">JOIN</span> kaupunginosajako B</span>
+<span id="cb85-3"><a href="07_harjoitus_7.html#cb85-3" aria-hidden="true" tabindex="-1"></a><span class="kw">ON</span> ST_Intersects(ST_Transform(a.geom, <span class="dv">4326</span>), b.geom)</span></code></pre></div>
 </div>
 <ul>
 <li><p>Entä minkä kaupunginosan sisällä on worlddatan populated_places-taulun piste?</p></li>
@@ -275,20 +259,20 @@ Tee alussa toiseen tietokantaan yritetty kysely nyt ulkoiseen tauluun:</p>
 </ul>
 <p>Koita vielä lopuksi muokata foreign tablea, esimerkiksi hae ensin</p>
 <div class="code-box">
-<div class="sourceCode" id="cb135"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb135-1"><a href="07_harjoitus_7.html#cb135-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> worlddata_foreign_table</span>
-<span id="cb135-2"><a href="07_harjoitus_7.html#cb135-2" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> name <span class="op">=</span> <span class="st">&#39;Vatican City&#39;</span>;</span></code></pre></div>
+<div class="sourceCode" id="cb86"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb86-1"><a href="07_harjoitus_7.html#cb86-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> worlddata_foreign_table</span>
+<span id="cb86-2"><a href="07_harjoitus_7.html#cb86-2" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> name <span class="op">=</span> <span class="st">&#39;Vatican City&#39;</span>;</span></code></pre></div>
 </div>
 <p>jolloin varmistut että kyseinen rivi on olemassa, ja muokkaa sitten:</p>
 <div class="code-box">
-<div class="sourceCode" id="cb136"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb136-1"><a href="07_harjoitus_7.html#cb136-1" aria-hidden="true" tabindex="-1"></a><span class="kw">UPDATE</span> worlddata_foreign_table </span>
-<span id="cb136-2"><a href="07_harjoitus_7.html#cb136-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SET</span> name <span class="op">=</span> <span class="st">&#39;Vatikaani&#39;</span></span>
-<span id="cb136-3"><a href="07_harjoitus_7.html#cb136-3" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> name <span class="op">=</span> <span class="st">&#39;Vatican City&#39;</span>;</span></code></pre></div>
+<div class="sourceCode" id="cb87"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb87-1"><a href="07_harjoitus_7.html#cb87-1" aria-hidden="true" tabindex="-1"></a><span class="kw">UPDATE</span> worlddata_foreign_table </span>
+<span id="cb87-2"><a href="07_harjoitus_7.html#cb87-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SET</span> name <span class="op">=</span> <span class="st">&#39;Vatikaani&#39;</span></span>
+<span id="cb87-3"><a href="07_harjoitus_7.html#cb87-3" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> name <span class="op">=</span> <span class="st">&#39;Vatican City&#39;</span>;</span></code></pre></div>
 </div>
 <p>Käy nyt varmistamassa että muokkaus todella muutti myös ulkoisen tietokannan alkuperäistä tauluna
 (mikäli ulkoisen käyttäjän oikeudet tähän riittivät). Valitse siis <em>worlddata</em> <strong>-&gt;</strong> Ylhäältä <strong>Tools</strong> <strong>-&gt;</strong> <strong>Query Tool</strong> ja aja</p>
 <div class="code-box">
-<div class="sourceCode" id="cb137"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb137-1"><a href="07_harjoitus_7.html#cb137-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> populated_places</span>
-<span id="cb137-2"><a href="07_harjoitus_7.html#cb137-2" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> name <span class="op">=</span> <span class="st">&#39;Vatikaani&#39;</span>;</span></code></pre></div>
+<div class="sourceCode" id="cb88"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb88-1"><a href="07_harjoitus_7.html#cb88-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> populated_places</span>
+<span id="cb88-2"><a href="07_harjoitus_7.html#cb88-2" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> name <span class="op">=</span> <span class="st">&#39;Vatikaani&#39;</span>;</span></code></pre></div>
 </div>
 <p>Voit vielä halutessasi muokata alkuperäisen worlddata-tietokannan taulua ja tarkistaa sen vaikutusta foreign tableen.</p>
 <p>Voit ajan salliessa lisäksi tutustua myös asennuksen mukana tulleisiin muun tyyppisiin foreign data wrappereihin hakemalla

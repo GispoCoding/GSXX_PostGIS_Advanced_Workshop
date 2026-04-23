@@ -15,7 +15,7 @@ tulokseen vielä tiedon siitä, missä kaupunginosassa puu on
 
 :::code-box
 ```sql
-SELECT 
+SELECT ...
 ```
 :::
 
@@ -85,7 +85,7 @@ taulun tapaan. Materialisoidun näkymän luomisen syntaksi on (vrt. syntaksia ta
 
 :::code-box
 ```sql
-CREATE MATERIALIZED VIEW IF NOT EXISTS <nimi> AS ();
+CREATE MATERIALIZED VIEW IF NOT EXISTS <nimi> AS ( <kysely>);
 ```
 :::
 
@@ -152,12 +152,12 @@ WHERE fid = 1;
 
 Huomataan ainakin, että:
 
-- Taulun datan muokkaus, joten komento toimii
+- Taulun datan muokkaus onnistuu, joten komento toimii
 
 - Näkymiä ei voinut muokata, vaan se antoi virheen
 
 Itse asiassa tavallisten näkymien täytyy toteuttaa useita ehtoja, jotta niiden dataa voisi suoraan 
-muokata: [](https://www.postgresql.org/docs/current/sql-createview.html). Tähän palataan vielä seuraavassa 
+muokata: [dokumentaatio (alaluku "Updatable Views")](https://www.postgresql.org/docs/current/sql-createview.html). Tähän palataan vielä seuraavassa 
 harjoituksessa, mutta muokataan vielä samalla tavoin lähtötaulun dataa, ja tarkastellaan sen vaikutusta näkymiin.
 
 :::code-box
