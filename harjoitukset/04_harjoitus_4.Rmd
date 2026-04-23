@@ -8,14 +8,14 @@
 
 Avaa [pgAdmin](/pgadmin) selaimeen ja kirjaudu sisään. Avaa **Query Tool** (Valitse *trainingdatabase* **-\>** Ylhäältä **Tools** **-\>** **Query Tool**).
 
-## Harjoitus: tavallinen näkymä
+## Harjoitus 4.1: tavallinen näkymä
 
 Edellisessä harjoituksessa muodostimme kyselyn teiden varsilla olevien puiden löytämiseksi. Tehdään tämän perusteella uusi kysely, johon haluamme liittää kuhunkin 
 tulokseen vielä tiedon siitä, missä kaupunginosassa puu on 
 
 :::code-box
 ```sql
-SELECT 
+SELECT ...
 ```
 :::
 
@@ -78,14 +78,14 @@ CREATE OR REPLACE VIEW view_tienvarren_puut AS (
 Kumman luomiseen kului enemmän aikaa? Kumpi on nopeampi käytössä?
 
 
-## Materialisoitu näkymä
+## Harjoitus 4.2: Materialisoitu näkymä
 
 Luo nyt vastaava näkymä materialisoituna, eli kyselyn palauttama data tallennetaan erikseen levylle tavallisen
 taulun tapaan. Materialisoidun näkymän luomisen syntaksi on (vrt. syntaksia taulun ja tavallisen näkymän tapaukseen): 
 
 :::code-box
 ```sql
-CREATE MATERIALIZED VIEW IF NOT EXISTS <nimi> AS ();
+CREATE MATERIALIZED VIEW IF NOT EXISTS <nimi> AS ( <kysely>);
 ```
 :::
 
@@ -118,7 +118,7 @@ Nämä eri tyyppiset näkymät löytyvät pgAdminin valikosta eri valikkojen alt
 
 
 
-## Näkymien muokkaus ja datan päivitys
+## Harjoitus 4.3: Näkymien muokkaus ja datan päivitys
 
 Näkymät toimivat monin tavoin tavallisen tietokantataulun kaltaisesti, mutta siihen on valittu ja yhdistelty
 sen luovalla SQL-kyselyllä kussakin tapauksessa relevantit tiedot. Kenties tietoja voisi myös kätevästi päivittää 
@@ -152,12 +152,12 @@ WHERE fid = 1;
 
 Huomataan ainakin, että:
 
-- Taulun datan muokkaus, joten komento toimii
+- Taulun datan muokkaus onnistuu, joten komento toimii
 
 - Näkymiä ei voinut muokata, vaan se antoi virheen
 
 Itse asiassa tavallisten näkymien täytyy toteuttaa useita ehtoja, jotta niiden dataa voisi suoraan 
-muokata: [](https://www.postgresql.org/docs/current/sql-createview.html). Tähän palataan vielä seuraavassa 
+muokata: [dokumentaatio (alaluku "Updatable Views")](https://www.postgresql.org/docs/current/sql-createview.html). Tähän palataan vielä seuraavassa 
 harjoituksessa, mutta muokataan vielä samalla tavoin lähtötaulun dataa, ja tarkastellaan sen vaikutusta näkymiin.
 
 :::code-box

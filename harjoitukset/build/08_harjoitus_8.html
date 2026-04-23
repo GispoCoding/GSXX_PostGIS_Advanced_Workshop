@@ -7,7 +7,7 @@
 <meta charset="utf-8" />
 <meta name="generator" content="pandoc" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta property="og:title" content="9 Harjoitus 8: PostgreSQL:n yhteentoimivuus muiden ohjelmistojen kanssa | PostGIS-työpaja" />
+<meta property="og:title" content="9 Harjoitus 8: Indeksit - tavalliset ja spatiaaliset | PostGIS-työpaja" />
 <meta property="og:type" content="book" />
 
 
@@ -19,9 +19,9 @@
 <meta name="date" content="2026-04-23" />
 
 
-<meta name="description" content="9 Harjoitus 8: PostgreSQL:n yhteentoimivuus muiden ohjelmistojen kanssa | PostGIS-työpaja">
+<meta name="description" content="9 Harjoitus 8: Indeksit - tavalliset ja spatiaaliset | PostGIS-työpaja">
 
-<title>9 Harjoitus 8: PostgreSQL:n yhteentoimivuus muiden ohjelmistojen kanssa | PostGIS-työpaja</title>
+<title>9 Harjoitus 8: Indeksit - tavalliset ja spatiaaliset | PostGIS-työpaja</title>
 
 
 
@@ -138,65 +138,44 @@ type="button" onclick="navToggle()" aria-label="Toggle navigation">
 </ul></li>
 <li class="has-sub"><a href="02_harjoitus_2.html#harjoitus-2-aineistojen-lataaminen"><span class="toc-section-number">3</span> Harjoitus 2: Aineistojen lataaminen</a>
 <ul>
-<li><a href="02_harjoitus_2.html#harjoitus-2.1-tekstitiedoston-lataaminen"><span class="toc-section-number">3.1</span> Harjoitus 2.1: Tekstitiedoston lataaminen</a></li>
-<li><a href="02_harjoitus_2.html#harjoitus-2.2-paikkatietoaineiston-lataaminen"><span class="toc-section-number">3.2</span> Harjoitus 2.2: Paikkatietoaineiston lataaminen</a></li>
+<li><a href="02_harjoitus_2.html#harjoitus-2.1-paikkatietoaineiston-lataaminen"><span class="toc-section-number">3.1</span> Harjoitus 2.1: Paikkatietoaineiston lataaminen</a></li>
 </ul></li>
 <li class="has-sub"><a href="03_harjoitus_3.html#harjoitus-3-postgis-funktiot"><span class="toc-section-number">4</span> Harjoitus 3: PostGIS-funktiot</a>
 <ul>
-<li><a href="03_harjoitus_3.html#postgisin-perusfunktiot-geometrioiden-määrittelyyn"><span class="toc-section-number">4.1</span> PostGISin perusfunktiot geometrioiden määrittelyyn</a></li>
-<li><a href="03_harjoitus_3.html#harjoitus-4.1-geometrioiden-metatiedot"><span class="toc-section-number">4.2</span> Harjoitus 4.1: Geometrioiden metatiedot</a></li>
-<li><a href="03_harjoitus_3.html#harjoitus-4.2-postgisin-perusfunktiot-geometrioiden-käsittelyyn"><span class="toc-section-number">4.3</span> Harjoitus 4.2: PostGISin perusfunktiot geometrioiden käsittelyyn</a></li>
-<li><a href="03_harjoitus_3.html#harjoitus-4.3-spatiaaliset-relaatiot"><span class="toc-section-number">4.4</span> Harjoitus 4.3: Spatiaaliset relaatiot</a></li>
-<li><a href="03_harjoitus_3.html#harjoitus-6.4"><span class="toc-section-number">4.5</span> Harjoitus 6.4</a></li>
-<li><a href="03_harjoitus_3.html#harjoitus-6.5"><span class="toc-section-number">4.6</span> Harjoitus 6.5</a></li>
-<li><a href="03_harjoitus_3.html#harjoitus-6.6"><span class="toc-section-number">4.7</span> Harjoitus 6.6</a></li>
-<li><a href="03_harjoitus_3.html#harjoitus-6.7"><span class="toc-section-number">4.8</span> Harjoitus 6.7</a></li>
-<li><a href="03_harjoitus_3.html#harjoitus-7.1-koordinaattipisteen-konversio"><span class="toc-section-number">4.9</span> Harjoitus 7.1: Koordinaattipisteen konversio</a></li>
-<li><a href="03_harjoitus_3.html#harjoitus-7.2-koordinaattimuunnos"><span class="toc-section-number">4.10</span> Harjoitus 7.2: Koordinaattimuunnos</a></li>
-<li><a href="03_harjoitus_3.html#harjoitus-7.3-koordinaattimuunnosten-vertailu"><span class="toc-section-number">4.11</span> Harjoitus 7.3: Koordinaattimuunnosten vertailu</a></li>
-<li><a href="03_harjoitus_3.html#harjoitus-7.5-koordinaattijärjestelmien-vertailu"><span class="toc-section-number">4.12</span> Harjoitus 7.5: Koordinaattijärjestelmien vertailu</a></li>
-<li><a href="03_harjoitus_3.html#harjoitus-7.6-uuden-paikkatietotaulun-luominen"><span class="toc-section-number">4.13</span> Harjoitus 7.6: Uuden paikkatietotaulun luominen</a></li>
-<li><a href="03_harjoitus_3.html#harjoitus-7.7-toisen-geometriakentän-lisääminen"><span class="toc-section-number">4.14</span> Harjoitus 7.7: Toisen geometriakentän lisääminen</a></li>
-<li><a href="03_harjoitus_3.html#harjoitus-7.8-muunnoksen-tallennus-geometriakenttään"><span class="toc-section-number">4.15</span> Harjoitus 7.8: Muunnoksen tallennus geometriakenttään</a></li>
+<li><a href="03_harjoitus_3.html#postgisin-perusfunktiot-geometrioiden-määrittelyyn"><span class="toc-section-number">4.1</span> 3.1: PostGISin perusfunktiot geometrioiden määrittelyyn</a></li>
+<li><a href="03_harjoitus_3.html#harjoitus-3.2-geometrioiden-metatiedot"><span class="toc-section-number">4.2</span> Harjoitus 3.2: Geometrioiden metatiedot</a></li>
+<li><a href="03_harjoitus_3.html#harjoitus-3.3-postgisin-perusfunktiot-geometrioiden-käsittelyyn"><span class="toc-section-number">4.3</span> Harjoitus 3.3: PostGISin perusfunktiot geometrioiden käsittelyyn</a></li>
+<li><a href="03_harjoitus_3.html#harjoitus-3.4-spatiaaliset-relaatiot"><span class="toc-section-number">4.4</span> Harjoitus 3.4: Spatiaaliset relaatiot</a></li>
 </ul></li>
 <li class="has-sub"><a href="04_harjoitus_4.html#harjoitus-4-tavalliset-ja-materialisoidut-näkymät"><span class="toc-section-number">5</span> Harjoitus 4: Tavalliset ja materialisoidut näkymät</a>
 <ul>
-<li><a href="04_harjoitus_4.html#harjoitus-tavallinen-näkymä"><span class="toc-section-number">5.1</span> Harjoitus: tavallinen näkymä</a></li>
-<li><a href="04_harjoitus_4.html#materialisoitu-näkymä"><span class="toc-section-number">5.2</span> Materialisoitu näkymä</a></li>
-<li><a href="04_harjoitus_4.html#näkymien-muokkaus-ja-datan-päivitys"><span class="toc-section-number">5.3</span> Näkymien muokkaus ja datan päivitys</a></li>
+<li><a href="04_harjoitus_4.html#harjoitus-4.1-tavallinen-näkymä"><span class="toc-section-number">5.1</span> Harjoitus 4.1: tavallinen näkymä</a></li>
+<li><a href="04_harjoitus_4.html#harjoitus-4.2-materialisoitu-näkymä"><span class="toc-section-number">5.2</span> Harjoitus 4.2: Materialisoitu näkymä</a></li>
+<li><a href="04_harjoitus_4.html#harjoitus-4.3-näkymien-muokkaus-ja-datan-päivitys"><span class="toc-section-number">5.3</span> Harjoitus 4.3: Näkymien muokkaus ja datan päivitys</a></li>
 </ul></li>
 <li class="has-sub"><a href="05_harjoitus_5.html#harjoitus-5-triggerit-ja-niiden-luonti"><span class="toc-section-number">6</span> Harjoitus 5: Triggerit ja niiden luonti</a>
 <ul>
-<li><a href="05_harjoitus_5.html#harjoitus"><span class="toc-section-number">6.1</span> Harjoitus:</a></li>
-<li><a href="05_harjoitus_5.html#harjoitus-triggeri-näkymän-päivittämiseen"><span class="toc-section-number">6.2</span> Harjoitus: Triggeri näkymän päivittämiseen</a></li>
-<li><a href="05_harjoitus_5.html#harjoitus-5.1"><span class="toc-section-number">6.3</span> Harjoitus 5.1</a></li>
-<li><a href="05_harjoitus_5.html#harjoitus-5.2"><span class="toc-section-number">6.4</span> Harjoitus 5.2</a></li>
-<li><a href="05_harjoitus_5.html#harjoitus-5.3"><span class="toc-section-number">6.5</span> Harjoitus 5.3</a></li>
-<li><a href="05_harjoitus_5.html#harjoitus-5.4"><span class="toc-section-number">6.6</span> Harjoitus 5.4</a></li>
-<li><a href="05_harjoitus_5.html#harjoitus-5.5"><span class="toc-section-number">6.7</span> Harjoitus 5.5</a></li>
+<li><a href="05_harjoitus_5.html#harjoitus-5.1-triggeri-näkymän-päivittämiseen"><span class="toc-section-number">6.1</span> Harjoitus 5.1: Triggeri näkymän päivittämiseen</a></li>
+<li><a href="05_harjoitus_5.html#harjoitus-5.2-trigger-kenttien-päivittämiseen"><span class="toc-section-number">6.2</span> Harjoitus 5.2: Trigger kenttien päivittämiseen</a></li>
 </ul></li>
 <li class="has-sub"><a href="06_harjoitus_6.html#harjoitus-6-käyttäjähallinta"><span class="toc-section-number">7</span> Harjoitus 6: Käyttäjähallinta</a>
 <ul>
-<li><a href="06_harjoitus_6.html#harjoitus-9.2-käyttäjäroolit"><span class="toc-section-number">7.1</span> Harjoitus 9.2: Käyttäjäroolit</a></li>
-<li><a href="06_harjoitus_6.html#harjoitus-9.3-ryhmäroolit"><span class="toc-section-number">7.2</span> Harjoitus 9.3: Ryhmäroolit</a></li>
-<li><a href="06_harjoitus_6.html#harjoitus-9.4-roolien-lisääminen-käyttöliittymässä"><span class="toc-section-number">7.3</span> Harjoitus 9.4: Roolien lisääminen käyttöliittymässä</a></li>
-<li><a href="06_harjoitus_6.html#harjoitus-9.5-uuden-taulutilan-luominen"><span class="toc-section-number">7.4</span> Harjoitus 9.5: Uuden taulutilan luominen</a></li>
+<li><a href="06_harjoitus_6.html#harjoitus-6.1-käyttäjäroolit"><span class="toc-section-number">7.1</span> Harjoitus 6.1: Käyttäjäroolit</a></li>
+<li><a href="06_harjoitus_6.html#harjoitus-6.2-ryhmäroolit"><span class="toc-section-number">7.2</span> Harjoitus 6.2: Ryhmäroolit</a></li>
+<li><a href="06_harjoitus_6.html#harjoitus-6.3-roolien-lisääminen-käyttöliittymässä"><span class="toc-section-number">7.3</span> Harjoitus 6.3: Roolien lisääminen käyttöliittymässä</a></li>
 </ul></li>
-<li class="has-sub"><a href="07_harjoitus_7.html#harjoitus-7-foreign-data-wrapper"><span class="toc-section-number">8</span> Harjoitus 7: Foreign Data Wrapper</a>
+<li class="has-sub"><a href="07_harjoitus_7.html#harjoitus-7-foreign-data-wrapper-ja-yhteentoimivuus-muiden-ohjelmistojen-kanssa"><span class="toc-section-number">8</span> Harjoitus 7: Foreign Data Wrapper ja yhteentoimivuus muiden ohjelmistojen kanssa</a>
 <ul>
-<li><a href="07_harjoitus_7.html#harjoitus-1"><span class="toc-section-number">8.1</span> Harjoitus</a></li>
+<li><a href="07_harjoitus_7.html#harjoitus-7.1-foreign-data-wrapperin-luominen"><span class="toc-section-number">8.1</span> Harjoitus 7.1: Foreign Data Wrapperin luominen</a></li>
 </ul></li>
-<li><a href="08_harjoitus_8.html#harjoitus-8-postgresqln-yhteentoimivuus-muiden-ohjelmistojen-kanssa"><span class="toc-section-number">9</span> Harjoitus 8: PostgreSQL:n yhteentoimivuus muiden ohjelmistojen kanssa</a></li>
-<li class="has-sub"><a href="09_harjoitus_09.html#harjoitus-9-indeksit---tavalliset-ja-spatiaaliset"><span class="toc-section-number">10</span> Harjoitus 9: Indeksit - tavalliset ja spatiaaliset</a>
+<li class="has-sub"><a href="08_harjoitus_8.html#harjoitus-8-indeksit---tavalliset-ja-spatiaaliset"><span class="toc-section-number">9</span> Harjoitus 8: Indeksit - tavalliset ja spatiaaliset</a>
 <ul>
-<li><a href="09_harjoitus_09.html#postgresqln-ei-spatiaaliset-indeksit"><span class="toc-section-number">10.1</span> PostgreSQL:n ei-spatiaaliset indeksit</a></li>
-<li><a href="09_harjoitus_09.html#postgresqln-spatiaaliset-indeksit"><span class="toc-section-number">10.2</span> PostgreSQL:n spatiaaliset indeksit</a></li>
-</ul></li>
-<li class="has-sub"><a href="10_harjoitus_10.html#harjoitus-10-suorituskyvyn-optimointi"><span class="toc-section-number">11</span> Harjoitus 10: Suorituskyvyn optimointi</a>
-<ul>
-<li><a href="10_harjoitus_10.html#harjoitus-9.1-taulutilat"><span class="toc-section-number">11.1</span> Harjoitus 9.1: Taulutilat</a></li>
-<li><a href="10_harjoitus_10.html#harjoitus-9.6-tietokannan-ja-taulun-taulutilan-muuttaminen"><span class="toc-section-number">11.2</span> Harjoitus 9.6: Tietokannan ja taulun taulutilan muuttaminen</a></li>
-<li><a href="10_harjoitus_10.html#harjoitus-9.7-indeksin-taulutilan-muuttaminen"><span class="toc-section-number">11.3</span> Harjoitus 9.7: Indeksin taulutilan muuttaminen</a></li>
+<li><a href="08_harjoitus_8.html#harjoitus-8.1-postgresqln-ei-spatiaaliset-indeksit"><span class="toc-section-number">9.1</span> Harjoitus 8.1: PostgreSQL:n ei-spatiaaliset indeksit</a></li>
+<li><a href="08_harjoitus_8.html#harjoitus-8.2-postgresqln-spatiaaliset-indeksit"><span class="toc-section-number">9.2</span> Harjoitus 8.2: PostgreSQL:n spatiaaliset indeksit</a></li>
+<li><a href="08_harjoitus_8.html#harjoitus-8.3-taulutilat"><span class="toc-section-number">9.3</span> Harjoitus 8.3: Taulutilat</a></li>
+<li><a href="08_harjoitus_8.html#harjoitus-8.4-uuden-taulutilan-luominen"><span class="toc-section-number">9.4</span> Harjoitus 8.4: Uuden taulutilan luominen</a></li>
+<li><a href="08_harjoitus_8.html#harjoitus-8.5-tietokannan-ja-taulun-taulutilan-muuttaminen"><span class="toc-section-number">9.5</span> Harjoitus 8.5: Tietokannan ja taulun taulutilan muuttaminen</a></li>
+<li><a href="08_harjoitus_8.html#harjoitus-8.6-indeksin-taulutilan-muuttaminen"><span class="toc-section-number">9.6</span> Harjoitus 8.6: Indeksin taulutilan muuttaminen</a></li>
 </ul></li>
 </ul>
 </div>
@@ -207,19 +186,171 @@ type="button" onclick="navToggle()" aria-label="Toggle navigation">
 </div>
 <div class="row">
 <div class="col-sm-12">
-<div id="harjoitus-8-postgresqln-yhteentoimivuus-muiden-ohjelmistojen-kanssa" class="section level1" number="9">
-<h1><span class="header-section-number">9</span> Harjoitus 8: PostgreSQL:n yhteentoimivuus muiden ohjelmistojen kanssa</h1>
-<p><strong>Harjoituksen sisältö</strong> - Harjoituksessa tutustutaan</p>
-<p><strong>Harjoituksen tavoite</strong> - Harjoituksen jälkeen opiskelija</p>
+<div id="harjoitus-8-indeksit---tavalliset-ja-spatiaaliset" class="section level1" number="9">
+<h1><span class="header-section-number">9</span> Harjoitus 8: Indeksit - tavalliset ja spatiaaliset</h1>
+<p><strong>Harjoituksen sisältö</strong> Kyselyjen suorittamisen tutkinta, Query Planner, sekä indeksien luonti</p>
+<p><strong>Harjoituksen tavoite</strong> - Opiskelija tuntee indeksien luomisen ja käyttötavat</p>
 <div id="valmistautuminen-6" class="section level3" number="9.0.1">
 <h3><span class="header-section-number">9.0.1</span> Valmistautuminen</h3>
 <p>Avaa <a href="/pgadmin">pgAdmin</a> selaimeen ja kirjaudu sisään. Avaa <strong>Query Tool</strong> (Valitse <em>trainingdatabase</em> <strong>-&gt;</strong> Ylhäältä <strong>Tools</strong> <strong>-&gt;</strong> <strong>Query Tool</strong>).</p>
+</div>
+<div id="harjoitus-8.1-postgresqln-ei-spatiaaliset-indeksit" class="section level2" number="9.1">
+<h2><span class="header-section-number">9.1</span> Harjoitus 8.1: PostgreSQL:n ei-spatiaaliset indeksit</h2>
+<div id="postgresqln-query-planner-sekä-explain-analyze--komento" class="section level3" number="9.1.1">
+<h3><span class="header-section-number">9.1.1</span> PostgreSQL:n Query Planner sekä EXPLAIN ANALYZE -komento</h3>
+<p>Kun SQL-kysely ajetaan, kysely menee ensimmäiseksi nk. Plannerille, suunnittelijalle, joka määrittää mikä on optimaalisin tapa toteuttaa annetun
+SQL-syntaksin mukainen kysely tietokannassa (esimerkiksi milloin tulisi käyttää määriteltyjä indeksejä ja milloin hakea vain taulusta rivi kerrallaan),
+ja muokkaa kyselyä sen mukaan.</p>
+<p>Olet ehkä huomannutkin että kun ajat PgAdminissa kyselyn ruudussa käväisee vihreä palkki, joka kertoo kuinka monta tietuetta kysely palautti mutta
+myös sen, kuinka kauan kyselyyn kului aikaa millisekunteina. Vaikka tästä arvosta saakin osviittaa kyselyn kestosta, se sisältää myös esimerkiksi
+verkkoliikenteeseen kuluvan ajan ja ei siten ole kovin sopiva itse kyselyjen optimointia tarkasteltaessa.</p>
+<p>Tähän tarkoitukseen on olemassa komennot EXPLAIN sekä EXPLAIN ANALYZE. Näitä käytetään yksinkertaisesti kirjoittamalla kyseinen avainsana ennen varsinaista kyselyä. Nämä kaksi eroavat toisistaan
+siinä, että EXPLAIN-komennolla saa näkyviin Plannerin muodostaman suunnitelman kyselyn toteutuksesta, kun taas EXPLAIN ANALYZE suorittaa kyselyn ja
+palauttaa lisäksi tietoa itse suorituksen kestosta. Kestosta annetaan sekä suunnitelman tuottamiseen kulunut aika että (käytettäessä EXPLAIN ANALYZEä)
+sen suorittamiseen kuluva aika millisekunteina, sekä kyselyn eri osien suhteellisia kustannuksia (Cost).</p>
+<p>On myös huomattava, että kumpikaan ei kuitenkaan
+palauta itse kyselyn tuottamia rivejä vaan ainoastaan tiedon siitä, millä tavoin kyselyä tultaisiin ajamaan.</p>
+<p>Tarkastellaan tätä muutamien esimerkkikyselyiden avulla:</p>
+<div class="code-box">
+<div class="sourceCode" id="cb80"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb80-1"><a href="08_harjoitus_8.html#cb80-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb80-2"><a href="08_harjoitus_8.html#cb80-2" aria-hidden="true" tabindex="-1"></a><span class="kw">EXPLAIN</span> <span class="kw">ANALYZE</span> <span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> helsinki.liikennevaylat;</span></code></pre></div>
+</div>
+<div class="code-box">
+<div class="sourceCode" id="cb81"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb81-1"><a href="08_harjoitus_8.html#cb81-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb81-2"><a href="08_harjoitus_8.html#cb81-2" aria-hidden="true" tabindex="-1"></a><span class="kw">EXPLAIN</span> <span class="kw">ANALYZE</span> <span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> helsinki.liikennevaylat <span class="kw">WHERE</span> pituus <span class="kw">BETWEEN</span> <span class="dv">50</span> <span class="kw">AND</span> <span class="dv">55</span>;</span></code></pre></div>
+</div>
+<div class="code-box">
+<div class="sourceCode" id="cb82"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb82-1"><a href="08_harjoitus_8.html#cb82-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-2"><a href="08_harjoitus_8.html#cb82-2" aria-hidden="true" tabindex="-1"></a><span class="kw">EXPLAIN</span> <span class="kw">ANALYZE</span> <span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> helsinki.liikennevaylat <span class="kw">WHERE</span> pituus <span class="op">&lt;</span> <span class="dv">13</span>;</span></code></pre></div>
+</div>
+<p>Luodaan sitten BTREE-indeksi kentälle “pituus”. Lyhimmillään tämä käy komennolla</p>
+<div class="code-box">
+<div class="sourceCode" id="cb83"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb83-1"><a href="08_harjoitus_8.html#cb83-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb83-2"><a href="08_harjoitus_8.html#cb83-2" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">INDEX</span> <span class="kw">ON</span> helsinki.liikennevaylat (pituus);</span></code></pre></div>
+</div>
+<p>Jos halutaan varmistua indeksin nimestä ja tyypistä, kirjoitetaan eksplisiittisesti</p>
+<div class="code-box">
+<div class="sourceCode" id="cb84"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb84-1"><a href="08_harjoitus_8.html#cb84-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb84-2"><a href="08_harjoitus_8.html#cb84-2" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">INDEX</span> liikennevaylat_pituus_idx <span class="kw">ON</span> helsinki.liikennevaylat <span class="kw">USING</span> BTREE (pituus);</span></code></pre></div>
+</div>
+<p>Samaten indeksin poistaminen on helppoa:</p>
+<div class="code-box">
+<div class="sourceCode" id="cb85"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb85-1"><a href="08_harjoitus_8.html#cb85-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb85-2"><a href="08_harjoitus_8.html#cb85-2" aria-hidden="true" tabindex="-1"></a><span class="kw">DROP</span> <span class="kw">INDEX</span> liikennevaylat_pituus_idx;</span></code></pre></div>
+</div>
+<p>Aja edellä annettuja kyselyjä ensin ilman indeksiä ja indeksin määrittelyn jälkeen (voit koittaa ajaa kyselyn muutaman kerran saadaksesi keskiarvon)</p>
+<p>EXPLAIN ANALYZEn tuloksissa esiintyviä sanoja
+- Seq Scan = sequential scanning, taulusta haetaan rivi kerrallaan
+- Bitmap Heap Scan
+- Bitmap Index Scan
+- Heap Blocks
+- Hash Join</p>
+<p>cost
+row
+width
+actual time
+loops</p>
+<p>Katso tallennetun indeksin koko</p>
+<div class="code-box">
+<div class="sourceCode" id="cb86"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb86-1"><a href="08_harjoitus_8.html#cb86-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb86-2"><a href="08_harjoitus_8.html#cb86-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> pg_size_pretty(pg_relation_size(‘users_username_idx’));</span></code></pre></div>
+</div>
+<p>Muut työkalut: <a href="https://explain.depesz.com/" class="uri">https://explain.depesz.com/</a>, <a href="https://explain.dalibo.com/" class="uri">https://explain.dalibo.com/</a> voi käyttää myös lokaalisti käytettävä versio, html-tiedosto?</p>
+</div>
+</div>
+<div id="harjoitus-8.2-postgresqln-spatiaaliset-indeksit" class="section level2" number="9.2">
+<h2><span class="header-section-number">9.2</span> Harjoitus 8.2: PostgreSQL:n spatiaaliset indeksit</h2>
+</div>
+<div id="harjoitus-8.3-taulutilat" class="section level2" number="9.3">
+<h2><span class="header-section-number">9.3</span> Harjoitus 8.3: Taulutilat</h2>
+<p>Tarkista koulutuspalvelimen oletustaulutilojen sijainti. Käyttäjien tiedot sijaitsevat <strong>pg_default</strong>-taulutilassa, joka on data_directoryn base-hakemistossa. Järjestelmän yleiset tiedot sijaitsevat <strong>pg_global</strong>-taulutilassa, joka on data_directoryn global-hakemistossa. Datahakemiston sijainnin voit tarkistaa komennolla:</p>
+<div class="code-box">
+<div class="sourceCode" id="cb87"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb87-1"><a href="08_harjoitus_8.html#cb87-1" aria-hidden="true" tabindex="-1"></a>SHOW data_directory;</span></code></pre></div>
+</div>
+</div>
+<div id="harjoitus-8.4-uuden-taulutilan-luominen" class="section level2" number="9.4">
+<h2><span class="header-section-number">9.4</span> Harjoitus 8.4: Uuden taulutilan luominen</h2>
+<p>Uutta taulutilaa varten pitää luoda ensin palvelimelle kansio. Kansion tulee olla postgres-käyttäjän omistuksessa ja käyttöoikeudet vain postgres-käyttäjälle. Hakemisto on luotu valmiiksi palvelimelle komennoilla:</p>
+<pre><code>sudo mkdir /usr/local/tmp_tbls
+sudo chown -R postgres:postgres /usr/local/tmp_tbls/
+sudo chmod 700 /usr/local/tmp_tbls/</code></pre>
+<p>Luo uusi taulutila SQL-komennolla psql:n tai pgAdminin avulla:</p>
+<div class="code-box">
+<div class="sourceCode" id="cb89"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb89-1"><a href="08_harjoitus_8.html#cb89-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLESPACE</span> tmp_tablespace</span>
+<span id="cb89-2"><a href="08_harjoitus_8.html#cb89-2" aria-hidden="true" tabindex="-1"></a>LOCATION <span class="st">&#39;/usr/local/tmp_tbls&#39;</span>;</span></code></pre></div>
+</div>
+</div>
+<div id="harjoitus-8.5-tietokannan-ja-taulun-taulutilan-muuttaminen" class="section level2" number="9.5">
+<h2><span class="header-section-number">9.5</span> Harjoitus 8.5: Tietokannan ja taulun taulutilan muuttaminen</h2>
+<p>Koko tietokannan taulutilan voi muuttaa yhdellä komennolla.</p>
+<div class="hint-box">
+<p><strong>HUOM!</strong> Tätä ei kuitenkaan voi tehdä jos tietokantaan on auki aktiivisia yhteyksiä!</p>
+</div>
+<ol style="list-style-type: decimal">
+<li>Sulje pgAdminin tietokantayhteys harjoitustietokantaasi klikkaamalla tietokantaa sivupaneelissa hiiren oikealla painikkeella ja valitsemalla <strong>Disconnect Database</strong>.</li>
+<li>Avaa tämän jälkeen sivupaneelista postgres-tietokanta ja avaa <strong>Query tool</strong> (voit tehdä tämän myös psql:n avulla). Anna komento:</li>
+</ol>
+<div class="code-box">
+<div class="sourceCode" id="cb90"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb90-1"><a href="08_harjoitus_8.html#cb90-1" aria-hidden="true" tabindex="-1"></a><span class="kw">ALTER</span> <span class="kw">DATABASE</span> trainingdatabase</span>
+<span id="cb90-2"><a href="08_harjoitus_8.html#cb90-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SET</span> <span class="kw">TABLESPACE</span> tmp_tablespace;</span></code></pre></div>
+</div>
+<div class="hint-box">
+<p>Mikäli tämä ei onnistu, ja pgAdmin4 kertoo, että tietokantaan on aktiivisia yhteyksiä, yritä kirjautua ulos ja takaisin sisään pgAdminiin.</p>
+</div>
+<p>Voit tarkistaa tietokannan taulutilan sijainnin SQL-kyselyllä:</p>
+<div class="code-box">
+<div class="sourceCode" id="cb91"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb91-1"><a href="08_harjoitus_8.html#cb91-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span></span>
+<span id="cb91-2"><a href="08_harjoitus_8.html#cb91-2" aria-hidden="true" tabindex="-1"></a>spcname, pg_tablespace_location(<span class="kw">oid</span>)</span>
+<span id="cb91-3"><a href="08_harjoitus_8.html#cb91-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span></span>
+<span id="cb91-4"><a href="08_harjoitus_8.html#cb91-4" aria-hidden="true" tabindex="-1"></a>pg_tablespace;</span></code></pre></div>
+</div>
+<p>Luo testausta varten tilapäinen taulu:</p>
+<div class="code-box">
+<div class="sourceCode" id="cb92"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb92-1"><a href="08_harjoitus_8.html#cb92-1" aria-hidden="true" tabindex="-1"></a><span class="kw">DROP</span> <span class="kw">TABLE</span> <span class="cf">IF</span> <span class="kw">EXISTS</span> tmp_table;</span>
+<span id="cb92-2"><a href="08_harjoitus_8.html#cb92-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-3"><a href="08_harjoitus_8.html#cb92-3" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> tmp_table <span class="kw">AS</span></span>
+<span id="cb92-4"><a href="08_harjoitus_8.html#cb92-4" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> x</span>
+<span id="cb92-5"><a href="08_harjoitus_8.html#cb92-5" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span></span>
+<span id="cb92-6"><a href="08_harjoitus_8.html#cb92-6" aria-hidden="true" tabindex="-1"></a>generate_series(<span class="dv">2</span>,<span class="dv">5000</span>,<span class="dv">2</span>) <span class="kw">AS</span> x;</span></code></pre></div>
+</div>
+<p>Taulun käyttämän taulutilan voit tarkistaa seuraavalla komennolla:</p>
+<div class="code-box">
+<div class="sourceCode" id="cb93"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb93-1"><a href="08_harjoitus_8.html#cb93-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span></span>
+<span id="cb93-2"><a href="08_harjoitus_8.html#cb93-2" aria-hidden="true" tabindex="-1"></a>tablename, <span class="kw">tablespace</span></span>
+<span id="cb93-3"><a href="08_harjoitus_8.html#cb93-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span></span>
+<span id="cb93-4"><a href="08_harjoitus_8.html#cb93-4" aria-hidden="true" tabindex="-1"></a>pg_tables</span>
+<span id="cb93-5"><a href="08_harjoitus_8.html#cb93-5" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span></span>
+<span id="cb93-6"><a href="08_harjoitus_8.html#cb93-6" aria-hidden="true" tabindex="-1"></a>tablename <span class="op">=</span> <span class="st">&#39;tmp_table&#39;</span>;</span></code></pre></div>
+</div>
+<p>Muuta taulun taulutilaa seuraavalla komennolla:</p>
+<div class="code-box">
+<div class="sourceCode" id="cb94"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb94-1"><a href="08_harjoitus_8.html#cb94-1" aria-hidden="true" tabindex="-1"></a><span class="kw">ALTER</span> <span class="kw">TABLE</span></span>
+<span id="cb94-2"><a href="08_harjoitus_8.html#cb94-2" aria-hidden="true" tabindex="-1"></a>tmp_table</span>
+<span id="cb94-3"><a href="08_harjoitus_8.html#cb94-3" aria-hidden="true" tabindex="-1"></a><span class="kw">SET</span> <span class="kw">TABLESPACE</span></span>
+<span id="cb94-4"><a href="08_harjoitus_8.html#cb94-4" aria-hidden="true" tabindex="-1"></a>tmp_tablespace;</span></code></pre></div>
+</div>
+<p>Tarkista, että taulun taulutila on nyt muuttunut. Voit myös käyttää pgAdminin käyttöliittymää taulutilojen tarkastamiseen.</p>
+</div>
+<div id="harjoitus-8.6-indeksin-taulutilan-muuttaminen" class="section level2" number="9.6">
+<h2><span class="header-section-number">9.6</span> Harjoitus 8.6: Indeksin taulutilan muuttaminen</h2>
+<p>Voit luoda indeksin tauluun komennolla:</p>
+<div class="code-box">
+<div class="sourceCode" id="cb95"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb95-1"><a href="08_harjoitus_8.html#cb95-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">INDEX</span></span>
+<span id="cb95-2"><a href="08_harjoitus_8.html#cb95-2" aria-hidden="true" tabindex="-1"></a>idx_tmp_x</span>
+<span id="cb95-3"><a href="08_harjoitus_8.html#cb95-3" aria-hidden="true" tabindex="-1"></a><span class="kw">ON</span> tmp_table(x);</span></code></pre></div>
+</div>
+<p>Indeksit luodaan oletusarvoisesti <strong>pg_default</strong>-taulutilaan. Usein käytetyt indeksit voi olla tarpeen tallentaa sellaiseen taulutilaan, joka käyttää palvelimessa olevaa nopeinta levyä (esimerkiksi SSD-levyt). Indeksien taulutilan muuttaminen onnistuu seuraavasti:</p>
+<div class="code-box">
+<div class="sourceCode" id="cb96"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb96-1"><a href="08_harjoitus_8.html#cb96-1" aria-hidden="true" tabindex="-1"></a><span class="kw">ALTER</span> <span class="kw">INDEX</span></span>
+<span id="cb96-2"><a href="08_harjoitus_8.html#cb96-2" aria-hidden="true" tabindex="-1"></a>idx_tmp_x</span>
+<span id="cb96-3"><a href="08_harjoitus_8.html#cb96-3" aria-hidden="true" tabindex="-1"></a><span class="kw">SET</span> <span class="kw">TABLESPACE</span></span>
+<span id="cb96-4"><a href="08_harjoitus_8.html#cb96-4" aria-hidden="true" tabindex="-1"></a>tmp_tablespace;</span></code></pre></div>
+</div>
 
 </div>
 </div>
 <p style="text-align: center;">
 <a href="07_harjoitus_7.html"><button class="btn btn-default">Previous</button></a>
-<a href="09_harjoitus_09.html"><button class="btn btn-default">Next</button></a>
 </p>
 </div>
 </div>
