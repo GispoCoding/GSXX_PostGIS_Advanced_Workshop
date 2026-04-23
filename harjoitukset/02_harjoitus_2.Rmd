@@ -104,7 +104,7 @@ Tarkastele lopuksi aineistoa esimerkiksi pgAdminin karttatoiminnallisuuden avull
 
 ## Harjoitus 2.2: Paikkatietoaineiston lataaminen
 
-Maanmittauslaitoksen aineisto on ladattu valmiiksi harjoitussivun [data-kansioon](/data).
+Harjoituksissa käytettävä Helsingin data-aineisto on ladattu valmiiksi harjoitussivun [data-kansioon](/data).
 
 ### Vaihtoehto 1: QGISin tietokannan hallinnan avulla
 
@@ -133,14 +133,17 @@ CREATE SCHEMA IF NOT EXISTS helsinki;
 
 Lataa [data-kansio](/data/helsinki_avoin_data.zip) omalle koneellesi. Aineistoja voi lisätä navigoimalla Tasot \> Lisää taso \> Lisää vektoritaso, klikkaamalla Lisää vektoritaso -kuvaketta tasojen hallinnan työkalupalkista tai ihan vain raahaamalla tasoja suoraan Selain-ikkunasta Tasot-ikkunaan.
 
-Lataa projektiisi ja tietokantaasi seuraavat aineistot (käytä tietokanta-exportissa näitä nimiä tauluille, kts. alla):
+Lataa projektiisi ja tietokantoihisi seuraavat aineistot (käytä tietokanta-exportissa näitä nimiä tauluille, kts. alla):
 
+Trainingdatabase:
 - puurekisteri_piste
 - liikennevaylat
 - ylre_viheralueet
-- aluesarjat_avainluvut_2024
-- piirijako_osaalue
 - kaupunginosajako
+
+Worldatabase:
+- populated_places
+- countries
 
 
 ::: hint-box
@@ -151,10 +154,12 @@ QGIS-projektiin avautuu vektoriaineistoja, johon on määritelty tietty koordina
 
 ![](img/qgistasot_hel.png)
 
-Avaa QGISin prosessointityökaluista työkalu nimeltä Export to PostgreSQL. Avaa työkalun alapalkista **Aja eräajona** (Run as Batch Process), joka mahdollistaa useamman taulun ajamiseen tietokantaan kerralla. Muuta parametreja niin, että aineistot tulee ladattua oikeaan skeemaan ja tietokantaan. **Täytä** (Fill Down) -toimintoa käyttämällä sinun ei tarvitse klikkailla jokaisen tason kohdalta arvoja kuntoon. 
-Lisää geometriasarakkeen nimeksi "wkb_geometry" (sillä tulemme jatkossa käyttämään tauluille myös muita geometria-kenttiä) 
-ja, varmistaaksesi taulujen nimien kirjaantumisen pienillä kirjaimilla, yhtenäisesti ja ilman geopackage-tiedoston nimeä, 
-kirjoita taulun nimi määrittävään kohtaan taulun nimi kuten se annettiin edellä.
+Avaa QGISin prosessointityökaluista työkalu nimeltä Export to PostgreSQL (Processing Toolbox > Database > Export to PostgreSQL). 
+Avaa työkalun alapalkista **Aja eräajona** (Run as Batch Process), joka mahdollistaa useamman taulun ajamiseen tietokantaan kerralla. 
+Muuta parametreja niin, että aineistot tulee ladattua oikeaan skeemaan ja tietokantaan. Huomaa, että Helsingin datat ja Natural Earth -aineiston tasoa tulevat eri tietokantoihin
+joten yhteyskin on niissä eri. **Täytä** (Fill Down) -toimintoa käyttämällä sinun ei tarvitse klikkailla jokaisen tason kohdalta arvoja kuntoon. 
+
+Varmista taulujen nimien kirjaantumisen pienillä kirjaimilla, kirjoita taulun nimi määrittävään kohtaan taulun nimi kuten se annettiin edellä.
 
 Tarkista mitä muita parametrejä prosessi pitää sisällään. Voit kuitenkin jättää ne oletusarvoisiksi. Lopulta latausprosessisi pitäisi näyttää kutakuinkin tältä. Klikkaa **Run**!
 
@@ -170,7 +175,7 @@ LIMIT 10;
 
 ### Vaihtoehto 2: Komentorivin avulla
 
-Luo tässä vaiheessa harjoitustietokantaan uusi skeema, jonne Helsingin aineistot tullaan lataamaan, ja anna skeemalle nimeksi "helsinki". Skeemojen avulla on helpompi pitää aineistot järjestyksessä. Uuden skeeman voi luoda pgAdminin graafisen käyttöliittymän kautta tai seuraavalla SQL-komennolla:
+Luo tarvittaessa ensin harjoitustietokantaan uusi skeema, jonne Helsingin aineistot tullaan lataamaan, ja anna skeemalle nimeksi "helsinki". Skeemojen avulla on helpompi pitää aineistot järjestyksessä. Uuden skeeman voi luoda pgAdminin graafisen käyttöliittymän kautta tai seuraavalla SQL-komennolla:
 
 ::: code-box
 ``` sql

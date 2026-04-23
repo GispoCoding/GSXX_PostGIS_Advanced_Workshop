@@ -1,6 +1,6 @@
 # Harjoitus 5: Triggerit ja niiden luonti
 
-**Harjoituksen sisältö** - Harjoituksessa tutustutaan PostGISin tapaan käsitellä geometrioita.
+**Harjoituksen sisältö** - Harjoituksessa tutustutaan PostgreSQL:n triggereihin ja niiden määrittelyyn.
 
 **Harjoituksen tavoite** - Harjoituksen jälkeen opiskelija tuntee PostGIS-geometrioiden käsittelyn perusteet.
 

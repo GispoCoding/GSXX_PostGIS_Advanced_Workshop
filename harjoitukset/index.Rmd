@@ -1,5 +1,5 @@
 ---
-title: "PostgreSQL ja PostGISin perusteet"
+title: "PostGIS-työpaja"
 author: "Gispo Oy"   
 date: "`r Sys.Date()`"
 site: "bookdown::bookdown_site"
@@ -31,4 +31,5 @@ Näiden harjoitusten avulla voit tutustua itsenäisesti PostgreSQL-tietokantajä
 Harjoituksissa käytettävät aineistot:
 
 - Helsingin aineistot on ladattu 18.4.2026 Helsingin kaupungin avoimesta WFS-rajapinnasta: https://kartta.hel.fi/ws/geoserver/avoindata/wfs?request=getCapabilities 
+- Natural Earth - ladattu [Natural Earth](https://www.naturalearthdata.com/)- sivustolta. Aineistot ovat julkisia (public domain)
 - airports.dat - ladattu [Openflights](https://openflights.org/data.html)- sivustolta. Lentokenttäaineisto on julkista (public domain).

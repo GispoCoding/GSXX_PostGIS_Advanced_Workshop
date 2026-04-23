@@ -10,16 +10,12 @@ Avaa [pgAdmin](/pgadmin) selaimeen ja kirjaudu sisään. Avaa **Query Tool** (Va
 
 ## Harjoitus: tavallinen näkymä
 
-Muodosta puurekisteri-aineistosta näkymä "puut_kaupunginosittain", jossa on tieto myös siitä, missä kaupunginosassa puu on.
+Edellisessä harjoituksessa muodostimme kyselyn teiden varsilla olevien puiden löytämiseksi. Tehdään tämän perusteella uusi kysely, johon haluamme liittää kuhunkin 
+tulokseen vielä tiedon siitä, missä kaupunginosassa puu on 
 
 :::code-box
 ```sql
-CREATE VIEW puut_kaupunginosittain AS (
-SELECT
-
-FROM
-);
-
+SELECT 
 ```
 :::
 
@@ -28,14 +24,16 @@ FROM
 ::: hidden-box
 :::code-box
 ```sql
-CREATE VIEW puut_kaupunginosittain AS (
-    SELECT a.*, b.nimi_fi  
-    FROM helsinki.___ a 
-    JOIN helsinki.___ b 
-    ON ... 
+-- käytetään esimerkiksi common table expressionia
+WITH teiden_puut AS (
+    <Aiempi kysely>
+)
+SELECT teiden_puut.*, k.nimi_fi FROM teiden_puut
+JOIN kaupunginosajako k
+ON ...;
 -- Millä ST-funktiolla spatiaalinen predikaatti, joka
 -- palauttaa tosi kun puu tietyn kaupunginosan sisällä
-);
+
 ```
 :::
 :::
@@ -45,53 +43,177 @@ CREATE VIEW puut_kaupunginosittain AS (
 :::hidden-box
 :::code-box
 ```sql
-CREATE VIEW puut_kaupunginosittain AS (
-    SELECT a.*, b.nimi_fi  
-    FROM helsinki.puurekisteri_piste a 
-    JOIN helsinki.kaupunginosajako b 
-    ON ST_Within(a.wkb_geometry, b.wkb_geometry)
-);
+WITH teiden_puut AS (
+    SELECT DISTINCT p.* FROM puurekisteri p
+    JOIN liikennevaylat l 
+    ON ST_DWithin(p.geom, l.geom, 5)
+)
+SELECT teiden_puut.*, k.nimi_fi FROM teiden_puut
+JOIN kaupunginosajako k
+ON ST_Within(teiden_puut.geom, k.geom);
 ```
 :::
 :::
 
-
-
-## Harjoitus 8.5: Geometrioiden yhdistäminen
-
-Muodosta (yhdistä) hallintoalueista maakuntien raja -aineisto:
+Luodaan tämän kyselyn perusteella ensin varsinainen tietokantataulu seuraavalla tavalla:
 
 :::code-box
 ```sql
-
-DROP TABLE IF EXISTS tmp.maakunnat;
-
-CREATE TABLE tmp.maakunnat as (
-    SELECT
-    ST_Union(wkb_geometry), maaku_ni1 as "Maakunnan nimi"
-    FROM
-    nlsfi.hallintoalue
-    GROUP BY
-    maaku_ni1
+CREATE TABLE IF NOT EXISTS tienvarren_puut AS (
+<kysely>
 );
 ```
 :::
 
-Vastaavasti, aineiston voi muodostaa myös hyödyntämällä näkymiä:
+Luodaan tämän jälkeen vaihtoehtoisesti samasta kyselystä normaali näkymä syntaksilla:
 
 :::code-box
 ```sql
-DROP VIEW IF EXISTS tmp.view_maakunta;
+CREATE OR REPLACE VIEW view_tienvarren_puut AS (
+<kysely>
+)
+```
+:::
 
-CREATE VIEW tmp.view_maakunta AS (
-    SELECT
-    ST_Union(wkb_geometry), maaku_ni1
-    FROM
-    nlsfi.hallintoalue
-    GROUP BY
-    maaku_ni1
-);
+Kumman luomiseen kului enemmän aikaa? Kumpi on nopeampi käytössä?
+
+
+## Materialisoitu näkymä
+
+Luo nyt vastaava näkymä materialisoituna, eli kyselyn palauttama data tallennetaan erikseen levylle tavallisen
+taulun tapaan. Materialisoidun näkymän luomisen syntaksi on (vrt. syntaksia taulun ja tavallisen näkymän tapaukseen): 
+
+:::code-box
+```sql
+CREATE MATERIALIZED VIEW IF NOT EXISTS <nimi> AS ();
 ```
 :::
 
 
+<button onclick="toggleAnswer(this)" class="btn answer_btn">ratkaisu</button>
+:::hidden-box
+:::code-box
+```sql
+CREATE MATERIALIZED VIEW IF NOT EXISTS mview_tienvarren_puut AS (
+WITH teiden_puut AS (
+    SELECT DISTINCT p.* FROM puurekisteri p
+    JOIN liikennevaylat l 
+    ON ST_DWithin(p.geom, l.geom, 5)
+)
+SELECT teiden_puut.*, k.nimi_fi FROM teiden_puut
+JOIN kaupunginosajako k
+ON ST_Within(teiden_puut.geom, k.geom)
+);
+```
+:::
+:::
+
+- Huomasitko jälleen materialisoidun näkymän luomisen ja kyselyn suhteelliset kestot?
+
+Nämä eri tyyppiset näkymät löytyvät pgAdminin valikosta eri valikkojen alta:
+
+![](img/view_valikot.png)
+
+- Onko valikkojen alta löytyvissä kohteissa eroja?
+
+
+
+## Näkymien muokkaus ja datan päivitys
+
+Näkymät toimivat monin tavoin tavallisen tietokantataulun kaltaisesti, mutta siihen on valittu ja yhdistelty
+sen luovalla SQL-kyselyllä kussakin tapauksessa relevantit tiedot. Kenties tietoja voisi myös kätevästi päivittää 
+tätä kautta?
+
+Testataan datan päivitystä kuhunkin tässä harjoituksessa luotuun näkymään:
+
+:::code-box
+```sql
+UPDATE tienvarren_puut
+SET kadunnimi = 'JOKUKATU'
+WHERE fid = 1;
+```
+:::
+
+:::code-box
+```sql
+UPDATE view_tienvarren_puut
+SET kadunnimi = 'JOKUKATU'
+WHERE fid = 1;
+```
+:::
+
+:::code-box
+```sql
+UPDATE mview_tienvarren_puut
+SET kadunnimi = 'JOKUKATU'
+WHERE fid = 1;
+```
+:::
+
+Huomataan ainakin, että:
+
+- Taulun datan muokkaus, joten komento toimii
+
+- Näkymiä ei voinut muokata, vaan se antoi virheen
+
+Itse asiassa tavallisten näkymien täytyy toteuttaa useita ehtoja, jotta niiden dataa voisi suoraan 
+muokata: [](https://www.postgresql.org/docs/current/sql-createview.html). Tähän palataan vielä seuraavassa 
+harjoituksessa, mutta muokataan vielä samalla tavoin lähtötaulun dataa, ja tarkastellaan sen vaikutusta näkymiin.
+
+:::code-box
+```sql
+UPDATE puurekisteri 
+SET puistonnim = 'EI NIMEÄ'
+WHERE puistonnim IS NULL;
+```
+:::
+
+Tarkista nyt vastaavasti, mikä oli vaikutus kuhunkin tauluun ja näkymään:
+
+:::code-box
+```sql
+SELECT * FROM tienvarren_puut WHERE puistonnim = 'EI NIMEÄ';
+```
+:::
+
+:::code-box
+```sql
+SELECT * FROM view_tienvarren_puut WHERE puistonnim = 'EI NIMEÄ';
+```
+:::
+
+:::code-box
+```sql
+SELECT * FROM mview_tienvarren_puut WHERE puistonnim = 'EI NIMEÄ';
+```
+:::
+
+
+### Materialisoitujen näkymien päivitys
+
+Materialisoitu näkymä on siis taulunkaltainen näkymä, jonka data on tallennettu fyysisenä kopioidaan
+levylle, eikä siis päivity vaikka sen määrittelevässä luontikyselyssä esiintyvien taulujen data muuttuu. 
+Kysely materialisoitujen näkymien kautta on kuitenkin yleensä tehokkaampaa, sillä ne sallivat indeksoinnin.
+Ne ovat hyviä käyttää varsinkin silloin, kun tulosten ei tarvitse olla koko ajan ajantasaisia tai kun siihen 
+liittyvä data muuttuu vain harvoin tai tietyin väliajoin. Tällöin voidaan ajaa (esimerkiksi ajastetusti) komento
+joka päivittää materialisoidun näkymä. Se tapahtuu nyt komennolla
+
+:::code-box
+```sql
+REFRESH MATERIALIZED VIEW mview_tienvarren_puut;
+```
+:::
+
+joka käytännössä korvaa materialisoidun näkymän aiemman sisällön. 
+
+Aja edellinen komento ja tarkastele materialisoitua näkymää uudelleen
+
+:::code-box
+```sql
+SELECT * FROM mview_tienvarren_puut;
+```
+:::
+
+jolloin huomaat että data on päivittynyt.
+
+Lisätietoja: https://www.postgresql.org/docs/current/sql-refreshmaterializedview.html

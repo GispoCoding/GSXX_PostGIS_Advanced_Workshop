@@ -55,9 +55,9 @@ Manager)** -lisäosan kautta). Tältä tietokanta näyttää QGISin
 
 ![](img/qgisDbmanager.png)
 
-### Harjoitustietokannan luonti
+### Harjoitustietokantojen luonti
 
-Luodaan koulutusta varten **trainingdatabase**-niminen
+Luodaan koulutusta varten 2 eri tietokantaa. Luodaan ensin **trainingdatabase**-niminen
 harjoitustietokanta. Tämän voi tehdä pgAdmin:n **graafisen
 käyttöliittymän** kautta:
 
@@ -70,6 +70,11 @@ käyttöliittymän** kautta:
 **DROP DATABASE** trainingdatabase;
 
 :::
+
+Vaikka **trainingdatabase** tuleekin olemaan pääasiallinen harjoitusten tietokanta, luodaan 
+vielä toinen tietokanta myöhempää käyttöä varten. Annetaan tälle nimeksi vaikkapa **worlddatabase**.
+Muutoin luonti sujuu samoja komentoja käyttäen.
+
 
 ### SQL-komentojen suorittaminen
 
@@ -105,6 +110,8 @@ Mitä spatial_ref_sys-taulu sisältää?
 Mitä näkymiä (views) on tietokantaan muodostunut? Mitä tietoja ne
 sisältävät?
 :::
+
+Toista sama postgis-laajennoksen asennus myös **worlddatabase**-tietokantaan.
 
 
 ## Psql-komentorivityökalu
