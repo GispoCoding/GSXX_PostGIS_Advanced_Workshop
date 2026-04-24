@@ -10,6 +10,8 @@ Avaa [pgAdmin](/pgadmin) selaimeen ja kirjaudu sisään.  Avaa **Query Tool** (V
 
 ## Harjoitus 8.1: PostgreSQL:n ei-spatiaaliset indeksit
 
+Käydään läpi ensin hieman taustaa yleisesti kyselyjen kestoon ja optimoimiseen liittyen.
+
 ### PostgreSQL:n Query Planner sekä EXPLAIN ANALYZE -komento
 
 Kun SQL-kysely ajetaan, kysely menee ensimmäiseksi nk. Plannerille, suunnittelijalle, joka määrittää mikä on optimaalisin tapa toteuttaa annetun 
@@ -28,12 +30,24 @@ sen suorittamiseen kuluva aika millisekunteina, sekä kyselyn eri osien suhteell
 On myös huomattava, että kumpikaan ei kuitenkaan 
 palauta itse kyselyn tuottamia rivejä vaan ainoastaan tiedon siitä, millä tavoin kyselyä tultaisiin ajamaan.
 
-Tarkastellaan tätä muutamien esimerkkikyselyiden avulla:
+Tarkastellaan tätä muutamien yksinkertaisten liikennevaylat-tauluun suoritettujen esimerkkikyselyiden avulla. Varmistetaan ensin mitä indeksejä kyseisessä taulussa on valmiina:
+
+![Kuva: liikennevaylat-taulun indeksit.](img/liikennevaylat_indexes.png)
+
+Nähdään, että taulussa on on indeksi sidx_liikennevaylat_geom. Kun tarkastellaan sitä lähemmin (properties), huomataan että se on GiST-tyyppinen indeksi geom-kentälle. Tämä on 
+siis se spatiaalinen indeksi, joka luotiin tuotaessa data tietokantaan QGIS-työkalun avulla. Ensimmäiset esimerkkikyselyt eivät kuitenkaan kohdistu geometria-kenttään, joten tällä ei ole 
+nyt vaikutusta ja se voidaan jättää paikoilleen.
+
+![Kuva: Esimerkki EXPLAIN ANALYZEN antamasta tulostuksesta.](img/pgadmin_explain_analyze.png)
+
+- Aja siis seuraavia kyselyjä ja kiinnitä huomiota/tallenna tulokset esimerkiksi notepadiin myöhempää vertailua ja tutkimista varten 
+(voit koittaa ajaa samaa kyselyn muutaman kerran saadaksesi jonkinlaisen keskiarvon).
+
 
 :::code-box
 ```sql
 
-EXPLAIN ANALYZE SELECT * FROM helsinki.liikennevaylat;
+EXPLAIN ANALYZE SELECT * FROM liikennevaylat;
 
 ```
 :::
@@ -42,7 +56,7 @@ EXPLAIN ANALYZE SELECT * FROM helsinki.liikennevaylat;
 :::code-box
 ```sql
 
-EXPLAIN ANALYZE SELECT * FROM helsinki.liikennevaylat WHERE pituus BETWEEN 50 AND 55;
+EXPLAIN ANALYZE SELECT * FROM liikennevaylat WHERE pituus BETWEEN 50 AND 55;
 
 ```
 :::
@@ -50,7 +64,7 @@ EXPLAIN ANALYZE SELECT * FROM helsinki.liikennevaylat WHERE pituus BETWEEN 50 AN
 :::code-box
 ```sql
 
-EXPLAIN ANALYZE SELECT * FROM helsinki.liikennevaylat WHERE pituus < 13;
+EXPLAIN ANALYZE SELECT * FROM liikennevaylat WHERE pituus < 13;
 
 ```
 :::
@@ -60,7 +74,7 @@ Luodaan sitten BTREE-indeksi kentälle "pituus". Lyhimmillään tämä käy kome
 :::code-box
 ```sql
 
-CREATE INDEX ON helsinki.liikennevaylat (pituus);
+CREATE INDEX IF NOT EXISTS ON liikennevaylat (pituus);
 
 ```
 :::
@@ -70,12 +84,12 @@ Jos halutaan varmistua indeksin nimestä ja tyypistä, kirjoitetaan eksplisiitti
 :::code-box
 ```sql
 
-CREATE INDEX liikennevaylat_pituus_idx ON helsinki.liikennevaylat USING BTREE (pituus);
+CREATE INDEX liikennevaylat_pituus_idx ON liikennevaylat USING BTREE (pituus);
 
 ```
 :::
 
-Samaten indeksin poistaminen on helppoa:
+Samaten indeksin poistaminen on helppoa (älä kuitenkaan poista vielä tässä):
 
 :::code-box
 ```sql
@@ -85,44 +99,91 @@ DROP INDEX liikennevaylat_pituus_idx;
 ```
 :::
 
-Aja edellä annettuja kyselyjä ensin ilman indeksiä ja indeksin määrittelyn jälkeen (voit koittaa ajaa kyselyn muutaman kerran saadaksesi keskiarvon)
+- Aja edellä annettuja kyselyjä nyt indeksin määrittelyn jälkeen ja vertaa saatuja tuloksia aiempaan. Miten query plan on muuttunut? Onko 
+suunnittelu- ja ajoaika muuttunut jollain tavalla?
+
+:::hint-box
+**Huom!** Muista että kysely suoritetaan ANALYZE-avainsanaa käytettäessä, ja vaikka tuloksena ei palautetakaan rivejä, voi muita kuin SELECT-kyselyjä
+suoritettaessa aiheutua epätoivottuja sivuvaikutuksia kyselyn ajamisesta. Jos pitää analysoida esimerkiksi INSERT-/UPDATE-/DELETE-/MERGE/CREATE TABLE AS -kyselyjä,
+on turvallisempaa tehdä nämä transaktiossa seuraavalla tavalla:
+
+**BEGIN**;\
+**EXPLAIN ANALYZE** ...;\
+**ROLLBACK**;
+
+:::
 
 
-
-
-
-
-
-EXPLAIN ANALYZEn tuloksissa esiintyviä sanoja
-- Seq Scan = sequential scanning, taulusta haetaan rivi kerrallaan
-- Bitmap Heap Scan
-- Bitmap Index Scan
-- Heap Blocks
-- Hash Join 
-
-cost 
-row 
-width
-actual time
-loops
-
-Katso tallennetun indeksin koko 
+- Katso tallennetun indeksin koko, esimerkiksi
 
 :::code-box
 ```sql
 
-SELECT pg_size_pretty(pg_relation_size(‘users_username_idx’));
+SELECT pg_size_pretty(pg_relation_size(‘sidx_liikennevaylat_geom’));
 
 ```
 :::
 
+tai vaihtamalla argumentiksi jonkin muun luodun indeksin nimen. Voit lisäksi verrata kokoluokkaa koko taulun kokoon kyselemällä 
+kokoa relaatiolle 'liikennevaylat'. Kannattaako mahdollisimman monen kentän indeksointi?
 
-
-
-Muut työkalut: https://explain.depesz.com/, https://explain.dalibo.com/ voi käyttää myös lokaalisti käytettävä versio, html-tiedosto?
  
 
 ## Harjoitus 8.2: PostgreSQL:n spatiaaliset indeksit
+
+Testataan nyt indeksien vaikutusta kyselyihin, joissa on mukana geometrioita ja spatiaalisia liitoksia.
+
+:::code-box
+```sql
+EXPLAIN ANALYZE
+SELECT *
+FROM liikennevaylat a 
+JOIN kaupunginosajako b
+ON ST_Crosses(a.geom, b.geom);
+```
+:::
+
+Miltä kyselyn osat näyttävät nyt EXPLAIN ANALYZEN mukaan? Ota jälleen tulostus talteen vertailun vuoksi. Poista nyt jo luodut spatiaaliset indeksit,
+ensin 'sidx_kaupunginosajako_geom'. Tämän voi tehdä joko pgAdminin kautta
+
+![Kuva: indeksin poistaminen taululta](img/pgadmin_drop_idx.png)
+
+
+tai suoraan Query Toolissa SQL:ää käyttäen
+
+:::code-box
+```sql
+
+DROP  INDEX <indeksin nimi>;
+
+```
+:::
+
+Aja EXPLAIN ANALYZE -kysely uudelleen. Tuleeko muutoksia? Poista vielä spatiaalinen indeksi liikennevaylat-taululta, ja vertaa tuloksia kyselyssä.
+
+Luodaan lopuksi vielä spatiaaliset indeksit uudelleen kyseisille tauluille.
+
+:::code-box
+```sql
+CREATE INDEX IF NOT EXISTS 
+sidx_kaupunginosajako_geom
+ON kaupunginosajako
+USING GIST (geom);
+
+```
+:::
+
+ja 
+
+:::code-box
+```sql
+CREATE INDEX IF NOT EXISTS
+sidx_liikennevaylat_geom
+ON liikennevaylat
+USING GIST (geom);
+
+```
+:::
 
 
 ## Harjoitus 8.3: Taulutilat

@@ -16,7 +16,7 @@
 
 <meta name="author" content="Gispo Oy" />
 
-<meta name="date" content="2026-04-23" />
+<meta name="date" content="2026-04-24" />
 
 
 <meta name="description" content="9 Harjoitus 8: Indeksit - tavalliset ja spatiaaliset | PostGIS-työpaja">
@@ -196,6 +196,7 @@ type="button" onclick="navToggle()" aria-label="Toggle navigation">
 </div>
 <div id="harjoitus-8.1-postgresqln-ei-spatiaaliset-indeksit" class="section level2" number="9.1">
 <h2><span class="header-section-number">9.1</span> Harjoitus 8.1: PostgreSQL:n ei-spatiaaliset indeksit</h2>
+<p>Käydään läpi ensin hieman taustaa yleisesti kyselyjen kestoon ja optimoimiseen liittyen.</p>
 <div id="postgresqln-query-planner-sekä-explain-analyze--komento" class="section level3" number="9.1.1">
 <h3><span class="header-section-number">9.1.1</span> PostgreSQL:n Query Planner sekä EXPLAIN ANALYZE -komento</h3>
 <p>Kun SQL-kysely ajetaan, kysely menee ensimmäiseksi nk. Plannerille, suunnittelijalle, joka määrittää mikä on optimaalisin tapa toteuttaa annetun
@@ -210,62 +211,114 @@ palauttaa lisäksi tietoa itse suorituksen kestosta. Kestosta annetaan sekä suu
 sen suorittamiseen kuluva aika millisekunteina, sekä kyselyn eri osien suhteellisia kustannuksia (Cost).</p>
 <p>On myös huomattava, että kumpikaan ei kuitenkaan
 palauta itse kyselyn tuottamia rivejä vaan ainoastaan tiedon siitä, millä tavoin kyselyä tultaisiin ajamaan.</p>
-<p>Tarkastellaan tätä muutamien esimerkkikyselyiden avulla:</p>
+<p>Tarkastellaan tätä muutamien yksinkertaisten liikennevaylat-tauluun suoritettujen esimerkkikyselyiden avulla. Varmistetaan ensin mitä indeksejä kyseisessä taulussa on valmiina:</p>
+<div class="figure">
+<img src="img/liikennevaylat_indexes.png" alt="" />
+<p class="caption">Kuva: liikennevaylat-taulun indeksit.</p>
+</div>
+<p>Nähdään, että taulussa on on indeksi sidx_liikennevaylat_geom. Kun tarkastellaan sitä lähemmin (properties), huomataan että se on GiST-tyyppinen indeksi geom-kentälle. Tämä on
+siis se spatiaalinen indeksi, joka luotiin tuotaessa data tietokantaan QGIS-työkalun avulla. Ensimmäiset esimerkkikyselyt eivät kuitenkaan kohdistu geometria-kenttään, joten tällä ei ole
+nyt vaikutusta ja se voidaan jättää paikoilleen.</p>
+<div class="figure">
+<img src="img/pgadmin_explain_analyze.png" alt="" />
+<p class="caption">Kuva: Esimerkki EXPLAIN ANALYZEN antamasta tulostuksesta.</p>
+</div>
+<ul>
+<li>Aja siis seuraavia kyselyjä ja kiinnitä huomiota/tallenna tulokset esimerkiksi notepadiin myöhempää vertailua ja tutkimista varten
+(voit koittaa ajaa samaa kyselyn muutaman kerran saadaksesi jonkinlaisen keskiarvon).</li>
+</ul>
 <div class="code-box">
 <div class="sourceCode" id="cb80"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb80-1"><a href="08_harjoitus_8.html#cb80-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb80-2"><a href="08_harjoitus_8.html#cb80-2" aria-hidden="true" tabindex="-1"></a><span class="kw">EXPLAIN</span> <span class="kw">ANALYZE</span> <span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> helsinki.liikennevaylat;</span></code></pre></div>
+<span id="cb80-2"><a href="08_harjoitus_8.html#cb80-2" aria-hidden="true" tabindex="-1"></a><span class="kw">EXPLAIN</span> <span class="kw">ANALYZE</span> <span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> liikennevaylat;</span></code></pre></div>
 </div>
 <div class="code-box">
 <div class="sourceCode" id="cb81"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb81-1"><a href="08_harjoitus_8.html#cb81-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb81-2"><a href="08_harjoitus_8.html#cb81-2" aria-hidden="true" tabindex="-1"></a><span class="kw">EXPLAIN</span> <span class="kw">ANALYZE</span> <span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> helsinki.liikennevaylat <span class="kw">WHERE</span> pituus <span class="kw">BETWEEN</span> <span class="dv">50</span> <span class="kw">AND</span> <span class="dv">55</span>;</span></code></pre></div>
+<span id="cb81-2"><a href="08_harjoitus_8.html#cb81-2" aria-hidden="true" tabindex="-1"></a><span class="kw">EXPLAIN</span> <span class="kw">ANALYZE</span> <span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> liikennevaylat <span class="kw">WHERE</span> pituus <span class="kw">BETWEEN</span> <span class="dv">50</span> <span class="kw">AND</span> <span class="dv">55</span>;</span></code></pre></div>
 </div>
 <div class="code-box">
 <div class="sourceCode" id="cb82"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb82-1"><a href="08_harjoitus_8.html#cb82-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-2"><a href="08_harjoitus_8.html#cb82-2" aria-hidden="true" tabindex="-1"></a><span class="kw">EXPLAIN</span> <span class="kw">ANALYZE</span> <span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> helsinki.liikennevaylat <span class="kw">WHERE</span> pituus <span class="op">&lt;</span> <span class="dv">13</span>;</span></code></pre></div>
+<span id="cb82-2"><a href="08_harjoitus_8.html#cb82-2" aria-hidden="true" tabindex="-1"></a><span class="kw">EXPLAIN</span> <span class="kw">ANALYZE</span> <span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> liikennevaylat <span class="kw">WHERE</span> pituus <span class="op">&lt;</span> <span class="dv">13</span>;</span></code></pre></div>
 </div>
 <p>Luodaan sitten BTREE-indeksi kentälle “pituus”. Lyhimmillään tämä käy komennolla</p>
 <div class="code-box">
 <div class="sourceCode" id="cb83"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb83-1"><a href="08_harjoitus_8.html#cb83-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb83-2"><a href="08_harjoitus_8.html#cb83-2" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">INDEX</span> <span class="kw">ON</span> helsinki.liikennevaylat (pituus);</span></code></pre></div>
+<span id="cb83-2"><a href="08_harjoitus_8.html#cb83-2" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">INDEX</span> <span class="cf">IF</span> <span class="kw">NOT</span> <span class="kw">EXISTS</span> <span class="kw">ON</span> liikennevaylat (pituus);</span></code></pre></div>
 </div>
 <p>Jos halutaan varmistua indeksin nimestä ja tyypistä, kirjoitetaan eksplisiittisesti</p>
 <div class="code-box">
 <div class="sourceCode" id="cb84"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb84-1"><a href="08_harjoitus_8.html#cb84-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb84-2"><a href="08_harjoitus_8.html#cb84-2" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">INDEX</span> liikennevaylat_pituus_idx <span class="kw">ON</span> helsinki.liikennevaylat <span class="kw">USING</span> BTREE (pituus);</span></code></pre></div>
+<span id="cb84-2"><a href="08_harjoitus_8.html#cb84-2" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">INDEX</span> liikennevaylat_pituus_idx <span class="kw">ON</span> liikennevaylat <span class="kw">USING</span> BTREE (pituus);</span></code></pre></div>
 </div>
-<p>Samaten indeksin poistaminen on helppoa:</p>
+<p>Samaten indeksin poistaminen on helppoa (älä kuitenkaan poista vielä tässä):</p>
 <div class="code-box">
 <div class="sourceCode" id="cb85"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb85-1"><a href="08_harjoitus_8.html#cb85-1" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb85-2"><a href="08_harjoitus_8.html#cb85-2" aria-hidden="true" tabindex="-1"></a><span class="kw">DROP</span> <span class="kw">INDEX</span> liikennevaylat_pituus_idx;</span></code></pre></div>
 </div>
-<p>Aja edellä annettuja kyselyjä ensin ilman indeksiä ja indeksin määrittelyn jälkeen (voit koittaa ajaa kyselyn muutaman kerran saadaksesi keskiarvon)</p>
-<p>EXPLAIN ANALYZEn tuloksissa esiintyviä sanoja
-- Seq Scan = sequential scanning, taulusta haetaan rivi kerrallaan
-- Bitmap Heap Scan
-- Bitmap Index Scan
-- Heap Blocks
-- Hash Join</p>
-<p>cost
-row
-width
-actual time
-loops</p>
-<p>Katso tallennetun indeksin koko</p>
+<ul>
+<li>Aja edellä annettuja kyselyjä nyt indeksin määrittelyn jälkeen ja vertaa saatuja tuloksia aiempaan. Miten query plan on muuttunut? Onko
+suunnittelu- ja ajoaika muuttunut jollain tavalla?</li>
+</ul>
+<div class="hint-box">
+<p><strong>Huom!</strong> Muista että kysely suoritetaan ANALYZE-avainsanaa käytettäessä, ja vaikka tuloksena ei palautetakaan rivejä, voi muita kuin SELECT-kyselyjä
+suoritettaessa aiheutua epätoivottuja sivuvaikutuksia kyselyn ajamisesta. Jos pitää analysoida esimerkiksi INSERT-/UPDATE-/DELETE-/MERGE/CREATE TABLE AS -kyselyjä,
+on turvallisempaa tehdä nämä transaktiossa seuraavalla tavalla:</p>
+<p><strong>BEGIN</strong>;<br />
+<strong>EXPLAIN ANALYZE</strong> …;<br />
+<strong>ROLLBACK</strong>;</p>
+</div>
+<ul>
+<li>Katso tallennetun indeksin koko, esimerkiksi</li>
+</ul>
 <div class="code-box">
 <div class="sourceCode" id="cb86"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb86-1"><a href="08_harjoitus_8.html#cb86-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb86-2"><a href="08_harjoitus_8.html#cb86-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> pg_size_pretty(pg_relation_size(‘users_username_idx’));</span></code></pre></div>
+<span id="cb86-2"><a href="08_harjoitus_8.html#cb86-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> pg_size_pretty(pg_relation_size(‘sidx_liikennevaylat_geom’));</span></code></pre></div>
 </div>
-<p>Muut työkalut: <a href="https://explain.depesz.com/" class="uri">https://explain.depesz.com/</a>, <a href="https://explain.dalibo.com/" class="uri">https://explain.dalibo.com/</a> voi käyttää myös lokaalisti käytettävä versio, html-tiedosto?</p>
+<p>tai vaihtamalla argumentiksi jonkin muun luodun indeksin nimen. Voit lisäksi verrata kokoluokkaa koko taulun kokoon kyselemällä
+kokoa relaatiolle ‘liikennevaylat’. Kannattaako mahdollisimman monen kentän indeksointi?</p>
 </div>
 </div>
 <div id="harjoitus-8.2-postgresqln-spatiaaliset-indeksit" class="section level2" number="9.2">
 <h2><span class="header-section-number">9.2</span> Harjoitus 8.2: PostgreSQL:n spatiaaliset indeksit</h2>
+<p>Testataan nyt indeksien vaikutusta kyselyihin, joissa on mukana geometrioita ja spatiaalisia liitoksia.</p>
+<div class="code-box">
+<div class="sourceCode" id="cb87"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb87-1"><a href="08_harjoitus_8.html#cb87-1" aria-hidden="true" tabindex="-1"></a><span class="kw">EXPLAIN</span> <span class="kw">ANALYZE</span></span>
+<span id="cb87-2"><a href="08_harjoitus_8.html#cb87-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span></span>
+<span id="cb87-3"><a href="08_harjoitus_8.html#cb87-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> liikennevaylat a </span>
+<span id="cb87-4"><a href="08_harjoitus_8.html#cb87-4" aria-hidden="true" tabindex="-1"></a><span class="kw">JOIN</span> kaupunginosajako b</span>
+<span id="cb87-5"><a href="08_harjoitus_8.html#cb87-5" aria-hidden="true" tabindex="-1"></a><span class="kw">ON</span> ST_Crosses(a.geom, b.geom);</span></code></pre></div>
+</div>
+<p>Miltä kyselyn osat näyttävät nyt EXPLAIN ANALYZEN mukaan? Ota jälleen tulostus talteen vertailun vuoksi. Poista nyt jo luodut spatiaaliset indeksit,
+ensin ‘sidx_kaupunginosajako_geom’. Tämän voi tehdä joko pgAdminin kautta</p>
+<div class="figure">
+<img src="img/pgadmin_drop_idx.png" alt="" />
+<p class="caption">Kuva: indeksin poistaminen taululta</p>
+</div>
+<p>tai suoraan Query Toolissa SQL:ää käyttäen</p>
+<div class="code-box">
+<div class="sourceCode" id="cb88"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb88-1"><a href="08_harjoitus_8.html#cb88-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb88-2"><a href="08_harjoitus_8.html#cb88-2" aria-hidden="true" tabindex="-1"></a><span class="kw">DROP</span>  <span class="kw">INDEX</span> <span class="op">&lt;</span>indeksin nimi<span class="op">&gt;</span>;</span></code></pre></div>
+</div>
+<p>Aja EXPLAIN ANALYZE -kysely uudelleen. Tuleeko muutoksia? Poista vielä spatiaalinen indeksi liikennevaylat-taululta, ja vertaa tuloksia kyselyssä.</p>
+<p>Luodaan lopuksi vielä spatiaaliset indeksit uudelleen kyseisille tauluille.</p>
+<div class="code-box">
+<div class="sourceCode" id="cb89"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb89-1"><a href="08_harjoitus_8.html#cb89-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">INDEX</span> <span class="cf">IF</span> <span class="kw">NOT</span> <span class="kw">EXISTS</span> </span>
+<span id="cb89-2"><a href="08_harjoitus_8.html#cb89-2" aria-hidden="true" tabindex="-1"></a>sidx_kaupunginosajako_geom</span>
+<span id="cb89-3"><a href="08_harjoitus_8.html#cb89-3" aria-hidden="true" tabindex="-1"></a><span class="kw">ON</span> kaupunginosajako</span>
+<span id="cb89-4"><a href="08_harjoitus_8.html#cb89-4" aria-hidden="true" tabindex="-1"></a><span class="kw">USING</span> GIST (geom);</span></code></pre></div>
+</div>
+<p>ja</p>
+<div class="code-box">
+<div class="sourceCode" id="cb90"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb90-1"><a href="08_harjoitus_8.html#cb90-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">INDEX</span> <span class="cf">IF</span> <span class="kw">NOT</span> <span class="kw">EXISTS</span></span>
+<span id="cb90-2"><a href="08_harjoitus_8.html#cb90-2" aria-hidden="true" tabindex="-1"></a>sidx_liikennevaylat_geom</span>
+<span id="cb90-3"><a href="08_harjoitus_8.html#cb90-3" aria-hidden="true" tabindex="-1"></a><span class="kw">ON</span> liikennevaylat</span>
+<span id="cb90-4"><a href="08_harjoitus_8.html#cb90-4" aria-hidden="true" tabindex="-1"></a><span class="kw">USING</span> GIST (geom);</span></code></pre></div>
+</div>
 </div>
 <div id="harjoitus-8.3-taulutilat" class="section level2" number="9.3">
 <h2><span class="header-section-number">9.3</span> Harjoitus 8.3: Taulutilat</h2>
 <p>Tarkista koulutuspalvelimen oletustaulutilojen sijainti. Käyttäjien tiedot sijaitsevat <strong>pg_default</strong>-taulutilassa, joka on data_directoryn base-hakemistossa. Järjestelmän yleiset tiedot sijaitsevat <strong>pg_global</strong>-taulutilassa, joka on data_directoryn global-hakemistossa. Datahakemiston sijainnin voit tarkistaa komennolla:</p>
 <div class="code-box">
-<div class="sourceCode" id="cb87"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb87-1"><a href="08_harjoitus_8.html#cb87-1" aria-hidden="true" tabindex="-1"></a>SHOW data_directory;</span></code></pre></div>
+<div class="sourceCode" id="cb91"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb91-1"><a href="08_harjoitus_8.html#cb91-1" aria-hidden="true" tabindex="-1"></a>SHOW data_directory;</span></code></pre></div>
 </div>
 </div>
 <div id="harjoitus-8.4-uuden-taulutilan-luominen" class="section level2" number="9.4">
@@ -276,8 +329,8 @@ sudo chown -R postgres:postgres /usr/local/tmp_tbls/
 sudo chmod 700 /usr/local/tmp_tbls/</code></pre>
 <p>Luo uusi taulutila SQL-komennolla psql:n tai pgAdminin avulla:</p>
 <div class="code-box">
-<div class="sourceCode" id="cb89"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb89-1"><a href="08_harjoitus_8.html#cb89-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLESPACE</span> tmp_tablespace</span>
-<span id="cb89-2"><a href="08_harjoitus_8.html#cb89-2" aria-hidden="true" tabindex="-1"></a>LOCATION <span class="st">&#39;/usr/local/tmp_tbls&#39;</span>;</span></code></pre></div>
+<div class="sourceCode" id="cb93"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb93-1"><a href="08_harjoitus_8.html#cb93-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLESPACE</span> tmp_tablespace</span>
+<span id="cb93-2"><a href="08_harjoitus_8.html#cb93-2" aria-hidden="true" tabindex="-1"></a>LOCATION <span class="st">&#39;/usr/local/tmp_tbls&#39;</span>;</span></code></pre></div>
 </div>
 </div>
 <div id="harjoitus-8.5-tietokannan-ja-taulun-taulutilan-muuttaminen" class="section level2" number="9.5">
@@ -291,43 +344,43 @@ sudo chmod 700 /usr/local/tmp_tbls/</code></pre>
 <li>Avaa tämän jälkeen sivupaneelista postgres-tietokanta ja avaa <strong>Query tool</strong> (voit tehdä tämän myös psql:n avulla). Anna komento:</li>
 </ol>
 <div class="code-box">
-<div class="sourceCode" id="cb90"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb90-1"><a href="08_harjoitus_8.html#cb90-1" aria-hidden="true" tabindex="-1"></a><span class="kw">ALTER</span> <span class="kw">DATABASE</span> trainingdatabase</span>
-<span id="cb90-2"><a href="08_harjoitus_8.html#cb90-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SET</span> <span class="kw">TABLESPACE</span> tmp_tablespace;</span></code></pre></div>
+<div class="sourceCode" id="cb94"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb94-1"><a href="08_harjoitus_8.html#cb94-1" aria-hidden="true" tabindex="-1"></a><span class="kw">ALTER</span> <span class="kw">DATABASE</span> trainingdatabase</span>
+<span id="cb94-2"><a href="08_harjoitus_8.html#cb94-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SET</span> <span class="kw">TABLESPACE</span> tmp_tablespace;</span></code></pre></div>
 </div>
 <div class="hint-box">
 <p>Mikäli tämä ei onnistu, ja pgAdmin4 kertoo, että tietokantaan on aktiivisia yhteyksiä, yritä kirjautua ulos ja takaisin sisään pgAdminiin.</p>
 </div>
 <p>Voit tarkistaa tietokannan taulutilan sijainnin SQL-kyselyllä:</p>
 <div class="code-box">
-<div class="sourceCode" id="cb91"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb91-1"><a href="08_harjoitus_8.html#cb91-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span></span>
-<span id="cb91-2"><a href="08_harjoitus_8.html#cb91-2" aria-hidden="true" tabindex="-1"></a>spcname, pg_tablespace_location(<span class="kw">oid</span>)</span>
-<span id="cb91-3"><a href="08_harjoitus_8.html#cb91-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span></span>
-<span id="cb91-4"><a href="08_harjoitus_8.html#cb91-4" aria-hidden="true" tabindex="-1"></a>pg_tablespace;</span></code></pre></div>
+<div class="sourceCode" id="cb95"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb95-1"><a href="08_harjoitus_8.html#cb95-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span></span>
+<span id="cb95-2"><a href="08_harjoitus_8.html#cb95-2" aria-hidden="true" tabindex="-1"></a>spcname, pg_tablespace_location(<span class="kw">oid</span>)</span>
+<span id="cb95-3"><a href="08_harjoitus_8.html#cb95-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span></span>
+<span id="cb95-4"><a href="08_harjoitus_8.html#cb95-4" aria-hidden="true" tabindex="-1"></a>pg_tablespace;</span></code></pre></div>
 </div>
 <p>Luo testausta varten tilapäinen taulu:</p>
 <div class="code-box">
-<div class="sourceCode" id="cb92"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb92-1"><a href="08_harjoitus_8.html#cb92-1" aria-hidden="true" tabindex="-1"></a><span class="kw">DROP</span> <span class="kw">TABLE</span> <span class="cf">IF</span> <span class="kw">EXISTS</span> tmp_table;</span>
-<span id="cb92-2"><a href="08_harjoitus_8.html#cb92-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb92-3"><a href="08_harjoitus_8.html#cb92-3" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> tmp_table <span class="kw">AS</span></span>
-<span id="cb92-4"><a href="08_harjoitus_8.html#cb92-4" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> x</span>
-<span id="cb92-5"><a href="08_harjoitus_8.html#cb92-5" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span></span>
-<span id="cb92-6"><a href="08_harjoitus_8.html#cb92-6" aria-hidden="true" tabindex="-1"></a>generate_series(<span class="dv">2</span>,<span class="dv">5000</span>,<span class="dv">2</span>) <span class="kw">AS</span> x;</span></code></pre></div>
+<div class="sourceCode" id="cb96"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb96-1"><a href="08_harjoitus_8.html#cb96-1" aria-hidden="true" tabindex="-1"></a><span class="kw">DROP</span> <span class="kw">TABLE</span> <span class="cf">IF</span> <span class="kw">EXISTS</span> tmp_table;</span>
+<span id="cb96-2"><a href="08_harjoitus_8.html#cb96-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-3"><a href="08_harjoitus_8.html#cb96-3" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> tmp_table <span class="kw">AS</span></span>
+<span id="cb96-4"><a href="08_harjoitus_8.html#cb96-4" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> x</span>
+<span id="cb96-5"><a href="08_harjoitus_8.html#cb96-5" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span></span>
+<span id="cb96-6"><a href="08_harjoitus_8.html#cb96-6" aria-hidden="true" tabindex="-1"></a>generate_series(<span class="dv">2</span>,<span class="dv">5000</span>,<span class="dv">2</span>) <span class="kw">AS</span> x;</span></code></pre></div>
 </div>
 <p>Taulun käyttämän taulutilan voit tarkistaa seuraavalla komennolla:</p>
 <div class="code-box">
-<div class="sourceCode" id="cb93"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb93-1"><a href="08_harjoitus_8.html#cb93-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span></span>
-<span id="cb93-2"><a href="08_harjoitus_8.html#cb93-2" aria-hidden="true" tabindex="-1"></a>tablename, <span class="kw">tablespace</span></span>
-<span id="cb93-3"><a href="08_harjoitus_8.html#cb93-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span></span>
-<span id="cb93-4"><a href="08_harjoitus_8.html#cb93-4" aria-hidden="true" tabindex="-1"></a>pg_tables</span>
-<span id="cb93-5"><a href="08_harjoitus_8.html#cb93-5" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span></span>
-<span id="cb93-6"><a href="08_harjoitus_8.html#cb93-6" aria-hidden="true" tabindex="-1"></a>tablename <span class="op">=</span> <span class="st">&#39;tmp_table&#39;</span>;</span></code></pre></div>
+<div class="sourceCode" id="cb97"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb97-1"><a href="08_harjoitus_8.html#cb97-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span></span>
+<span id="cb97-2"><a href="08_harjoitus_8.html#cb97-2" aria-hidden="true" tabindex="-1"></a>tablename, <span class="kw">tablespace</span></span>
+<span id="cb97-3"><a href="08_harjoitus_8.html#cb97-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span></span>
+<span id="cb97-4"><a href="08_harjoitus_8.html#cb97-4" aria-hidden="true" tabindex="-1"></a>pg_tables</span>
+<span id="cb97-5"><a href="08_harjoitus_8.html#cb97-5" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span></span>
+<span id="cb97-6"><a href="08_harjoitus_8.html#cb97-6" aria-hidden="true" tabindex="-1"></a>tablename <span class="op">=</span> <span class="st">&#39;tmp_table&#39;</span>;</span></code></pre></div>
 </div>
 <p>Muuta taulun taulutilaa seuraavalla komennolla:</p>
 <div class="code-box">
-<div class="sourceCode" id="cb94"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb94-1"><a href="08_harjoitus_8.html#cb94-1" aria-hidden="true" tabindex="-1"></a><span class="kw">ALTER</span> <span class="kw">TABLE</span></span>
-<span id="cb94-2"><a href="08_harjoitus_8.html#cb94-2" aria-hidden="true" tabindex="-1"></a>tmp_table</span>
-<span id="cb94-3"><a href="08_harjoitus_8.html#cb94-3" aria-hidden="true" tabindex="-1"></a><span class="kw">SET</span> <span class="kw">TABLESPACE</span></span>
-<span id="cb94-4"><a href="08_harjoitus_8.html#cb94-4" aria-hidden="true" tabindex="-1"></a>tmp_tablespace;</span></code></pre></div>
+<div class="sourceCode" id="cb98"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb98-1"><a href="08_harjoitus_8.html#cb98-1" aria-hidden="true" tabindex="-1"></a><span class="kw">ALTER</span> <span class="kw">TABLE</span></span>
+<span id="cb98-2"><a href="08_harjoitus_8.html#cb98-2" aria-hidden="true" tabindex="-1"></a>tmp_table</span>
+<span id="cb98-3"><a href="08_harjoitus_8.html#cb98-3" aria-hidden="true" tabindex="-1"></a><span class="kw">SET</span> <span class="kw">TABLESPACE</span></span>
+<span id="cb98-4"><a href="08_harjoitus_8.html#cb98-4" aria-hidden="true" tabindex="-1"></a>tmp_tablespace;</span></code></pre></div>
 </div>
 <p>Tarkista, että taulun taulutila on nyt muuttunut. Voit myös käyttää pgAdminin käyttöliittymää taulutilojen tarkastamiseen.</p>
 </div>
@@ -335,16 +388,16 @@ sudo chmod 700 /usr/local/tmp_tbls/</code></pre>
 <h2><span class="header-section-number">9.6</span> Harjoitus 8.6: Indeksin taulutilan muuttaminen</h2>
 <p>Voit luoda indeksin tauluun komennolla:</p>
 <div class="code-box">
-<div class="sourceCode" id="cb95"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb95-1"><a href="08_harjoitus_8.html#cb95-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">INDEX</span></span>
-<span id="cb95-2"><a href="08_harjoitus_8.html#cb95-2" aria-hidden="true" tabindex="-1"></a>idx_tmp_x</span>
-<span id="cb95-3"><a href="08_harjoitus_8.html#cb95-3" aria-hidden="true" tabindex="-1"></a><span class="kw">ON</span> tmp_table(x);</span></code></pre></div>
+<div class="sourceCode" id="cb99"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb99-1"><a href="08_harjoitus_8.html#cb99-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">INDEX</span></span>
+<span id="cb99-2"><a href="08_harjoitus_8.html#cb99-2" aria-hidden="true" tabindex="-1"></a>idx_tmp_x</span>
+<span id="cb99-3"><a href="08_harjoitus_8.html#cb99-3" aria-hidden="true" tabindex="-1"></a><span class="kw">ON</span> tmp_table(x);</span></code></pre></div>
 </div>
 <p>Indeksit luodaan oletusarvoisesti <strong>pg_default</strong>-taulutilaan. Usein käytetyt indeksit voi olla tarpeen tallentaa sellaiseen taulutilaan, joka käyttää palvelimessa olevaa nopeinta levyä (esimerkiksi SSD-levyt). Indeksien taulutilan muuttaminen onnistuu seuraavasti:</p>
 <div class="code-box">
-<div class="sourceCode" id="cb96"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb96-1"><a href="08_harjoitus_8.html#cb96-1" aria-hidden="true" tabindex="-1"></a><span class="kw">ALTER</span> <span class="kw">INDEX</span></span>
-<span id="cb96-2"><a href="08_harjoitus_8.html#cb96-2" aria-hidden="true" tabindex="-1"></a>idx_tmp_x</span>
-<span id="cb96-3"><a href="08_harjoitus_8.html#cb96-3" aria-hidden="true" tabindex="-1"></a><span class="kw">SET</span> <span class="kw">TABLESPACE</span></span>
-<span id="cb96-4"><a href="08_harjoitus_8.html#cb96-4" aria-hidden="true" tabindex="-1"></a>tmp_tablespace;</span></code></pre></div>
+<div class="sourceCode" id="cb100"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb100-1"><a href="08_harjoitus_8.html#cb100-1" aria-hidden="true" tabindex="-1"></a><span class="kw">ALTER</span> <span class="kw">INDEX</span></span>
+<span id="cb100-2"><a href="08_harjoitus_8.html#cb100-2" aria-hidden="true" tabindex="-1"></a>idx_tmp_x</span>
+<span id="cb100-3"><a href="08_harjoitus_8.html#cb100-3" aria-hidden="true" tabindex="-1"></a><span class="kw">SET</span> <span class="kw">TABLESPACE</span></span>
+<span id="cb100-4"><a href="08_harjoitus_8.html#cb100-4" aria-hidden="true" tabindex="-1"></a>tmp_tablespace;</span></code></pre></div>
 </div>
 
 </div>
@@ -361,7 +414,7 @@ sudo chmod 700 /usr/local/tmp_tbls/</code></pre>
 
 <div class="footer-info">
 <h5 class="footer-title">PostGIS-työpaja</h5>
-<span class="footer-version">v2026-04-23</span>
+<span class="footer-version">v2026-04-24</span>
 <div class="license"><img src="img/by-nd.svg" width="80px" alt="CC-BY-ND"></div>
 </div>
 
